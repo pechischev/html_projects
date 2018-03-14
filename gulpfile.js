@@ -1,52 +1,31 @@
 'use strict';
 
-var gulp = require('gulp');
-var sass = require('gulp-sass');
-var watch = require('gulp-watch');
-var gulpSequence = require('gulp-sequence');
+const gulp = require('gulp');
+const sass = require('gulp-sass');
+const watch = require('gulp-watch');
+const gulpSequence = require('gulp-sequence');
 
-var fs = require("fs");
-var browserify = require("browserify");
-var babelify = require("babelify");
-var source = require('vinyl-source-stream');
-var gutil = require('gulp-util');
+const fs = require("fs");
+const browserify = require("browserify");
+const babelify = require("babelify");
+const source = require('vinyl-source-stream');
+const gutil = require('gulp-util');
 
 const notify = require('gulp-notify');
-const eslint = require('gulp-eslint');
+const tsify = require("tsify");
+const sourcemaps = require('gulp-sourcemaps');
+const buffer = require('vinyl-buffer');
+const tslint = require("gulp-tslint");
 
-var sassFiles = 'css/styles.scss';
+const sassFile = 'css/styles.scss';
+const mainPath = "./src/main.tsx";
 
-const mainPath = "./src/main.js";
-
-const eslintConfig = {
-    "env": {
-        "browser": true,
-        "node": true,
-        "es6": true
-    },
-    "ecmaFeatures": {
-        "arrowFunctions": true,
-        "binaryLiterals": true,
-        "blockBindings": true,
-        "classes": true,
-        "defaultParams": true,
-        "destructuring": true,
-        "forOf": true,
-        "generators": true,
-        "objectLiteralComputedProperties": true,
-        "objectLiteralDuplicateProperties": true,
-        "objectLiteralShorthandMethods": true,
-        "objectLiteralShorthandProperties": true,
-        "octalLiterals": true,
-        "regexUFlag": true,
-        "regexYFlag": true,
-        "spread": true,
-        "superInFunctions": true,
-        "templateStrings": true,
-        "unicodeCodePointEscapes": true,
-        "globalReturn": true,
-        "modules": true
-    }
+const paths = {
+	build: {
+		css: './build/css/',
+		js: './build/js/'
+	},
+	src: './src/**'
 };
 
 const onError = (err) => {
@@ -57,41 +36,42 @@ const onError = (err) => {
     this.emit('end');
 };
 
-gulp.task('es6', () =>  {
-	browserify({ debug: true })
-		.transform(babelify.configure({
-			presets : ["es2015"]
-		}))
+gulp.task("build_ts", function () {
+	return browserify({ debug: true })
+		.transform(babelify.configure({ presets : ["es2015"] }))
 		.require(mainPath, { entry: true })
+		.transform("babelify")
+		.plugin(tsify)
 		.bundle()
 		.on('error', gutil.log)
 		.pipe(source('main.js'))
-		.pipe(gulp.dest('./build/js/'));
+		.pipe(buffer())
+		.pipe(sourcemaps.init({loadMaps: true}))
+		.pipe(sourcemaps.write('./'))
+		.pipe(gulp.dest(paths.build.js));
 });
 
-// Lint JS/JSX files
-gulp.task('eslint', () => {
-    return gulp.src('src/**')
-        .pipe(eslint({
-            baseConfig: eslintConfig
-        }))
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
+gulp.task("tslint", () =>
+	gulp.src(paths.src)
+		.pipe(tslint({
+			formatter: "verbose"
+		}))
+		.pipe(tslint.report())
+);
 
 gulp.task('compile_css', () => {
-    gulp.src('css/styles.scss')
+    gulp.src(sassFile)
         .pipe(sass())
-        .pipe(gulp.dest('build/css/'));
+        .pipe(gulp.dest(paths.build.css));
 });
 
 gulp.task('build_js', (cb) => {
-    gulpSequence('eslint', 'es6', cb);
+    gulpSequence('tslint', 'build_ts', cb);
 });
 
 gulp.task('build', ['compile_css', 'build_js']);
 
 gulp.task('watch', () => {
-    gulp.watch(sassFiles, gulpSequence('compile_css'));
-    gulp.watch('src/*.js', ['build_js']);
+    gulp.watch(sassFile, gulpSequence('compile_css'));
+    gulp.watch(paths.src, ['build_js']);
 });
