@@ -16,7 +16,7 @@
     "eofline": false,
     "forin": true,
     "indent": [ true, "spaces" ],
-    "interface-name": [true, "never-prefix"],
+    "interface-name": [true, "always-prefix"],
     "jsdoc-format": true,
     "jsx-no-lambda": false,
     "jsx-no-multiline-js": false,
@@ -45,7 +45,6 @@
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-variable": true,
-    "no-empty": true,
     "no-eval": true,
     "no-shadowed-variable": true,
     "no-string-literal": true,
@@ -56,8 +55,6 @@
     "one-line": [
       true,
       "check-catch",
-      "check-else",
-      "check-open-brace",
       "check-whitespace"
     ],
     "quotemark": [true, "single", "jsx-double"],
@@ -67,7 +64,6 @@
 
     "trailing-comma": false,
 
-    "triple-equals": [ true, "allow-null-check" ],
     "typedef": [
       true,
       "parameter",

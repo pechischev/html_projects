@@ -71,7 +71,7 @@ gulp.task('build_js', (cb) => {
 });
 
 gulp.task('test', () => {
-	return gulp.src('test/*.spec.ts')
+	return gulp.src('test/**')
 		.pipe(mocha({
 			reporter: 'progress',
 			require: ['ts-node/register']
