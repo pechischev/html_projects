@@ -11,6 +11,9 @@ const babelify = require("babelify");
 const source = require('vinyl-source-stream');
 const gutil = require('gulp-util');
 
+const args = require('yargs').argv;
+const jsmin = require('gulp-jsmin');
+
 const notify = require('gulp-notify');
 const tsify = require("tsify");
 const sourcemaps = require('gulp-sourcemaps');
@@ -38,7 +41,9 @@ const onError = (err) => {
 };
 
 gulp.task("build_ts", () => {
-	return browserify({ debug: true })
+	const hasDebug = !!args.debug;
+
+	const build = browserify({ debug: hasDebug })
 		.transform(babelify.configure({ presets : ["es2015"] }))
 		.require(mainPath, { entry: true })
 		.transform("babelify")
@@ -46,10 +51,24 @@ gulp.task("build_ts", () => {
 		.bundle()
 		.on('error', gutil.log)
 		.pipe(source('main.js'))
-		.pipe(buffer())
-		.pipe(sourcemaps.init({loadMaps: true}))
-		.pipe(sourcemaps.write('./'))
-		.pipe(gulp.dest(paths.build.js));
+		.pipe(gulp.dest(paths.build.js))
+		.on('end', () => {
+			if (hasDebug)
+			{
+				build
+					.pipe(buffer())
+					.pipe(sourcemaps.init({loadMaps: true}))
+					.pipe(sourcemaps.write('./'))
+					.pipe(gulp.dest(paths.build.js));
+			}
+			else
+			{
+				gulp.src(paths.build.js + 'main.js')
+					.pipe(jsmin())
+					.pipe(gulp.dest(paths.build.js))
+			}
+		});
+	return build;
 });
 
 gulp.task("tslint", () =>
