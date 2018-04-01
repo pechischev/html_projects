@@ -1,6 +1,6 @@
 import Dispatcher from '../event/Dispatcher';
 
-export class Timer {
+class Timer {
 	private _keyInterval: number|null;
 	private _delay: number;
 	private _start: number;
@@ -53,3 +53,5 @@ export class Timer {
 		return this._duration;
 	}
 }
+
+export = Timer;

@@ -1,6 +1,6 @@
 import IDispatcher from './IDispatcher';
 
-export default class Dispatcher implements IDispatcher {
+class Dispatcher implements IDispatcher {
     private _listeners: Array<{callback: Function, scope: Object|null}>;
 
     constructor() {
@@ -38,9 +38,11 @@ export default class Dispatcher implements IDispatcher {
        this._listeners.splice(index, 1);
     }
 
-    private _hasListener(callback: Function) {
+    private _hasListener(callback: Function): boolean {
         return !!this._listeners.find((obj) => {
             return obj.callback == callback;
         });
     }
 }
+
+export = Dispatcher;
