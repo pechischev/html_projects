@@ -16,8 +16,6 @@
     "forin": true,
     "interface-name": [true, "always-prefix"],
     "jsdoc-format": true,
-    "jsx-no-lambda": false,
-    "jsx-no-multiline-js": false,
     "label-position": true,
     "max-line-length": [ true, 120 ],
     "member-ordering": [
@@ -26,7 +24,7 @@
       "static-before-instance",
       "variables-before-functions"
     ],
-    "no-any": true,
+    "no-any": false,
     "no-arg": true,
     "no-bitwise": true,
     "no-console": [
@@ -55,7 +53,7 @@
       "check-catch",
       "check-whitespace"
     ],
-    "quotemark": [true, "single", "jsx-double"],
+    "quotemark": [true, "single"],
     "radix": true,
     "semicolon": [true, "always"],
     "switch-default": true,

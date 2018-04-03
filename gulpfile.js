@@ -15,7 +15,7 @@ const paths = {
 	},
 	src: './src/**',
 	main: './src/main.tsx',
-	style: 'css/styles.scss'
+	style: 'css/common.scss'
 };
 
 gulp.task("tslint", () => lib.build_ts.tslint(paths.src));

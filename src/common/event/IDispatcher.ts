@@ -1,10 +1,10 @@
 interface IDispatcher {
 
-    addListener(callback: Function, scope?: Object): void;
+    addListener(callback: Function, scope?: any): void;
 
-    dispatch(): void;
+    dispatch(args?: any): void;
 
     removeListener(callback: Function): void;
 }
 
-export = IDispatcher;
+export default IDispatcher;

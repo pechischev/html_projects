@@ -1,8 +1,8 @@
 import TagName from '../dom/TagName';
 
 type IComponentConfig = {
-    className: string | undefined;
-    tagName: string | undefined;
+    className?: string;
+    tagName?: string;
 };
 
 class Component {
@@ -92,6 +92,14 @@ class Component {
         this._displayObject.textContent = text;
     }
 
+    listen(eventType: string, handler: EventListenerOrEventListenerObject) {
+        this._displayObject.addEventListener(eventType, handler);
+    }
+
+    unlisten(eventType: string, handler: EventListenerOrEventListenerObject) {
+        this._displayObject.removeEventListener(eventType, handler);
+    }
+
     private _createElement(elementTag: string, className: string|undefined) {
         const element = document.createElement(elementTag);
         if (className)
@@ -102,4 +110,4 @@ class Component {
     }
 }
 
-export = Component;
+export default Component;

@@ -1,21 +1,21 @@
 import IDispatcher from './IDispatcher';
 
 class Dispatcher implements IDispatcher {
-    private _listeners: Array<{callback: Function, scope: Object|null}>;
+    private _listeners: Array<{callback: Function, scope?: any}>;
 
     constructor() {
         this._listeners = [];
     }
 
-    addListener(callback: Function, scope?: Object) {
+    addListener(callback: Function, scope?: any) {
         if (this._hasListener(callback))
         {
             return;
         }
-        this._listeners.push({callback, scope: scope || null});
+        this._listeners.push({callback, scope: scope});
     }
 
-    dispatch() {
+    dispatch(args?: any) { // TODO: fix transfer arguments to function
         for (let i = 0; i < this._listeners.length; ++i)
         {
             const obj = this._listeners[i];
@@ -23,7 +23,7 @@ class Dispatcher implements IDispatcher {
             {
                 continue;
             }
-            obj.callback.apply(obj.scope);
+            obj.callback(args);
         }
     }
 
@@ -45,4 +45,4 @@ class Dispatcher implements IDispatcher {
     }
 }
 
-export = Dispatcher;
+export default Dispatcher;
