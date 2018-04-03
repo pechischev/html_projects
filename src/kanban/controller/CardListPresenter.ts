@@ -10,7 +10,7 @@ class CardListPresenter {
 
         this._view = view;
         this._view.addCardListEvent().addListener(() => this._createCardList());
-        this._view.removeEvent().addListener((cardList: CardList) => {
+        this._view.removeListEvent().addListener((cardList: CardList) => {
             this._removeCardList(cardList);
         });
     }

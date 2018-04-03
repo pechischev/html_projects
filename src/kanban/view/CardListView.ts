@@ -4,6 +4,7 @@ import Card from '../model/Card';
 import CardView from './CardView';
 import CardController from '../controller/CardController';
 import Dispatcher from '../../common/event/Dispatcher';
+import EditableTitleView from './EditableTitleView';
 
 const APPEND_CARD_BUTTON_TEXT = 'Add card';
 
@@ -28,14 +29,13 @@ class CardListView extends Component {
             this.invalidate();
         });
 
-        const titleContainer = new Component({ className: 'title'});
-        titleContainer.setTextContent(cardList.title());
+        const titleContainer = new EditableTitleView(this._cardList);
         this.addChild(titleContainer);
 
         const removeListIcon = new Component({className: 'remove-list-icon remove-icon'});
         removeListIcon.setTextContent('X');
-        this.addChild(removeListIcon);
         removeListIcon.listen('click', () =>  this._removeEvent.dispatch(this._cardList));
+        this.addChild(removeListIcon);
 
         this._itemsContainer = new Component({className: 'items-container'});
         this.addChild(this._itemsContainer);
@@ -46,10 +46,6 @@ class CardListView extends Component {
 
         appendCardButton.listen('click', () => {
             this._cardList.appendCard(this._controller.addCard());
-        });
-
-        this._cardList.titleChangedEvent().addListener(() => {
-            titleContainer.setTextContent(this._cardList.title());
         });
 
         this.invalidate();

@@ -6,7 +6,7 @@ type IComponentConfig = {
 };
 
 class Component {
-    private _displayObject: HTMLElement;
+    private _displayObject: HTMLElement|HTMLInputElement; // TODO: correct typing TS-11
     private _x: number;
     private _y: number;
 
@@ -36,7 +36,7 @@ class Component {
         }
     }
 
-    displayObject(): HTMLElement {
+    displayObject(): HTMLElement|HTMLInputElement {
         return this._displayObject;
     }
 
@@ -90,6 +90,10 @@ class Component {
 
     setTextContent(text: string) {
         this._displayObject.textContent = text;
+    }
+
+    setAttribute(attr: {name: string, value: string}) {
+        this._displayObject.setAttribute(attr.name, attr.value);
     }
 
     listen(eventType: string, handler: EventListenerOrEventListenerObject) {

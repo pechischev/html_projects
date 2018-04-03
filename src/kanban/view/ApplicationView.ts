@@ -12,8 +12,7 @@ class ApplicationView extends Component {
    private _itemsContainer: Component;
     private _cardController: CardController;
     private _addCardListEvent: Dispatcher;
-    private _addCardEvent: Dispatcher;
-    private _removeEvent: Dispatcher;
+    private _removeListEvent: Dispatcher;
 
     constructor() {
         super({ className: 'application' });
@@ -26,8 +25,7 @@ class ApplicationView extends Component {
         this.addChild(this._itemsContainer);
 
         this._addCardListEvent = new Dispatcher();
-        this._removeEvent = new Dispatcher();
-        this._addCardEvent = new Dispatcher();
+        this._removeListEvent = new Dispatcher();
 
         const appendListButton = new Component({className: 'append-list', tagName: TagName.BUTTON});
         appendListButton.setTextContent(APPEND_LIST_BUTTON_TEXT);
@@ -41,12 +39,8 @@ class ApplicationView extends Component {
         return this._addCardListEvent;
     }
 
-    removeEvent(): Dispatcher {
-        return this._removeEvent;
-    }
-
-    addCardEvent(): Dispatcher {
-        return this._addCardEvent;
+    removeListEvent(): Dispatcher {
+        return this._removeListEvent;
     }
 
     appendCardListView(cardList: CardList) {
@@ -76,7 +70,7 @@ class ApplicationView extends Component {
 
     private _createCardListView(cardList: CardList): CardListView {
         const itemView = new CardListView(cardList, this._cardController);
-        itemView.removeEvent().addListener((item: CardList) => this._removeEvent.dispatch(item));
+        itemView.removeEvent().addListener((item: CardList) => this._removeListEvent.dispatch(item));
         return itemView;
     }
 }

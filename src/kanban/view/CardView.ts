@@ -1,4 +1,5 @@
 import Component from '../../common/component/Component';
+import EditableTitleView from './EditableTitleView';
 import Card from '../model/Card';
 import Dispatcher from '../../common/event/Dispatcher';
 
@@ -12,18 +13,13 @@ class CardView extends Component {
         this._card = card;
         this._removeCardEvent = new Dispatcher();
 
-        const titleContainer = new Component({ className: 'title'});
-        titleContainer.setTextContent(card.title());
-        this.addChild(titleContainer);
-
         const removeCardIcon = new Component({className: 'remove-card-icon remove-icon'});
         removeCardIcon.setTextContent('X');
         removeCardIcon.listen('click', () => this._removeCardEvent.dispatch());
         this.addChild(removeCardIcon);
 
-        this._card.titleChangedEvent().addListener(() => {
-            titleContainer.setTextContent(this._card.title());
-        });
+        const titleContainer = new EditableTitleView(card);
+        this.addChild(titleContainer);
     }
 
     removeCardEvent(): Dispatcher {

@@ -31,6 +31,15 @@
   vertical-align: top;
 }
 
+.title-container {
+  cursor: pointer;
+
+  .title {
+    white-space: normal;
+    word-break: break-all;
+  }
+}
+
 .remove-icon {
   cursor: pointer;
 
@@ -46,7 +55,7 @@
   background: #fff5f5;
   margin: 0 10px;
   border-radius: 6px;
-  padding: 5px 10px 20px;
+  padding: 5px 10px 10px;
   vertical-align: top;
 
   .title {
