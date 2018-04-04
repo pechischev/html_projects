@@ -67,6 +67,10 @@ class CardListView extends Component {
         }
     }
 
+    list(): CardList {
+        return this._cardList;
+    }
+
     id(): string {
         return this._cardList.id();
     }

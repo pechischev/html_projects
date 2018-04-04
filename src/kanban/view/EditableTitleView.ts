@@ -14,7 +14,6 @@ class EditableTitleView extends Component {
         this.addChild(this._title);
 
         this._textInput = new TextInput();
-        this._textInput.addClassNames('title');
         this._textInput.setVisible(false);
         this.addChild(this._textInput);
 

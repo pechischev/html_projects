@@ -40,11 +40,11 @@ class Component {
         return this._displayObject;
     }
 
-    addClassNames(classNames: string[]|string) {
+    addClassNames(classNames: any) {
         const classNameValues = (classNames instanceof Array && classNames.length) ? classNames : [classNames];
         for (const className of classNameValues)
         {
-            this._displayObject.classList.add(...className); // TODO: fix compiler error TS2345
+            this._displayObject.classList.add(className);
         }
 
     }

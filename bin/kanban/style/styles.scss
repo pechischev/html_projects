@@ -57,6 +57,7 @@
   border-radius: 6px;
   padding: 5px 10px 10px;
   vertical-align: top;
+  cursor: grab;
 
   .title {
     padding: 0 10px 10px;
@@ -83,6 +84,7 @@
   display: list-item;
   list-style: none;
   margin: 10px 0;
+  cursor: grab;
 
   .title {
     padding-top: 3px;
@@ -93,4 +95,10 @@
     right: 5px;
     top: 3px;
   }
+}
+
+.moving {
+  position: absolute;
+  cursor: grabbing;
+  z-index: 1000;
 }

@@ -10,6 +10,10 @@ class Coordinate {
     equals(coordinate: Coordinate): boolean {
         return (this.x == coordinate.x) && (this.y == coordinate.y);
     }
+
+    distance(coordinate: Coordinate): Coordinate {
+        return new Coordinate(this.x - coordinate.x, this.y - coordinate.y);
+    }
 }
 
-export = Coordinate;
+export default Coordinate;

@@ -15,7 +15,7 @@ class Dispatcher implements IDispatcher {
         this._listeners.push({callback, scope: scope});
     }
 
-    dispatch(args?: any) { // TODO: fix transfer arguments to function
+    dispatch(args?: any, ...otherArgs: any[]) { // TODO: fix transfer arguments to function
         for (let i = 0; i < this._listeners.length; ++i)
         {
             const obj = this._listeners[i];
@@ -23,7 +23,7 @@ class Dispatcher implements IDispatcher {
             {
                 continue;
             }
-            obj.callback(args);
+            obj.callback(args, ...otherArgs);
         }
     }
 
