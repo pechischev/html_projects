@@ -3,6 +3,7 @@ import CardList from '../model/CardList';
 import Card from '../model/Card';
 import CardView from './CardView';
 import CardController from '../controller/CardController';
+import CardMovementController from '../controller/CardMovementController';
 import Dispatcher from '../../common/event/Dispatcher';
 import EditableTitleView from './EditableTitleView';
 
@@ -14,6 +15,7 @@ class CardListView extends Component {
     private _itemsContainer: Component;
     private _removeEvent: Dispatcher;
     private _controller: CardController;
+    private _moveController: CardMovementController;
 
     constructor(cardList: CardList, controller: CardController) {
         super({className: 'cardlist'});
@@ -21,6 +23,7 @@ class CardListView extends Component {
         this._cardList = cardList;
 
         this._controller = controller;
+        this._moveController = new CardMovementController();
 
         this._cardsView = [];
         this._removeEvent = new Dispatcher();
@@ -80,6 +83,14 @@ class CardListView extends Component {
         view.removeCardEvent().addListener(() => {
             this._controller.removeCard(card);
             this._cardList.removeCard(card);
+        });
+        view.listen('mousedown', (event: MouseEvent) => {
+            if (event.defaultPrevented || view.editable())
+            {
+                return;
+            }
+            this._moveController.move(view, event);
+            event.preventDefault();
         });
         return view;
     }

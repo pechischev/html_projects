@@ -7,17 +7,12 @@
     ],
     "ban": false,
     "class-name": true,
-    "comment-format": [
-      true,
-      "check-space"
-    ],
     "curly": true,
     "eofline": false,
     "forin": true,
     "interface-name": [true, "always-prefix"],
     "jsdoc-format": true,
     "label-position": true,
-    "max-line-length": [ true, 120 ],
     "member-ordering": [
       true,
       "public-before-private",
@@ -25,6 +20,8 @@
       "variables-before-functions"
     ],
     "no-any": false,
+    "jsx-no-lambda": false,
+    "jsx-no-multiline-js": false,
     "no-arg": true,
     "no-bitwise": true,
     "no-console": [
@@ -53,7 +50,7 @@
       "check-catch",
       "check-whitespace"
     ],
-    "quotemark": [true, "single"],
+    "quotemark": [true, "single", "jsx-double"],
     "radix": true,
     "semicolon": [true, "always"],
     "switch-default": true,

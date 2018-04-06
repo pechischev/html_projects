@@ -46,7 +46,6 @@ class Component {
         {
             this._displayObject.classList.add(className);
         }
-
     }
 
     hasClassName(className: string): boolean {

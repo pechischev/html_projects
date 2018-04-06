@@ -21,7 +21,6 @@ class TextInput extends Component {
         this.listen('blur', () => this._blurEvent.dispatch());
         this.listen('focus', (event: Event) => {
             this._focusEvent.dispatch();
-            event.preventDefault();
         });
 
         if (placeholder)

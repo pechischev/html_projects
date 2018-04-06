@@ -9,36 +9,21 @@ class CardListPresenter {
 
     constructor(view: ApplicationView) {
         this._cardsList = [];
+        this._view = view;
 
         this._cardController = new CardController();
-
-        this._view = view;
-        this._view.setCardController(this._cardController);
-        this._view.addCardListEvent().addListener(() => this._createCardList());
-        this._view.removeListEvent().addListener((cardList: CardList) => {
-            this._removeCardList(cardList);
-        });
-        this._view.changeListPositionEvent().addListener((index: number, list: CardList) => {
-            this._insertCardList(list, index);
-        });
     }
 
-    private _createCardList() {
-        const cardList = new CardList();
-        this._insertCardList(cardList);
+    cardController(): CardController {
+        return this._cardController;
     }
 
-    private _insertCardList(list: CardList, position: number = this._cardsList.length) {
-        const index = this._getCardListIndexById(list.id());
-        if (index != -1)
-        {
-            this._cardsList.splice(index, 1);
-        }
-        this._cardsList.splice(position, 0, list);
-        this._view.render(this._cardsList);
+    appendList() {
+        const list = new CardList();
+        this.insertList(list);
     }
 
-    private _removeCardList(cardList: CardList) {
+    removeList(cardList: CardList) {
         const index = this._getCardListIndexById(cardList.id());
         if (index == -1)
         {
@@ -50,6 +35,16 @@ class CardListPresenter {
         {
             this._cardController.removeCard(card);
         }
+        this._view.render(this._cardsList);
+    }
+
+    insertList(list: CardList, position: number = this._cardsList.length) {
+        const index = this._getCardListIndexById(list.id());
+        if (index != -1)
+        {
+            this._cardsList.splice(index, 1);
+        }
+        this._cardsList.splice(position, 0, list);
         this._view.render(this._cardsList);
     }
 

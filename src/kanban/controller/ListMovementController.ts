@@ -5,7 +5,6 @@ import Dispatcher from '../../common/event/Dispatcher';
 
 class ListMovementController {
     private _listViews: Array<CardListView>;
-    private _baseContainer: Component;
     private _changeListPositionEvent: Dispatcher;
     private _startPosition: Coordinate|null;
     private _sourceIndex: number;
@@ -14,7 +13,6 @@ class ListMovementController {
 
     constructor(listViews: Array<CardListView>, baseContainer: Component) {
         this._listViews = listViews;
-        this._baseContainer = baseContainer;
         this._startPosition = null;
         this._index = -1;
 
@@ -53,13 +51,14 @@ class ListMovementController {
 
         if (this._index != this._sourceIndex && this._index != -1)
         {
-            this._changeListPositionEvent.dispatch(this._index,  this._selectedItemView.list());
+            this._changeListPositionEvent.dispatch(this._selectedItemView.list(), this._index);
         }
 
         event.preventDefault();
 
         this._index = -1;
         this._selectedItemView = null;
+        this._startPosition = null;
 
         document.onmousemove = null;
         document.onmouseup = null;
