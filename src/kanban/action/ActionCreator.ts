@@ -1,22 +1,26 @@
 import Action from './Action';
 import Card from '../model/Card';
-import { default as ListAction } from '../action/ListAction';
+import { default as Actions } from '../action/Actions';
 
 class ActionCreator {
-    static appendListAction(): Action {
-        return {type: ListAction.APPEND_LIST};
+    static appendActions(): Action {
+        return {type: Actions.APPEND_LIST};
     }
 
-    static removeListAction(id: string): Action {
-        return {type: ListAction.REMOVE_LIST, context: { id }};
+    static removeActions(id: string): Action {
+        return {type: Actions.REMOVE_LIST, context: { id }};
     }
 
     static appendCardAction(id: string): Action {
-        return {type: ListAction.APPEND_CARD, context: { id }};
+        return {type: Actions.APPEND_CARD, context: { id }};
     }
 
     static removeCardAction(listId: string, card: Card): Action {
-        return {type: ListAction.REMOVE_CARD, context: {id: listId, card}};
+        return {type: Actions.REMOVE_CARD, context: {id: listId, card}};
+    }
+
+    static authAction(email: string, password: string): Action {
+        return {type: Actions.AUTH, context: {email, password}};
     }
 }
 

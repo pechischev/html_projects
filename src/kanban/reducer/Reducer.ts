@@ -1,22 +1,24 @@
-import { default as ListAction } from '../action/ListAction';
+import { default as Actions } from '../action/Actions';
 import ListHelper from '../controller/ListHelper';
 import IStorableState from '../storage/IStorableState';
 import Action from '../action/Action';
 
-const LineReducer = (state: IStorableState = {lists: []}, action: Action) => {
+const Reducer = (state: IStorableState = {lists: []}, action: Action) => {
     const {type, context} = action;
     switch (type) {
-        case ListAction.APPEND_LIST:
+        case Actions.APPEND_LIST:
             return ListHelper.appendList(state);
-        case ListAction.APPEND_CARD:
+        case Actions.APPEND_CARD:
             return ListHelper.appendCardToList(state, context);
-        case ListAction.REMOVE_LIST:
+        case Actions.REMOVE_LIST:
             return ListHelper.removeList(state, context);
-        case ListAction.REMOVE_CARD:
+        case Actions.REMOVE_CARD:
             return ListHelper.removeCard(state, context);
+        case Actions.AUTH:
+            return ListHelper.auth(state, context);
         default:
             return state;
     }
 };
 
-export default LineReducer;
+export default Reducer;

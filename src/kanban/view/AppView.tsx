@@ -27,7 +27,7 @@ class AppView extends MemoryStorage {
     }
 
     private _appendList() {
-        this._storage.dispatch(ActionCreator.appendListAction());
+        this._storage.dispatch(ActionCreator.appendActions());
     }
 }
 

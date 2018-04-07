@@ -51,6 +51,11 @@
     min-height: 35px;
   }
 
+  .list-group {
+    max-height: 800px;
+    overflow: auto;
+  }
+
   .add-card {
     display: inline-block;
     position: relative;
@@ -77,6 +82,18 @@
 
   .remove-button {
     right: 5px;
+  }
+}
+
+.auth-form {
+  position: relative;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  form {
+    width: 500px;
+    margin: 0 auto;
   }
 }
 

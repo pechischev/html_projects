@@ -1,8 +1,15 @@
 import List from '../model/List';
 import Card from '../model/Card';
+import User from '../model/User';
 import IStorableState from '../storage/IStorableState';
 
 class ListHelper {
+    static auth(state: IStorableState, context: any): IStorableState {
+        const {email, password} = context;
+        state.user = new User(email, password);
+        return state;
+    }
+
     static appendList(state: IStorableState): IStorableState {
         state.lists.push(new List());
         return state;

@@ -38,7 +38,7 @@ class ListView extends MemoryStorage<IListViewProps, any> {
     }
 
     private _removeList() {
-        this._storage.dispatch(ActionCreator.removeListAction(this._list.id()));
+        this._storage.dispatch(ActionCreator.removeActions(this._list.id()));
     }
 
 }
