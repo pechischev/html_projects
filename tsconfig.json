@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es2015",
     "module": "commonjs",
+    "jsx": "react",
     "outDir": "build/js",
     "rootDir": "src",
     "allowSyntheticDefaultImports": true,
@@ -17,7 +18,8 @@
     },
     "types": [
       "react",
-      "react-native"
+      "react-dom",
+      "react-beautiful-dnd"
     ]
   }
 }
