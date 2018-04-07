@@ -1,14 +1,14 @@
 import AppView from './view/AppView';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import Store from './store/Store';
-import { default as listReducer } from './reducer/ListReducer';
+import Storage from './storage/Storage';
+import { default as ListReducer } from './reducer/ListReducer';
 
 class Application {
     constructor(container: HTMLElement) {
 
-        const store = new Store(listReducer);
-        ReactDOM.render(<AppView store={store}/>, container);
+        const storage = new Storage(ListReducer);
+        ReactDOM.render(<AppView storage={storage}/>, container);
     }
 
     start() {

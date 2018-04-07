@@ -1,42 +1,23 @@
 import * as React from 'react';
-import ListView from './ListView';
-import Store from '../store/Store';
-import CardList from '../model/CardList';
-import { default as ListAction } from '../action/ListAction';
+import ListView from './list/ListView';
+import List from '../model/List';
+import MemoryStorage from './memoryStorage/MemoryStorage';
+import IMemoryStorageProps from './memoryStorage/IMemoryStorageProps';
+import ActionCreator from '../action/ActionCreator';
 
-interface IAppViewProps {
-    store: Store;
-}
-
-class AppView extends React.Component<IAppViewProps, any> {
-    private _store: Store;
-    private _unsubscribeKey: string;
-
-    constructor(props: IAppViewProps) {
-        super();
-
-        this._store = props.store;
-    }
-
-    componentDidMount() {
-        this._unsubscribeKey = this._store.subscribe(() => this.forceUpdate());
-    }
-
-    componentWillUnmount() {
-        if (this._unsubscribeKey)
-        {
-            this._store.unsubscribeByKey(this._unsubscribeKey);
-        }
+class AppView extends MemoryStorage {
+    constructor(props: IMemoryStorageProps) {
+        super(props);
     }
 
     render() {
         return (
             <div id="container">
                 <div className="list-container row">
-                    {this._store.getState().lists.map((list: CardList) => {
+                    {this._storage.getState().lists.map((list: List) => {
                         return <ListView key={list.id()}
                                          list={list}
-                                         store={this._store}
+                                         storage={this._storage}
                         />;
                     })}
                     <button className="btn btn-default clickable" onClick={this._appendList.bind(this)}>Append list</button>
@@ -46,7 +27,7 @@ class AppView extends React.Component<IAppViewProps, any> {
     }
 
     private _appendList() {
-        this._store.dispatch({type: ListAction.APPEND_LIST});
+        this._storage.dispatch(ActionCreator.appendListAction());
     }
 }
 

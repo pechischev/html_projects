@@ -1,18 +1,29 @@
 import * as React from 'react';
+import BaseItem from '../model/BaseItem';
 
-type EditableContainerState = {
-    editable: boolean
-    title: string
-};
+interface IEditableContainerState {
+    editable: boolean;
+    title: string;
+}
 
-class EditableContainer extends React.Component<any, EditableContainerState> {
-    constructor(props: any) {
+interface IEditableContainerProps {
+    item: BaseItem;
+}
+
+class EditableContainer extends React.Component<IEditableContainerProps, IEditableContainerState> {
+    private _item: BaseItem;
+
+    constructor(props: IEditableContainerProps) {
         super();
+
+        this._item = props.item;
 
         this.state = {
             editable: false,
-            title: props.text
+            title: props.item.title()
         };
+
+        this._item.titleChangedEvent().addListener(this._updateTitle, this);
     }
 
     render () {
@@ -23,19 +34,26 @@ class EditableContainer extends React.Component<any, EditableContainerState> {
         );
     }
 
+    componentWillUnmount() {
+        this._item.titleChangedEvent().removeListener(this._updateTitle, this);
+    }
+
     private _toggleEditableState() {
         this.setState({
             editable: !this.state.editable,
         });
     }
 
+    private _updateTitle() {
+        this.setState({
+            title: this._item.title()
+        });
+    }
+
     private _onInput(event: Event) {
         if (event.target instanceof HTMLInputElement)
         {
-            const title = event.target.value;
-            this.setState({
-                title: title
-            });
+            this._item.setTitle(event.target.value);
         }
     }
 

@@ -1,7 +1,7 @@
 import Utils from '../../common/utils/Utils';
 import Dispatcher from '../../common/event/Dispatcher';
 
-class BaseItem { // TODO: rename class name
+class BaseItem {
     private _title: string;
     private _id: string;
     private _titleChangedEvent: Dispatcher;

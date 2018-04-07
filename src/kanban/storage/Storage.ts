@@ -1,7 +1,7 @@
 import IStorableState from './IStorableState';
 import Utils from '../../common/utils/Utils';
 
-class Store {
+class Storage {
     private _state: IStorableState;
     private _callbacks: Map<string, Function>;
     private _reducer: Function;
@@ -35,4 +35,4 @@ class Store {
     }
 }
 
-export default Store;
+export default Storage;

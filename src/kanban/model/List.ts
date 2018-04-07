@@ -4,7 +4,7 @@ import Dispatcher from '../../common/event/Dispatcher';
 
 const DEFAULT_LIST_TEXT = 'Input list name';
 
-class CardList extends BaseItem {
+class List extends BaseItem {
     private _cards: Array<Card>;
     private _changedCardsEvent: Dispatcher;
 
@@ -51,4 +51,4 @@ class CardList extends BaseItem {
     }
 }
 
-export default CardList;
+export default List;

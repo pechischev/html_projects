@@ -4,7 +4,7 @@ interface IDispatcher {
 
     dispatch(args?: any, ...otherArgs: any[]): void;
 
-    removeListener(callback: Function): void;
+    removeListener(callback: Function, scope?: any): void;
 }
 
 export default IDispatcher;

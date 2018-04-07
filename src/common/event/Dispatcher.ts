@@ -12,10 +12,10 @@ class Dispatcher implements IDispatcher {
         {
             return;
         }
-        this._listeners.push({callback, scope: scope});
+        this._listeners.push({callback, scope: scope || null});
     }
 
-    dispatch(args?: any, ...otherArgs: any[]) { // TODO: fix transfer arguments to function
+    dispatch(args?: any, ...otherArgs: any[]) {
         for (let i = 0; i < this._listeners.length; ++i)
         {
             const obj = this._listeners[i];
@@ -23,13 +23,14 @@ class Dispatcher implements IDispatcher {
             {
                 continue;
             }
-            obj.callback(args, ...otherArgs);
+            const params = [args, ...otherArgs];
+            obj.callback.apply(obj.scope, ...params);
         }
     }
 
-    removeListener(callback: Function) {
+    removeListener(callback: Function, scope?: any) {
        const index = this._listeners.findIndex((obj) => {
-           return obj.callback == callback;
+           return obj.callback == callback && obj.scope === scope;
        });
        if (index == -1)
        {

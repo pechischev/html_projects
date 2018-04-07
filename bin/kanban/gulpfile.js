@@ -33,8 +33,6 @@ gulp.task("build_ts", () => {
 
 gulp.task('build_js', (cb) => gulpSequence('tslint', 'build_ts', cb));
 
-gulp.task('test', () => lib.test());
-
 gulp.task('build_kanban', ['compile_css', 'build_js', 'test']);
 
 gulp.task('watch', () => {

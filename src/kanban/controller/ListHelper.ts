@@ -1,10 +1,10 @@
-import CardList from '../model/CardList';
+import List from '../model/List';
 import Card from '../model/Card';
-import IStorableState from '../store/IStorableState';
+import IStorableState from '../storage/IStorableState';
 
 class ListHelper {
     static appendList(state: IStorableState): IStorableState {
-        state.lists.push(new CardList());
+        state.lists.push(new List());
         return state;
     }
 
@@ -39,11 +39,11 @@ class ListHelper {
         return state;
     }
 
-    static getListIndexById(id: string, lists: Array<CardList>): number {
-        return lists.findIndex((listItem: CardList) => id == listItem.id());
+    static getListIndexById(id: string, lists: Array<List>): number {
+        return lists.findIndex((listItem: List) => id == listItem.id());
     }
 
-    static getListById(id: string, lists: Array<CardList>): CardList|undefined {
+    static getListById(id: string, lists: Array<List>): List|undefined {
         const index = this.getListIndexById(id, lists);
         if (index == -1)
         {
