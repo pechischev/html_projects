@@ -19,22 +19,34 @@ class CardView extends MemoryStorage<ICardViewProps, any> {
         return (
             <Draggable draggableId={this._card.id()} index={this.props.index}>
                 {(dragProvided, dragSnapshot) => {
+                    const draggablePropsStyle = dragProvided.draggableProps && dragProvided.draggableProps.style;
+                    const dragStyle = this._getItemStyle(dragSnapshot.isDragging, draggablePropsStyle);
                     return (
-                        <li className="list-group-item card"
-                            ref={dragProvided.innerRef}
-                            {...dragProvided.draggableProps}
-                            {...dragProvided.dragHandleProps}
-                        >
-                            <div className="title-container">
-                                <EditableContainer storage={this._storage} item={this._card}/>
-                                <span className="remove-button clickable" onClick={this._removeCard.bind(this)}>X</span>
-                            </div>
+                        <span>
+                            <li className="list-group-item card"
+                                ref={dragProvided.innerRef}
+                                {...dragProvided.draggableProps}
+                                {...dragProvided.dragHandleProps}
+                                style={{...dragStyle}}>
+                                <div className="title-container">
+                                    <EditableContainer storage={this._storage} item={this._card}/>
+                                    <span className="remove-button clickable" onClick={this._removeCard.bind(this)}>X</span>
+                                </div>
+                            </li>
                             {dragProvided.placeholder}
-                        </li>
+                        </span>
                     );
                 }}
             </Draggable>
         );
+    }
+
+    private _getItemStyle(isDragging: boolean, draggableStyle: any): Object {
+        return {
+            backgroundColor: isDragging ? '#fbfbbc' : '#fff',
+            ...draggableStyle,
+            margin: '0px 0px 7px 0px',
+        };
     }
 
     private _removeCard() {

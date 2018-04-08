@@ -23,38 +23,40 @@ class ListView extends MemoryStorage<IListViewProps, any> {
             <Draggable draggableId={this._list.id()} index={this.props.index}>
                 {(dragProvided, dragSnapshot) => {
                     return (
-                        <div className="cardlist"
-                             ref={dragProvided.innerRef}
-                             {...dragProvided.draggableProps}
-                             {...dragProvided.dragHandleProps}>
-                            <div className="title-container">
-                                <EditableContainer storage={this._storage} item={this._list}/>
-                                <span className="remove-button clickable" onClick={this._removeList.bind(this)}>X</span>
+                        <li className="list-item">
+                            <div className="cardlist"
+                                 ref={dragProvided.innerRef}
+                                 {...dragProvided.draggableProps}
+                                 {...dragProvided.dragHandleProps}>
+                                <div className="title-container">
+                                    <EditableContainer storage={this._storage} item={this._list}/>
+                                    <span className="remove-button clickable" onClick={this._removeList.bind(this)}>X</span>
+                                </div>
+                                <Droppable droppableId={this._list.id()} type={Config.CARD_TYPE}>
+                                    {(dropProvided) => {
+                                        return (
+                                            <div>
+                                                <ul className="list-group"
+                                                    ref={dropProvided.innerRef}
+                                                    {...dropProvided.droppableProps}>
+                                                    {this._list.cards().map((card: Card, index: number) => {
+                                                        return <CardView key={card.id()}
+                                                                         card={card}
+                                                                         storage={this._storage}
+                                                                         listId={this._list.id()}
+                                                                         index={index}
+                                                        />;
+                                                    })}
+                                                    {dropProvided.placeholder}
+                                                </ul>
+                                                <a className="add-card clickable" href="#" onClick={this._addCard.bind(this)}>Add card</a>
+                                            </div>
+                                        );
+                                    }}
+                                </Droppable>
                             </div>
-                            <Droppable droppableId={this._list.id()} type={Config.CARD_TYPE}>
-                                {(dropProvided, dropSnapshot) => {
-                                    return (
-                                        <div>
-                                            <ul className="list-group"
-                                                ref={dropProvided.innerRef}
-                                                {...dropProvided.droppableProps}>
-                                                {this._list.cards().map((card: Card, index: number) => {
-                                                    return <CardView key={card.id()}
-                                                                     card={card}
-                                                                     storage={this._storage}
-                                                                     listId={this._list.id()}
-                                                                     index={index}
-                                                    />;
-                                                })}
-                                                {dropProvided.placeholder}
-                                            </ul>
-                                            <a className="add-card clickable" href="#" onClick={this._addCard.bind(this)}>Add card</a>
-                                        </div>
-                                    );
-                                }}
-                            </Droppable>
                             {dragProvided.placeholder}
-                        </div>
+                        </li>
                     );
                 }}
             </Draggable>

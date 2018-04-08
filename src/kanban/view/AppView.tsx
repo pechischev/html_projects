@@ -22,9 +22,11 @@ class AppView extends MemoryStorage {
                 <DragDropContext onDragEnd={this._onDragEnd.bind(this)}>
                     <div>
                         <Droppable droppableId="list-container" type={Config.LIST_TYPE} direction='horizontal'>
-                            {(dropProvided, dropSnapshot) => {
+                            {(dropProvided) => {
                                 return (
-                                    <div className="list-container row" ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
+                                    <ul className="list-container row"
+                                         ref={dropProvided.innerRef}
+                                         {...dropProvided.droppableProps}>
                                         {this._storage.getState().lists.map((list: List, index) => {
                                             return <ListView key={list.id()}
                                                              list={list}
@@ -33,7 +35,7 @@ class AppView extends MemoryStorage {
                                             />;
                                         })}
                                         {dropProvided.placeholder}
-                                    </div>
+                                    </ul>
                                 );
                             }}
                         </Droppable>
