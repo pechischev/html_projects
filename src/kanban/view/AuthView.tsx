@@ -3,6 +3,7 @@ import MemoryStorage from './memoryStorage/MemoryStorage';
 import IMemoryStorageProps from './memoryStorage/IMemoryStorageProps';
 import ActionCreator from '../action/ActionCreator';
 import Message from '../message/Message';
+import Sha1Crypt from '../crypt/Sha1Crypt';
 
 class AuthView extends MemoryStorage {
     private _refEmail: HTMLInputElement;
@@ -45,7 +46,7 @@ class AuthView extends MemoryStorage {
 
         if (email && password)
         {
-            this._storage.dispatch(ActionCreator.authAction(email, password));
+            this._storage.dispatch(ActionCreator.authAction(email, Sha1Crypt.encode(password)));
         }
         else
         {
