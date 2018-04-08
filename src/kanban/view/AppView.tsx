@@ -4,7 +4,7 @@ import List from '../model/List';
 import MemoryStorage from './memoryStorage/MemoryStorage';
 import IMemoryStorageProps from './memoryStorage/IMemoryStorageProps';
 import ActionCreator from '../action/ActionCreator';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 import Config from '../config/Config';
 
 class AppView extends MemoryStorage {
@@ -20,13 +20,23 @@ class AppView extends MemoryStorage {
                     <button className="btn btn-primary" onClick={this._appendList.bind(this)}>Append list</button>
                 </div>
                 <DragDropContext onDragEnd={this._onDragEnd.bind(this)}>
-                    <div className="list-container row">
-                        {this._storage.getState().lists.map((list: List) => {
-                            return <ListView key={list.id()}
-                                             list={list}
-                                             storage={this._storage}
-                            />;
-                        })}
+                    <div>
+                        <Droppable droppableId="list-container" type={Config.LIST_TYPE} direction='horizontal'>
+                            {(dropProvided, dropSnapshot) => {
+                                return (
+                                    <div className="list-container row" ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
+                                        {this._storage.getState().lists.map((list: List, index) => {
+                                            return <ListView key={list.id()}
+                                                             list={list}
+                                                             storage={this._storage}
+                                                             index={index}
+                                            />;
+                                        })}
+                                        {dropProvided.placeholder}
+                                    </div>
+                                );
+                            }}
+                        </Droppable>
                     </div>
                 </DragDropContext>
             </div>
@@ -58,7 +68,8 @@ class AppView extends MemoryStorage {
         }
         else if (type == Config.LIST_TYPE)
         {
-
+            const context = {listId: result.draggableId, oldIndex: source.index, newIndex: destination.index};
+            this._storage.dispatch(ActionCreator.moveListAction(context));
         }
     }
 }

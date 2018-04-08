@@ -21,7 +21,9 @@ const Reducer = (state: IStorableState = {lists: []}, action: Action) => {
         case ApplicationAction.UPDATE_ITEM:
             return state;
         case ApplicationAction.MOVE_CARD:
-            return ListHelper.moveItem(state, context);
+            return ListHelper.moveCard(state, context);
+        case ApplicationAction.MOVE_LIST:
+            return ListHelper.moveList(state, context);
         default:
             return state;
     }

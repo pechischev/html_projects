@@ -44,7 +44,14 @@ class ListHelper { // TODO: rename to ApplicationHelper
         return state;
     }
 
-    static moveItem(state: IStorableState, context: {destination: DraggableLocation, source: DraggableLocation}): IStorableState {
+    static moveList(state: IStorableState, context: any): IStorableState {
+        const {listId, oldIndex, newIndex} = context;
+        let lists = state.lists.slice();
+        state.lists = ArrayUtils.replacePositionTo(lists, oldIndex, newIndex);
+        return state;
+    }
+
+    static moveCard(state: IStorableState, context: {destination: DraggableLocation, source: DraggableLocation}): IStorableState {
         const sourceListId = context.source.droppableId;
         const oldIndex = context.source.index;
 

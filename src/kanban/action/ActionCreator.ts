@@ -35,6 +35,10 @@ class ActionCreator {
     static moveCardAction(destination: DraggableLocation, source: DraggableLocation): Action {
         return {type: ApplicationAction.MOVE_CARD, context: {destination, source}};
     }
+
+    static moveListAction(context: {listId: string, oldIndex: number, newIndex: number}): Action {
+        return {type: ApplicationAction.MOVE_LIST, context};
+    }
 }
 
 export default ActionCreator;
