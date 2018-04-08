@@ -4,19 +4,41 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Storage from './storage/Storage';
 import { default as Reducer } from './reducer/Reducer';
+import Serializer from './controller/Serializer';
 
 class Application {
+    private _storage: Storage;
+    private _serializer: Serializer;
+    private _container: HTMLElement;
+
     constructor(container: HTMLElement) {
 
-        const storage = new Storage(Reducer);
-        storage.subscribe(() => {
-            const state = storage.getState();
-            if (state.user)
-            {
-                ReactDOM.render(<AppView storage={storage}/>, container);
-            }
-        });
-        ReactDOM.render(<AuthView storage={storage}/>, container);
+        this._container = container;
+        this._serializer = new Serializer();
+
+        this._storage = new Storage(Reducer);
+        this._storage.subscribe(this._changeView.bind(this));
+        this._storage.subscribe(this._save.bind(this));
+        this._changeView();
+
+        this._serializer.init();
+    }
+
+    private _changeView() { // TODO: rename
+        const state = this._storage.getState();
+        if (state.user)
+        {
+            ReactDOM.render(<AppView storage={this._storage}/>, this._container);
+        }
+        else
+        {
+            ReactDOM.render(<AuthView storage={this._storage}/>, this._container);
+        }
+    }
+
+    private _save() {
+        const state = this._storage.getState();
+        this._serializer.save(state);
     }
 }
 

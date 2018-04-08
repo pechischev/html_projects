@@ -13,6 +13,10 @@ class AppView extends MemoryStorage {
     render() {
         return (
             <div id="container">
+                <div className="panel">
+                    <button className="btn btn-primary" onClick={this._exit.bind(this)}>Exit</button>
+                    <button className="btn btn-primary" onClick={this._appendList.bind(this)}>Append list</button>
+                </div>
                 <div className="list-container row">
                     {this._storage.getState().lists.map((list: List) => {
                         return <ListView key={list.id()}
@@ -20,10 +24,13 @@ class AppView extends MemoryStorage {
                                          storage={this._storage}
                         />;
                     })}
-                    <button className="btn btn-default clickable" onClick={this._appendList.bind(this)}>Append list</button>
                 </div>
             </div>
         );
+    }
+
+    private _exit() {
+        this._storage.dispatch(ActionCreator.exitAction());
     }
 
     private _appendList() {

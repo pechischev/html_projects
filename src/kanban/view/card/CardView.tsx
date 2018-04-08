@@ -18,7 +18,7 @@ class CardView extends MemoryStorage<ICardViewProps, any> {
         return (
             <li className="list-group-item card">
                 <div className="title-container">
-                    <EditableContainer item={this._card}/>
+                    <EditableContainer storage={this._storage} item={this._card}/>
                     <span className="remove-button clickable" onClick={this._removeCard.bind(this)}>X</span>
                 </div>
             </li>

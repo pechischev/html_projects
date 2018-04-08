@@ -20,7 +20,7 @@ class ListView extends MemoryStorage<IListViewProps, any> {
         return (
             <div className="cardlist">
                 <div className="title-container">
-                    <EditableContainer item={this._list}/>
+                    <EditableContainer storage={this._storage} item={this._list}/>
                     <span className="remove-button clickable" onClick={this._removeList.bind(this)}>X</span>
                 </div>
                 <ul className="list-group">

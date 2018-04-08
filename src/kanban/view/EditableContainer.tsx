@@ -1,20 +1,23 @@
 import * as React from 'react';
 import BaseItem from '../model/BaseItem';
+import MemoryStorage from './memoryStorage/MemoryStorage';
+import IMemoryStorageProps from './memoryStorage/IMemoryStorageProps';
+import ActionCreator from '../action/ActionCreator';
 
 interface IEditableContainerState {
     editable: boolean;
     title: string;
 }
 
-interface IEditableContainerProps {
+interface IEditableContainerProps extends IMemoryStorageProps {
     item: BaseItem;
 }
 
-class EditableContainer extends React.Component<IEditableContainerProps, IEditableContainerState> {
+class EditableContainer extends MemoryStorage<IEditableContainerProps, IEditableContainerState> {
     private _item: BaseItem;
 
     constructor(props: IEditableContainerProps) {
-        super();
+        super(props);
 
         this._item = props.item;
 
@@ -35,6 +38,7 @@ class EditableContainer extends React.Component<IEditableContainerProps, IEditab
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         this._item.titleChangedEvent().removeListener(this._updateTitle, this);
     }
 
@@ -48,6 +52,7 @@ class EditableContainer extends React.Component<IEditableContainerProps, IEditab
         this.setState({
             title: this._item.title()
         });
+        this._storage.dispatch(ActionCreator.updateItemAction());
     }
 
     private _onInput(event: Event) {

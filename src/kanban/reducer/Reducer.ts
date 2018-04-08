@@ -1,4 +1,4 @@
-import { default as Actions } from '../action/Actions';
+import { default as ApplicationAction } from '../action/ApplicationAction';
 import ListHelper from '../controller/ListHelper';
 import IStorableState from '../storage/IStorableState';
 import Action from '../action/Action';
@@ -6,16 +6,20 @@ import Action from '../action/Action';
 const Reducer = (state: IStorableState = {lists: []}, action: Action) => {
     const {type, context} = action;
     switch (type) {
-        case Actions.APPEND_LIST:
+        case ApplicationAction.APPEND_LIST:
             return ListHelper.appendList(state);
-        case Actions.APPEND_CARD:
+        case ApplicationAction.APPEND_CARD:
             return ListHelper.appendCardToList(state, context);
-        case Actions.REMOVE_LIST:
+        case ApplicationAction.REMOVE_LIST:
             return ListHelper.removeList(state, context);
-        case Actions.REMOVE_CARD:
+        case ApplicationAction.REMOVE_CARD:
             return ListHelper.removeCard(state, context);
-        case Actions.AUTH:
+        case ApplicationAction.AUTH:
             return ListHelper.auth(state, context);
+        case ApplicationAction.EXIT_FROM_SESSION:
+            return ListHelper.exitFromSession(state);
+        case ApplicationAction.UPDATE_ITEM:
+            return state;
         default:
             return state;
     }
