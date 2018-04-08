@@ -1,13 +1,12 @@
 import BaseItem from './BaseItem';
 import Card from './Card';
-
-const DEFAULT_LIST_TEXT = 'Input list name';
+import Message from '../message/Message';
 
 class List extends BaseItem {
     private _cards: Array<Card>;
 
     constructor(title?: string, id?: string) {
-        super((title || DEFAULT_LIST_TEXT), id);
+        super((title || Message.DEFAULT_LIST_TEXT), id);
         this._cards = [];
     }
 

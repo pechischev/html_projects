@@ -17,14 +17,14 @@ class Application {
         this._serializer = new Serializer();
 
         this._storage = new Storage(Reducer);
-        this._storage.subscribe(this._changeView.bind(this));
+        this._storage.subscribe(this._invalidate.bind(this));
         this._storage.subscribe(this._save.bind(this));
-        this._changeView();
+        this._invalidate();
 
         this._serializer.init();
     }
 
-    private _changeView() { // TODO: rename
+    private _invalidate() {
         const state = this._storage.getState();
         if (state.user)
         {

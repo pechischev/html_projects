@@ -24,7 +24,7 @@ class AppView extends MemoryStorage {
                         <Droppable droppableId="list-container" type={Config.LIST_TYPE} direction='horizontal'>
                             {(dropProvided) => {
                                 return (
-                                    <ul className="list-container row"
+                                    <ul className="list-container"
                                          ref={dropProvided.innerRef}
                                          {...dropProvided.droppableProps}>
                                         {this._storage.getState().lists.map((list: List, index) => {
@@ -60,7 +60,8 @@ class AppView extends MemoryStorage {
         {
             return;
         }
-        if (destination.droppableId == source.droppableId && destination.index == source.index)
+        const staysOldPosition = destination.droppableId == source.droppableId && destination.index == source.index;
+        if (staysOldPosition)
         {
             return;
         }

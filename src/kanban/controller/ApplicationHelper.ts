@@ -6,12 +6,12 @@ import UserDataLoader from './Loader';
 import { DraggableLocation } from 'react-beautiful-dnd';
 import ArrayUtils from '../../common/utils/ArrayUtils';
 import Config from '../config/Config';
+import Message from '../message/Message';
 
-class ListHelper { // TODO: rename to ApplicationHelper
+class ApplicationHelper {
     static auth(state: IStorableState, context: {email: string, password: string}): IStorableState {
         const {email, password} = context;
         state.error = null;
-
         if (email.match(Config.EMAIL_PATTERN))
         {
             if (!UserDataLoader.userExists(email))
@@ -22,7 +22,7 @@ class ListHelper { // TODO: rename to ApplicationHelper
             const data = UserDataLoader.getUserData(email, password);
             if (!data)
             {
-                state.error = new Error("Error! Check the correctness of the entered data");
+                state.error = new Error(Message.INVALID_LOGIN_DATA);
             }
             else
             {
@@ -33,7 +33,7 @@ class ListHelper { // TODO: rename to ApplicationHelper
         }
         else
         {
-            state.error = new Error("Error! Email is not correct. Please enter the email again");
+            state.error = new Error(Message.INCORRECT_EMAIL);
         }
         return state;
     }
@@ -45,7 +45,7 @@ class ListHelper { // TODO: rename to ApplicationHelper
     }
 
     static moveList(state: IStorableState, context: any): IStorableState {
-        const {listId, oldIndex, newIndex} = context;
+        const {oldIndex, newIndex} = context;
         let lists = state.lists.slice();
         state.lists = ArrayUtils.replacePositionTo(lists, oldIndex, newIndex);
         return state;
@@ -129,4 +129,4 @@ class ListHelper { // TODO: rename to ApplicationHelper
     }
 }
 
-export default ListHelper;
+export default ApplicationHelper;

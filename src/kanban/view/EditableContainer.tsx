@@ -62,6 +62,14 @@ class EditableContainer extends MemoryStorage<IEditableContainerProps, IEditable
         }
     }
 
+    private _onFocus(event: Event) {
+        const element = event.target;
+        if (element instanceof HTMLInputElement)
+        {
+            element.selectionStart = element.value.length;
+        }
+    }
+
     private _inputElement() {
         return (
             <input type="text"
@@ -69,6 +77,7 @@ class EditableContainer extends MemoryStorage<IEditableContainerProps, IEditable
                    onChange={this._onInput.bind(this)}
                    onBlur={this._toggleEditableState.bind(this)}
                    value={this.state.title}
+                   onFocus={this._onFocus.bind(this)}
                    autoFocus
             />
         );

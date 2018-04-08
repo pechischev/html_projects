@@ -1,10 +1,15 @@
 import List from '../model/List';
 import Card from '../model/Card';
 import User from '../model/User';
+import Config from '../config/Config';
 
 interface IUserData {
     user: User;
     lists: Array<List>;
+}
+
+function getStorage(): any {
+    return localStorage || Storage;
 }
 
 class UserDataLoader {
@@ -23,7 +28,7 @@ class UserDataLoader {
     }
 
     static getUserData(email: string, password: string): any {
-        const data = JSON.parse(localStorage.getItem("trello"));
+        const data = JSON.parse(getStorage().getItem(Config.APP_NAME));
         if (!data)
         {
             return null;
@@ -33,7 +38,7 @@ class UserDataLoader {
     }
 
     static userExists(email: string): boolean {
-        const data = JSON.parse(localStorage.getItem("trello"));
+        const data = JSON.parse(getStorage().getItem(Config.APP_NAME));
         if (!data)
         {
             return false;
