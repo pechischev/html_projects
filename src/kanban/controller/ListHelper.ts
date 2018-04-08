@@ -3,14 +3,16 @@ import Card from '../model/Card';
 import User from '../model/User';
 import IStorableState from '../storage/IStorableState';
 import UserDataLoader from './Loader';
+import { DraggableLocation } from 'react-beautiful-dnd';
+import ArrayUtils from '../../common/utils/ArrayUtils';
+import Config from '../config/Config';
 
 class ListHelper { // TODO: rename to ApplicationHelper
     static auth(state: IStorableState, context: {email: string, password: string}): IStorableState {
         const {email, password} = context;
         state.error = null;
 
-        const pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-        if (email.match(pattern)) // TODO: get list users and check on equals
+        if (email.match(Config.EMAIL_PATTERN))
         {
             if (!UserDataLoader.userExists(email))
             {
@@ -39,6 +41,34 @@ class ListHelper { // TODO: rename to ApplicationHelper
     static exitFromSession(state: IStorableState) {
         state.user = null;
         state.lists = [];
+        return state;
+    }
+
+    static moveItem(state: IStorableState, context: {destination: DraggableLocation, source: DraggableLocation}): IStorableState {
+        const sourceListId = context.source.droppableId;
+        const oldIndex = context.source.index;
+
+        const targetListId = context.destination.droppableId;
+        const newIndex = context.destination.index;
+
+        const lists = state.lists.slice();
+        const sourceListIndex = lists.findIndex((list: List) => list.id() == sourceListId);
+        const currentList = lists[sourceListIndex];
+
+        if (sourceListId == targetListId)
+        {
+            const cards = ArrayUtils.replacePositionTo(currentList.cards(), oldIndex, newIndex);
+            currentList.setCards(cards);
+        }
+        else
+        {
+            const targetListIndex = lists.findIndex((list: List) => list.id() == targetListId);
+            const card = currentList.cards()[oldIndex];
+            currentList.removeCard(card);
+            lists[targetListIndex].insertCardTo(card, newIndex);
+        }
+
+        state.lists = lists;
         return state;
     }
 

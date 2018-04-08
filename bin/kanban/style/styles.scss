@@ -15,6 +15,11 @@
   padding: 10px 20px;
 }
 
+.centered {
+  display: block;
+  margin: 0 auto;
+}
+
 .clickable {
   opacity: 1;
 
@@ -101,7 +106,6 @@
 
   form {
     width: 500px;
-    margin: 0 auto;
   }
 }
 

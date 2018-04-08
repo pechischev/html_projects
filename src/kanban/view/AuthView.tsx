@@ -18,23 +18,21 @@ class AuthView extends MemoryStorage {
         const error = this._storage.getState().error;
         return (
             <div className="auth-form row ">
-                <form>
+                <form className="centered">
                     {error ? (<div className="alert alert-danger" role="alert">{error.message}</div>) : null}
                     <div className="form-group">
-                        <label htmlFor="inputEmail3" className="col-sm-2 control-label" >Email</label>
                         <div className="col-sm-12">
                             <input type="email" className="form-control" placeholder="Email" required ref={(input: HTMLInputElement) => this._refEmail = input} />
                         </div>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="inputPassword3" className="col-sm-2 control-label">Password</label>
                         <div className="col-sm-12">
                             <input type="password" className="form-control" placeholder="Password" required ref={(input: HTMLInputElement) => this._refPassword = input} />
                         </div>
                     </div>
                     <div className="form-group">
                         <div className="col-sm-offset-2 col-sm-10">
-                            <button className="btn btn-primary" onClick={this._authorization.bind(this)}>Login</button>
+                            <button className="btn btn-primary centered" onClick={this._authorization.bind(this)}>Login</button>
                         </div>
                     </div>
                 </form>
@@ -43,8 +41,9 @@ class AuthView extends MemoryStorage {
     }
 
     private _authorization() {
-        const email = this._refEmail.value;
-        const password = this._refPassword.value;
+        // TODO: retrieve after realization
+        const email = "temp1@gmail.com"; //this._refEmail.value;
+        const password = "1"; //this._refPassword.value;
 
         if (email && password)
         {

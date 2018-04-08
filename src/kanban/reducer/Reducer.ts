@@ -1,4 +1,4 @@
-import { default as ApplicationAction } from '../action/ApplicationAction';
+import ApplicationAction from '../action/ApplicationAction';
 import ListHelper from '../controller/ListHelper';
 import IStorableState from '../storage/IStorableState';
 import Action from '../action/Action';
@@ -20,6 +20,8 @@ const Reducer = (state: IStorableState = {lists: []}, action: Action) => {
             return ListHelper.exitFromSession(state);
         case ApplicationAction.UPDATE_ITEM:
             return state;
+        case ApplicationAction.MOVE_CARD:
+            return ListHelper.moveItem(state, context);
         default:
             return state;
     }

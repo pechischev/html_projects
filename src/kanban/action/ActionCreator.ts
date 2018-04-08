@@ -1,6 +1,7 @@
 import Action from './Action';
 import Card from '../model/Card';
-import { default as ApplicationAction } from '../action/ApplicationAction';
+import ApplicationAction from '../action/ApplicationAction';
+import { DraggableLocation } from 'react-beautiful-dnd';
 
 class ActionCreator {
     static appendActions(): Action {
@@ -29,6 +30,10 @@ class ActionCreator {
 
     static updateItemAction(): Action {
         return {type: ApplicationAction.UPDATE_ITEM};
+    }
+
+    static moveCardAction(destination: DraggableLocation, source: DraggableLocation): Action {
+        return {type: ApplicationAction.MOVE_CARD, context: {destination, source}};
     }
 }
 

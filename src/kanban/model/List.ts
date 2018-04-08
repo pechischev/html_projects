@@ -1,31 +1,30 @@
 import BaseItem from './BaseItem';
 import Card from './Card';
-import Dispatcher from '../../common/event/Dispatcher';
 
 const DEFAULT_LIST_TEXT = 'Input list name';
 
 class List extends BaseItem {
     private _cards: Array<Card>;
-    private _changedCardsEvent: Dispatcher;
 
     constructor(title?: string, id?: string) {
         super((title || DEFAULT_LIST_TEXT), id);
         this._cards = [];
-
-        this._changedCardsEvent = new Dispatcher();
     }
 
-    changedCardsEvent(): Dispatcher {
-        return this._changedCardsEvent;
+    setCards(cards: Array<Card>) {
+        this._cards = cards;
     }
 
     appendCard(card: Card) {
+        this.insertCardTo(card);
+    }
+
+    insertCardTo(card: Card, index: number = this._cards.length) {
         if (this._hasCard(card))
         {
             return;
         }
-        this._cards.push(card);
-        this._changedCardsEvent.dispatch();
+        this._cards.splice(index, 0, card);
     }
 
     removeCard(card: Card) {
@@ -35,7 +34,6 @@ class List extends BaseItem {
         }
         const index = this._getCardIndex(card);
         this._cards.splice(index, 1);
-        this._changedCardsEvent.dispatch();
     }
 
     cards(): Array<Card> {

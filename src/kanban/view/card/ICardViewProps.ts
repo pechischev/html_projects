@@ -3,6 +3,7 @@ import Card from '../../model/Card';
 
 interface ICardViewProps extends IMemoryStorageProps {
     card: Card;
+    index: number;
     listId: string;
 }
 
