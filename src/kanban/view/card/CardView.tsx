@@ -15,7 +15,7 @@ class CardView extends MemoryStorage<ICardViewProps, any> {
         this._card = props.card;
     }
 
-    render() {
+    render(): any {
         return (
             <Draggable draggableId={this._card.id()} index={this.props.index}>
                 {(dragProvided, dragSnapshot) => {

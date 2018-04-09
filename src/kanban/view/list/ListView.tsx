@@ -18,7 +18,7 @@ class ListView extends MemoryStorage<IListViewProps, any> {
         this._list = props.list;
     }
 
-    render() {
+    render(): any {
         return (
             <Draggable draggableId={this._list.id()} index={this.props.index}>
                 {(dragProvided, dragSnapshot) => {

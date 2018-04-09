@@ -12,7 +12,7 @@ class AppView extends MemoryStorage {
         super(props);
     }
 
-    render() {
+    render(): any {
         return (
             <div id="container">
                 <div className="panel">

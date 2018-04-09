@@ -59,7 +59,7 @@ class ApplicationHelper {
         const newIndex = context.destination.index;
 
         const lists = state.lists.slice();
-        const sourceListIndex = lists.findIndex((list: List) => list.id() == sourceListId);
+        const sourceListIndex = ArrayUtils.findIndex(lists, (list: List) => list.id() == sourceListId);
         const currentList = lists[sourceListIndex];
 
         if (sourceListId == targetListId)
@@ -69,7 +69,7 @@ class ApplicationHelper {
         }
         else
         {
-            const targetListIndex = lists.findIndex((list: List) => list.id() == targetListId);
+            const targetListIndex = ArrayUtils.findIndex(lists, (list: List) => list.id() == targetListId);
             const card = currentList.cards()[oldIndex];
             currentList.removeCard(card);
             lists[targetListIndex].insertCardTo(card, newIndex);
@@ -116,7 +116,7 @@ class ApplicationHelper {
     }
 
     static getListIndexById(id: string, lists: Array<List>): number {
-        return lists.findIndex((listItem: List) => id == listItem.id());
+        return ArrayUtils.findIndex(lists, (listItem: List) => id == listItem.id());
     }
 
     static getListById(id: string, lists: Array<List>): List|undefined {

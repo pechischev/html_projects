@@ -1,6 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es5",
+    "lib": [
+      "ES5",
+      "ES2015",
+      "ES6",
+      "DOM",
+      "DOM.Iterable",
+      "ScriptHost"
+    ],
     "module": "commonjs",
     "jsx": "react",
     "outDir": "build/js",
@@ -12,6 +20,7 @@
     "preserveConstEnums": true,
     "allowJs": true,
     "sourceMap": true,
+    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "*": ["./src/*"]

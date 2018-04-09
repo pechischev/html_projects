@@ -2,14 +2,12 @@ import List from '../model/List';
 import Card from '../model/Card';
 import User from '../model/User';
 import Config from '../config/Config';
+import ArrayUtils from '../../common/utils/ArrayUtils';
+import Utils from '../../common/utils/Utils';
 
 interface IUserData {
     user: User;
     lists: Array<List>;
-}
-
-function getStorage(): any {
-    return localStorage || Storage;
 }
 
 class UserDataLoader {
@@ -28,22 +26,22 @@ class UserDataLoader {
     }
 
     static getUserData(email: string, password: string): any {
-        const data = JSON.parse(getStorage().getItem(Config.APP_NAME));
+        const data = JSON.parse(Utils.getStorage().getItem(Config.APP_NAME));
         if (!data)
         {
             return null;
         }
 
-        return data.find((dataItem: any) => (dataItem.user.email === email && dataItem.user.password == password));
+        return ArrayUtils.find(data, (dataItem: any) => (dataItem.user.email === email && dataItem.user.password == password));
     }
 
     static userExists(email: string): boolean {
-        const data = JSON.parse(getStorage().getItem(Config.APP_NAME));
-        if (!data)
+        const data = JSON.parse(Utils.getStorage().getItem(Config.APP_NAME));
+        if (!data.length)
         {
             return false;
         }
-        return !!data.find((dataItem: any) => (dataItem.user.email === email));
+        return !!ArrayUtils.find(data, (dataItem: any) => (dataItem.user.email === email));
     }
 }
 

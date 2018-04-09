@@ -1,4 +1,5 @@
 import IDispatcher from './IDispatcher';
+import ArrayUtils from '../../common/utils/ArrayUtils';
 
 class Dispatcher implements IDispatcher {
     private _listeners: Array<{callback: Function, scope?: any}>;
@@ -29,7 +30,7 @@ class Dispatcher implements IDispatcher {
     }
 
     removeListener(callback: Function, scope?: any) {
-       const index = this._listeners.findIndex((obj) => {
+       const index = ArrayUtils.findIndex(this._listeners, (obj: any) => {
            return obj.callback == callback && obj.scope === scope;
        });
        if (index == -1)
@@ -40,7 +41,7 @@ class Dispatcher implements IDispatcher {
     }
 
     private _hasListener(callback: Function): boolean {
-        return !!this._listeners.find((obj) => {
+        return !!ArrayUtils.find(this._listeners, (obj: any) => {
             return obj.callback == callback;
         });
     }

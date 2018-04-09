@@ -3,6 +3,8 @@ import List from '../model/List';
 import Card from '../model/Card';
 import User from '../model/User';
 import Config from '../config/Config';
+import ArrayUtils from '../../common/utils/ArrayUtils';
+import Utils from '../../common/utils/Utils';
 
 class Serializer {
     private _data: Array<any>;
@@ -16,7 +18,7 @@ class Serializer {
         const data = this._getDataFromLocaleStorage();
         if (!data)
         {
-            this._getStorage().setItem(Config.APP_NAME, JSON.stringify([]));
+            Utils.getStorage().setItem(Config.APP_NAME, JSON.stringify([]));
         }
     }
 
@@ -31,7 +33,7 @@ class Serializer {
             lists: this._serializeLists(state.lists)
         };
 
-        const currentUser = data.find((dataItem: any) => (dataItem.user.email === storageData.user.email));
+        const currentUser = ArrayUtils.find(data, (dataItem: any) => (dataItem.user.email === storageData.user.email));
         if (!currentUser)
         {
             data.push(storageData);
@@ -41,7 +43,7 @@ class Serializer {
             currentUser.lists = storageData.lists;
         }
 
-        this._getStorage().setItem(Config.APP_NAME, JSON.stringify(data));
+        Utils.getStorage().setItem(Config.APP_NAME, JSON.stringify(data));
     }
 
     private _serializeUser(user: User): any {
@@ -80,11 +82,7 @@ class Serializer {
     }
 
     private _getDataFromLocaleStorage(): any {
-        return JSON.parse(this._getStorage().getItem(Config.APP_NAME));
-    }
-
-    private _getStorage(): any {
-        return localStorage || Storage;
+        return JSON.parse(Utils.getStorage().getItem(Config.APP_NAME));
     }
 }
 

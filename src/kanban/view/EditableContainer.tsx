@@ -29,7 +29,7 @@ class EditableContainer extends MemoryStorage<IEditableContainerProps, IEditable
         this._item.titleChangedEvent().addListener(this._updateTitle, this);
     }
 
-    render () {
+    render(): any {
         return (
             <div className="title-container">
                 {this.state.editable ? this._inputElement() : this._titleElement()}
@@ -70,7 +70,7 @@ class EditableContainer extends MemoryStorage<IEditableContainerProps, IEditable
         }
     }
 
-    private _inputElement() {
+    private _inputElement(): any {
         return (
             <input type="text"
                    className="title form-control form-control-sm"
@@ -83,7 +83,7 @@ class EditableContainer extends MemoryStorage<IEditableContainerProps, IEditable
         );
     }
 
-    private _titleElement() {
+    private _titleElement(): any {
         return (
             <div className="title form-control-sm" onClick={this._toggleEditableState.bind(this)}>{this.state.title}</div>
         );
