@@ -22,7 +22,7 @@ class AuthView extends MemoryStorage {
         const error = this._storage.getState().error || this._error;
         this._error = null;
         return (
-            <div className="auth-form">
+            <div className="auth-form centered">
                 <div className="centered">
                     {error ? (<div className="alert alert-danger" role="alert">{error.message}</div>) : null}
                     <span className="help-block">{Message.AUTH_TEXT}</span>
