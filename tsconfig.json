@@ -12,7 +12,6 @@
     "module": "commonjs",
     "jsx": "react",
     "outDir": "build/js",
-    "rootDir": "src",
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
@@ -30,5 +29,9 @@
       "react-dom",
       "react-beautiful-dnd"
     ]
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "bin"
+  ]
 }

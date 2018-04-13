@@ -1,10 +1,10 @@
-import IStorableState from '../storage/IStorableState';
-import List from '../model/List';
-import Card from '../model/Card';
-import User from '../model/User';
-import Config from '../config/Config';
-import ArrayUtils from '../../common/utils/ArrayUtils';
-import Utils from '../../common/utils/Utils';
+import IStorableState from 'kanban/storage/IStorableState';
+import List from 'kanban/model/List';
+import Card from 'kanban/model/Card';
+import User from 'kanban/model/User';
+import Config from 'kanban/config/Config';
+import ArrayUtils from 'common/utils/ArrayUtils';
+import Utils from 'common/utils/Utils';
 
 class Serializer {
     private _data: Array<any>;

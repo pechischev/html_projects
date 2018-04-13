@@ -1,9 +1,9 @@
 import * as React from 'react';
-import EditableContainer from '../EditableContainer';
-import Card from '../../model/Card';
-import MemoryStorage from '../memoryStorage/MemoryStorage';
-import ICardViewProps from './ICardViewProps';
-import ActionCreator from '../../action/ActionCreator';
+import EditableContainer from 'kanban/view/EditableContainer';
+import Card from 'kanban/model/Card';
+import MemoryStorage from 'kanban/view/memoryStorage/MemoryStorage';
+import ICardViewProps from 'kanban/view/card/ICardViewProps';
+import ActionCreator from 'kanban/action/ActionCreator';
 import { Draggable } from 'react-beautiful-dnd';
 
 class CardView extends MemoryStorage<ICardViewProps, any> {

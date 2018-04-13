@@ -1,5 +1,5 @@
-import IMemoryStorageProps from '../memoryStorage/IMemoryStorageProps';
-import Card from '../../model/Card';
+import IMemoryStorageProps from 'kanban/view/memoryStorage/IMemoryStorageProps';
+import Card from 'kanban/model/Card';
 
 interface ICardViewProps extends IMemoryStorageProps {
     card: Card;

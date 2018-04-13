@@ -1,6 +1,6 @@
-import Action from './Action';
-import Card from '../model/Card';
-import ApplicationAction from '../action/ApplicationAction';
+import Action from 'kanban/action/Action';
+import Card from 'kanban/model/Card';
+import ApplicationAction from 'kanban/action/ApplicationAction';
 import { DraggableLocation } from 'react-beautiful-dnd';
 
 class ActionCreator {

@@ -1,6 +1,6 @@
-import IStorableState from './IStorableState';
-import Utils from '../../common/utils/Utils';
-import ArrayUtils from '../../common/utils/ArrayUtils';
+import IStorableState from 'kanban/storage//IStorableState';
+import Utils from 'common/utils/Utils';
+import ArrayUtils from 'common/utils/ArrayUtils';
 
 type CallbackType = {
     key?: string;

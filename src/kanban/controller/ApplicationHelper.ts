@@ -1,12 +1,12 @@
-import List from '../model/List';
-import Card from '../model/Card';
-import User from '../model/User';
-import IStorableState from '../storage/IStorableState';
-import UserDataLoader from './Loader';
+import List from 'kanban/model/List';
+import Card from 'kanban/model/Card';
+import User from 'kanban/model/User';
+import IStorableState from 'kanban/storage/IStorableState';
+import UserDataLoader from 'kanban/controller/Loader';
 import { DraggableLocation } from 'react-beautiful-dnd';
-import ArrayUtils from '../../common/utils/ArrayUtils';
-import Config from '../config/Config';
-import Message from '../message/Message';
+import ArrayUtils from 'common/utils/ArrayUtils';
+import Config from 'kanban/config/Config';
+import Message from 'kanban/message/Message';
 
 class ApplicationHelper {
     static auth(state: IStorableState, context: {email: string, password: string}): IStorableState {

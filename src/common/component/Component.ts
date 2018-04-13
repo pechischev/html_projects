@@ -1,4 +1,4 @@
-import TagName from '../dom/TagName';
+import TagName from 'common/dom/TagName';
 
 type IComponentConfig = {
     className?: string;

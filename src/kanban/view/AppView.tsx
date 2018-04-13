@@ -1,11 +1,11 @@
 import * as React from 'react';
-import ListView from './list/ListView';
-import List from '../model/List';
-import MemoryStorage from './memoryStorage/MemoryStorage';
-import IMemoryStorageProps from './memoryStorage/IMemoryStorageProps';
-import ActionCreator from '../action/ActionCreator';
+import ListView from 'kanban/view/list/ListView';
+import List from 'kanban/model/List';
+import MemoryStorage from 'kanban/view/memoryStorage/MemoryStorage';
+import IMemoryStorageProps from 'kanban/view/memoryStorage/IMemoryStorageProps';
+import ActionCreator from 'kanban/action/ActionCreator';
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
-import Config from '../config/Config';
+import Config from 'kanban/config/Config';
 
 class AppView extends MemoryStorage {
     constructor(props: IMemoryStorageProps) {

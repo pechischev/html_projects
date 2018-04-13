@@ -1,4 +1,4 @@
-import Storage from '../../storage/Storage';
+import Storage from 'kanban/storage/Storage';
 
 interface IMemoryStorageProps {
     storage: Storage;

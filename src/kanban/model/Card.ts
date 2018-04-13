@@ -1,5 +1,5 @@
-import BaseItem from './BaseItem';
-import Message from '../message/Message';
+import BaseItem from 'kanban/model/BaseItem';
+import Message from 'kanban/message/Message';
 
 class Card extends BaseItem {
     constructor(title?: string, id?: string) {

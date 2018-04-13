@@ -1,10 +1,10 @@
-import Dispatcher from '../event/Dispatcher';
+import Dispatcher from 'common/event/Dispatcher';
 
 class Timer {
-	private _keyInterval: number|null;
-	private _delay: number;
-	private _start: number;
-	private _duration: number;
+	private _keyInterval: any; // TODO: fix typization
+	private _delay: any;
+	private _start: any;
+	private _duration: any;
 	private _startEvent: Dispatcher;
 	private _tickEvent: Dispatcher;
 	private _stopEvent: Dispatcher;

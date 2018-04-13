@@ -1,9 +1,9 @@
 import * as React from 'react';
-import MemoryStorage from './memoryStorage/MemoryStorage';
-import IMemoryStorageProps from './memoryStorage/IMemoryStorageProps';
-import ActionCreator from '../action/ActionCreator';
-import Message from '../message/Message';
-import Sha1Crypt from '../crypt/Sha1Crypt';
+import MemoryStorage from 'kanban/view/memoryStorage/MemoryStorage';
+import IMemoryStorageProps from 'kanban/view/memoryStorage/IMemoryStorageProps';
+import ActionCreator from 'kanban/action/ActionCreator';
+import Message from 'kanban/message/Message';
+import Sha1Crypt from 'kanban/crypt/Sha1Crypt';
 
 class AuthView extends MemoryStorage {
     private _refEmail: HTMLInputElement;

@@ -1,5 +1,5 @@
-import IMemoryStorageProps from '../memoryStorage/IMemoryStorageProps';
-import List from '../../model/List';
+import IMemoryStorageProps from 'kanban/view/memoryStorage/IMemoryStorageProps';
+import List from 'kanban/model/List';
 
 interface IListViewProps extends IMemoryStorageProps {
     list: List;
