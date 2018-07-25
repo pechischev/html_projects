@@ -11,11 +11,11 @@
     ],
     "module": "commonjs",
     "jsx": "react",
-    "outDir": "build/js",
+    "outDir": "build/dist",
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
-    "moduleResolution": "classic",
+    "moduleResolution": "node",
     "preserveConstEnums": true,
     "allowJs": true,
     "sourceMap": true,
@@ -27,7 +27,9 @@
     "types": [
       "react",
       "react-dom",
-      "react-beautiful-dnd"
+      "react-beautiful-dnd",
+      "rxjs",
+      "react-bootstrap"
     ]
   },
   "exclude": [
