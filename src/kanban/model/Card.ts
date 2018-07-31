@@ -1,4 +1,4 @@
-import BaseItem from 'kanban/model/BaseItem';
+import { BaseItem } from 'kanban/model/BaseItem';
 import Message from 'kanban/message/Message';
 
 class Card extends BaseItem {

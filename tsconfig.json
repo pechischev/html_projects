@@ -9,31 +9,25 @@
       "DOM.Iterable",
       "ScriptHost"
     ],
-    "module": "commonjs",
+    "module": "es6",
     "jsx": "react",
     "outDir": "build/dist",
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true,
     "experimentalDecorators": true,
+    "noStrictGenericChecks": true,
+    "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "preserveConstEnums": true,
-    "allowJs": true,
+    "allowJs": false,
     "sourceMap": true,
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "*": ["./src/*"]
-    },
-    "types": [
-      "react",
-      "react-dom",
-      "react-beautiful-dnd",
-      "rxjs",
-      "react-bootstrap"
-    ]
+    }
   },
   "exclude": [
     "node_modules",
-    "bin"
+    "bin",
+    "build"
   ]
 }

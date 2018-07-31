@@ -1,4 +1,4 @@
-import BaseItem from 'kanban/model/BaseItem';
+import { BaseItem } from 'kanban/model/BaseItem';
 import Card from 'kanban/model/Card';
 import Message from 'kanban/message/Message';
 

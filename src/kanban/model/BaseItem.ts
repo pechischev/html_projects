@@ -1,7 +1,7 @@
 import Utils from 'common/utils/Utils';
 import Dispatcher from 'common/event/Dispatcher';
 
-class BaseItem {
+export class BaseItem {
     private _title: string;
     private _id: string;
     private _titleChangedEvent: Dispatcher;
@@ -34,5 +34,3 @@ class BaseItem {
         return this._title;
     }
 }
-
-export default BaseItem;
