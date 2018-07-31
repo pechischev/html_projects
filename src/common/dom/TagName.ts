@@ -1,5 +1,5 @@
 
-const TagName = { // TODO: systematize tags
+export const TagName = { // TODO: systematize tags
     A: 'A',
     ABBR: 'ABBR',
     ADDRESS: 'ADDRESS',
@@ -109,5 +109,3 @@ const TagName = { // TODO: systematize tags
     VIDEO: 'VIDEO',
     WBR: 'WBR',
 };
-
-export default TagName;

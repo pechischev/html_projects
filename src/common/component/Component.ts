@@ -1,4 +1,4 @@
-import TagName from 'common/dom/TagName';
+import { TagName } from "common/dom/TagName";
 
 type IComponentConfig = {
     className?: string;
@@ -52,7 +52,7 @@ class Component {
         return this._displayObject.classList.contains(className);
     }
 
-    removeClassNames(classNames: Array<string>|string) {
+    removeClassNames(classNames: string[]|string) {
         if (classNames instanceof Array)
         {
             for (const name of classNames)

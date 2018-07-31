@@ -1,4 +1,11 @@
 {
+  "extends": [
+    "tslint:all",
+    "tslint-react"
+  ],
+  "linterOptions": {
+    "typeCheck": true
+  },
   "rules": {
     "align": [
       true,
@@ -10,9 +17,20 @@
     "curly": true,
     "eofline": false,
     "forin": true,
-    "interface-name": [true, "always-prefix"],
+    "interface-name": [
+      true,
+      "always-prefix"
+    ],
     "jsdoc-format": true,
     "label-position": true,
+    "linebreak-style": [
+      true,
+      "CRLF"
+    ],
+    "member-access": [
+      true,
+      "no-public"
+    ],
     "member-ordering": [
       true,
       "public-before-private",
@@ -33,6 +51,12 @@
       "timeEnd",
       "trace"
     ],
+    "arrow-return-shorthand": false,
+    "max-line-length": [false],
+    "ordered-imports": false,
+    "no-submodule-imports": false,
+    "no-implicit-dependencies": false,
+    "newline-before-return": false,
     "no-consecutive-blank-lines": true,
     "no-construct": true,
     "no-debugger": true,
@@ -50,10 +74,11 @@
       "check-whitespace"
     ],
     "radix": true,
-    "semicolon": [true, "always"],
-
+    "semicolon": [
+      true,
+      "always"
+    ],
     "trailing-comma": false,
-
     "typedef": [
       true,
       "parameter",
@@ -69,7 +94,13 @@
         "variable-declaration": "nospace"
       }
     ],
-    "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore",
+      "allow-pascal-case"
+    ],
     "whitespace": [
       true,
       "check-branch",

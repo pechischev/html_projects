@@ -1,5 +1,5 @@
 import Dispatcher from 'common/event/Dispatcher';
-import TagName from 'common/dom/TagName';
+import { TagName } from 'common/dom/TagName';
 import Component from 'common/component/Component';
 
 class TextInput extends Component {
