@@ -1,5 +1,5 @@
-import IDispatcher from 'common/event/IDispatcher';
-import ArrayUtils from 'common/utils/ArrayUtils';
+import IDispatcher from "common/event/IDispatcher";
+import ArrayUtils from "common/utils/ArrayUtils";
 
 class Dispatcher implements IDispatcher {
     private _listeners: Array<{callback: Function, scope?: any}>;

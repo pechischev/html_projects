@@ -1,6 +1,6 @@
-import * as React from 'react';
-import Storage from 'kanban/storage/Storage';
-import IMemoryStorageProps from 'kanban/view/memoryStorage/IMemoryStorageProps';
+import * as React from "react";
+import Storage from "kanban/storage/Storage";
+import IMemoryStorageProps from "kanban/view/memoryStorage/IMemoryStorageProps";
 
 /**
  * @template P {Props}, S {State}

@@ -1,5 +1,5 @@
-import Utils from 'common/utils/Utils';
-import Dispatcher from 'common/event/Dispatcher';
+import Utils from "common/utils/Utils";
+import Dispatcher from "common/event/Dispatcher";
 
 export class BaseItem {
     private _title: string;

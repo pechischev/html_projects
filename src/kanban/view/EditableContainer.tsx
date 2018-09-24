@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { BaseItem } from 'kanban/model/BaseItem';
-import MemoryStorage from 'kanban/view/memoryStorage/MemoryStorage';
-import IMemoryStorageProps from 'kanban/view/memoryStorage/IMemoryStorageProps';
-import ActionCreator from 'kanban/action/ActionCreator';
+import * as React from "react";
+import { BaseItem } from "kanban/model/BaseItem";
+import MemoryStorage from "kanban/view/memoryStorage/MemoryStorage";
+import IMemoryStorageProps from "kanban/view/memoryStorage/IMemoryStorageProps";
+import ActionCreator from "kanban/action/ActionCreator";
 
 interface IEditableContainerState {
     editable: boolean;

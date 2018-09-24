@@ -1,6 +1,6 @@
-import { BaseItem } from 'kanban/model/BaseItem';
-import Card from 'kanban/model/Card';
-import Message from 'kanban/message/Message';
+import { BaseItem } from "kanban/model/BaseItem";
+import Card from "kanban/model/Card";
+import Message from "kanban/message/Message";
 
 class List extends BaseItem {
     private _cards: Array<Card>;

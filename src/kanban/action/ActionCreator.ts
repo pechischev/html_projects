@@ -1,7 +1,7 @@
-import Action from 'kanban/action/Action';
-import Card from 'kanban/model/Card';
-import ApplicationAction from 'kanban/action/ApplicationAction';
-import { DraggableLocation } from 'react-beautiful-dnd';
+import Action from "kanban/action/Action";
+import Card from "kanban/model/Card";
+import ApplicationAction from "kanban/action/ApplicationAction";
+import { DraggableLocation } from "react-beautiful-dnd";
 
 class ActionCreator {
     static appendActions(): Action {

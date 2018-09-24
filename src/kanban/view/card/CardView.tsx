@@ -1,10 +1,10 @@
-import * as React from 'react';
-import EditableContainer from 'kanban/view/EditableContainer';
-import Card from 'kanban/model/Card';
-import MemoryStorage from 'kanban/view/memoryStorage/MemoryStorage';
-import ICardViewProps from 'kanban/view/card/ICardViewProps';
-import ActionCreator from 'kanban/action/ActionCreator';
-import { Draggable } from 'react-beautiful-dnd';
+import * as React from "react";
+import EditableContainer from "kanban/view/EditableContainer";
+import Card from "kanban/model/Card";
+import MemoryStorage from "kanban/view/memoryStorage/MemoryStorage";
+import ICardViewProps from "kanban/view/card/ICardViewProps";
+import ActionCreator from "kanban/action/ActionCreator";
+import { Draggable } from "react-beautiful-dnd";
 
 class CardView extends MemoryStorage<ICardViewProps, any> {
     private _card: Card;
@@ -43,9 +43,9 @@ class CardView extends MemoryStorage<ICardViewProps, any> {
 
     private _getItemStyle(isDragging: boolean, draggableStyle: any): Object {
         return {
-            backgroundColor: isDragging ? '#fbfbbc' : '#fff',
+            backgroundColor: isDragging ? "#fbfbbc" : "#fff",
             ...draggableStyle,
-            margin: '0px 0px 7px 0px',
+            margin: "0px 0px 7px 0px",
         };
     }
 

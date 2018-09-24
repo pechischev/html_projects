@@ -1,10 +1,10 @@
-import AppView from 'kanban/view/AppView';
-import AuthView from 'kanban/view/AuthView';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import Storage from 'kanban/storage/Storage';
-import Reducer from 'kanban/reducer/Reducer';
-import Serializer from 'kanban/controller/Serializer';
+import AppView from "kanban/view/AppView";
+import AuthView from "kanban/view/AuthView";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import Storage from "kanban/storage/Storage";
+import Reducer from "kanban/reducer/Reducer";
+import Serializer from "kanban/controller/Serializer";
 
 class Application {
     private _storage: Storage;

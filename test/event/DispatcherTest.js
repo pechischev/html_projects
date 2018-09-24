@@ -1,6 +1,6 @@
-import { expect } from 'chai';
-import { spy } from 'sinon';
-import Dispatcher from '../../src/common/event/Dispatcher';
+import { expect } from "chai";
+import { spy } from "sinon";
+import Dispatcher from "../../src/common/event/Dispatcher";
 
 describe("EventDispatcherTest", () => {
 	let dispatcher;

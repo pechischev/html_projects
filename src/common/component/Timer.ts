@@ -1,4 +1,4 @@
-import Dispatcher from 'common/event/Dispatcher';
+import Dispatcher from "common/event/Dispatcher";
 
 class Timer {
 	private _keyInterval: any; // TODO: fix typization

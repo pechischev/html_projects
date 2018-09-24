@@ -1,13 +1,13 @@
-import * as React from 'react';
-import EditableContainer from 'kanban/view/EditableContainer';
-import CardView from 'kanban/view/card/CardView';
-import List from 'kanban/model/List';
-import Card from 'kanban/model/Card';
-import ActionCreator from 'kanban/action/ActionCreator';
-import MemoryStorage from 'kanban/view/memoryStorage/MemoryStorage';
-import IListViewProps from 'kanban/view/list/IListViewProps';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
-import Config from 'kanban/config/Config';
+import * as React from "react";
+import EditableContainer from "kanban/view/EditableContainer";
+import CardView from "kanban/view/card/CardView";
+import List from "kanban/model/List";
+import Card from "kanban/model/Card";
+import ActionCreator from "kanban/action/ActionCreator";
+import MemoryStorage from "kanban/view/memoryStorage/MemoryStorage";
+import IListViewProps from "kanban/view/list/IListViewProps";
+import { Droppable, Draggable } from "react-beautiful-dnd";
+import Config from "kanban/config/Config";
 
 class ListView extends MemoryStorage<IListViewProps, any> {
     private _list: List;

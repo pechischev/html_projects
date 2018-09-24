@@ -71,12 +71,12 @@ class Component {
     }
 
     setVisible(value: boolean) {
-        this._displayObject.style.display = (value) ? '' : 'none';
+        this._displayObject.style.display = (value) ? "" : "none";
     }
 
     setPosition(x: number, y: number) {
-        this._displayObject.style.left = x + 'px';
-        this._displayObject.style.top = y + 'px';
+        this._displayObject.style.left = x + "px";
+        this._displayObject.style.top = y + "px";
     }
 
     x(): number {
@@ -107,7 +107,7 @@ class Component {
         const element = document.createElement(elementTag);
         if (className)
         {
-            element.setAttribute('class', className);
+            element.setAttribute("class", className);
         }
         return element;
     }

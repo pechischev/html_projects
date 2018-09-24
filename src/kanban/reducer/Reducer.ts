@@ -1,7 +1,7 @@
-import ApplicationAction from 'kanban/action/ApplicationAction';
-import ApplicationHelper from 'kanban/controller/ApplicationHelper';
-import IStorableState from 'kanban/storage/IStorableState';
-import Action from 'kanban/action/Action';
+import ApplicationAction from "kanban/action/ApplicationAction";
+import ApplicationHelper from "kanban/controller/ApplicationHelper";
+import IStorableState from "kanban/storage/IStorableState";
+import Action from "kanban/action/Action";
 
 const Reducer = (state: IStorableState = {lists: []}, action: Action) => {
     const {type, context} = action;
