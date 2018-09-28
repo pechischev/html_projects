@@ -1,32 +1,37 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "ES5",
-      "ES6",
-      "DOM",
-      "DOM.Iterable",
-      "ScriptHost"
-    ],
+    "target": "es6",
     "module": "es6",
+    "lib": [
+      "es5",
+      "es6",
+      "dom"
+    ],
+    "sourceMap": true,
+    "allowJs": false,
     "jsx": "react",
-    "outDir": "build/dist",
+    "moduleResolution": "node",
+    "outDir": "build",
+    "isolatedModules": true,
     "experimentalDecorators": true,
     "noStrictGenericChecks": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
     "preserveConstEnums": true,
-    "allowJs": false,
-    "sourceMap": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "rootDirs": [
+      "src",
+      "test"
+    ],
     "paths": {
-      "*": ["./src/*"]
+      "*": [
+        "src/*"
+      ]
     }
   },
   "exclude": [
     "node_modules",
-    "bin",
+    "bin/**/build",
     "build"
   ]
 }

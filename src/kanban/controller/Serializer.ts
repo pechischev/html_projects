@@ -3,7 +3,7 @@ import List from "kanban/model/List";
 import Card from "kanban/model/Card";
 import User from "kanban/model/User";
 import Config from "kanban/config/Config";
-import ArrayUtils from "common/utils/ArrayUtils";
+import { ArrayUtils } from "common/utils/ArrayUtils";
 import Utils from "common/utils/Utils";
 
 class Serializer {

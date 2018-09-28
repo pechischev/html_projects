@@ -24,6 +24,7 @@
     "typescript": "^2.7.2"
   },
   "devDependencies": {
+    "@types/mocha": "^5.2.5",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-polyfill": "^6.26.0",

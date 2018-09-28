@@ -1,4 +1,4 @@
-const ArrayUtils = {
+export const ArrayUtils = {
     replacePositionTo(arr: Array<any>, oldIndex: number, newIndex: number) {
         if (newIndex >= arr.length)
         {
@@ -34,5 +34,3 @@ const ArrayUtils = {
         return arr[index];
     }
 };
-
-export default ArrayUtils;

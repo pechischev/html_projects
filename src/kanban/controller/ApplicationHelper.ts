@@ -4,7 +4,7 @@ import User from "kanban/model/User";
 import IStorableState from "kanban/storage/IStorableState";
 import UserDataLoader from "kanban/controller/Loader";
 import { DraggableLocation } from "react-beautiful-dnd";
-import ArrayUtils from "common/utils/ArrayUtils";
+import { ArrayUtils } from "common/utils/ArrayUtils";
 import Config from "kanban/config/Config";
 import Message from "kanban/message/Message";
 
