@@ -37,8 +37,7 @@ describe("EventDispatcherTest", () => {
 
     describe("removeListener", () => {
         it("should remove listener", () => {
-            const callback = () => {
-            };
+            const callback = () => {};
             dispatcher.addListener(callback);
             dispatcher.removeListener(callback);
 

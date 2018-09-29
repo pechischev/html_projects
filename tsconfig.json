@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es5",
     "module": "es6",
     "lib": [
       "es5",
@@ -12,7 +12,7 @@
     "jsx": "react",
     "moduleResolution": "node",
     "outDir": "build",
-    "isolatedModules": true,
+    "isolatedModules": false,
     "experimentalDecorators": true,
     "noStrictGenericChecks": true,
     "forceConsistentCasingInFileNames": true,
@@ -25,7 +25,8 @@
     ],
     "paths": {
       "*": [
-        "src/*"
+        "src/*",
+        "test/*"
       ]
     }
   },
