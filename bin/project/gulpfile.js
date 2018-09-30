@@ -15,4 +15,4 @@ gulp.task("build_js", (cb) => {
 	return lib.build_ts(config, cb);
 });
 
-gulp.task("build_kanban", ["compile_css", "build_js"]);
+gulp.task("build_project", ["compile_css", "build_js"]);
