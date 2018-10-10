@@ -10,7 +10,7 @@
     "align": [
       true,
       "parameters",
-      "statements"
+      "arguments"
     ],
     "ban": false,
     "class-name": true,
@@ -31,6 +31,8 @@
       true,
       "no-public"
     ],
+    "indent": [true, "tabs", 4],
+    "prefer-function-over-method": false,
     "member-ordering": [
       true,
       "public-before-private",
