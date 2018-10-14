@@ -1,60 +1,59 @@
-import Dispatcher from "common/event/Dispatcher";
-import { TagName } from "common/dom/TagName";
 import Component from "common/component/Component";
+import { TagName } from "common/dom/TagName";
+import { Dispatcher } from "common/event/Dispatcher";
 
 export class TextInput extends Component {
-    private _changedEvent: Dispatcher;
-    private _blurEvent: Dispatcher;
-    private _focusEvent: Dispatcher;
+	private _changedEvent: Dispatcher;
+	private _blurEvent: Dispatcher;
+	private _focusEvent: Dispatcher;
 
-    constructor(placeholder?: string) {
-        super({
-            className: "text-input",
+	constructor(placeholder?: string) {
+		super({
+			className: 'text-input',
 
-            tagName: TagName.INPUT
-        });
+			tagName: TagName.INPUT
+		});
 
-        this._changedEvent = new Dispatcher();
-        this._blurEvent = new Dispatcher();
-        this._focusEvent = new Dispatcher();
+		this._changedEvent = new Dispatcher();
+		this._blurEvent = new Dispatcher();
+		this._focusEvent = new Dispatcher();
 
-        this.listen("change", () => this._changedEvent.dispatch());
-        this.listen("blur", () => this._blurEvent.dispatch());
-        this.listen("focus", (event: Event) => {
-            this._focusEvent.dispatch();
-        });
+		this.listen('change', () => this._changedEvent.dispatch());
+		this.listen('blur', () => this._blurEvent.dispatch());
+		this.listen('focus', (event: Event) => {
+			this._focusEvent.dispatch();
+		});
 
-        if (placeholder)
-        {
-            this.setAttribute({name: "placeholder", value: placeholder});
-        }
-    }
+		if (placeholder) {
+			this.setAttribute({name: 'placeholder', value: placeholder});
+		}
+	}
 
-    setValue(value: string) {
-        const element = this.displayObject();
-        if (element instanceof HTMLInputElement) // TODO: to fix typing problem, temporary solution
-        {
-            element.value = value;
-        }
-    }
+	setValue(value: string) {
+		const element = this.displayObject();
+		if (element instanceof HTMLInputElement) // TODO: to fix typing problem, temporary solution
+		{
+			element.value = value;
+		}
+	}
 
-    value() {
-        const element = this.displayObject();
-        if (element instanceof HTMLInputElement) // TODO: to fix typing problem, temporary solution
-        {
-            return element.value;
-        }
-    }
+	value() {
+		const element = this.displayObject();
+		if (element instanceof HTMLInputElement) // TODO: to fix typing problem, temporary solution
+		{
+			return element.value;
+		}
+	}
 
-    changedEvent(): Dispatcher {
-        return this._changedEvent;
-    }
+	changedEvent(): Dispatcher {
+		return this._changedEvent;
+	}
 
-    blurEvent(): Dispatcher {
-        return this._blurEvent;
-    }
+	blurEvent(): Dispatcher {
+		return this._blurEvent;
+	}
 
-    focusEvent(): Dispatcher {
-        return this._focusEvent;
-    }
+	focusEvent(): Dispatcher {
+		return this._focusEvent;
+	}
 }

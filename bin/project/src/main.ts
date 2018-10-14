@@ -1,3 +1,3 @@
-import { Map } from "project/map/Map";
+import { Map } from "map/Map";
 
 const map = new Map();

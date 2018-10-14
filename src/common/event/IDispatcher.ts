@@ -1,10 +1,10 @@
-interface IDispatcher {
+import { Types } from "common/types/Types";
 
-    addListener(callback: Function, scope?: any): void;
+export interface IDispatcher {
 
-    dispatch(args?: any, ...otherArgs: any[]): void;
+	addListener(callback: Types.Handler, scope?: object): void;
 
-    removeListener(callback: Function, scope?: any): void;
+	dispatch<T>(args?: T): void;
+
+	removeListener(callback: Types.Handler, scope?: object): void;
 }
-
-export default IDispatcher;
