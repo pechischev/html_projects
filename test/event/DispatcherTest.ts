@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { spy } from "sinon";
 import { Dispatcher } from "common/event/Dispatcher";
 
-describe("DispatcherTest", () => {
+describe("Dispatchert", () => {
 	let dispatcher;
 
 	beforeEach(() => {

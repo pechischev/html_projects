@@ -29,7 +29,8 @@
     ],
     "member-access": [
       true,
-      "no-public"
+      "no-public",
+      "check-constructor"
     ],
     "triple-equals": false,
     "no-namespace": false,
@@ -37,6 +38,7 @@
     "no-magic-numbers": [true, -1, 0, 1, 2],
     "indent": [true, "tabs", 4],
     "prefer-function-over-method": false,
+    "type-literal-delimiter": false,
     "member-ordering": [
       true,
       "public-before-private",

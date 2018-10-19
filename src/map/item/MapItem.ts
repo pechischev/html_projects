@@ -1,12 +1,18 @@
+import { Listener } from "common/event/Listener";
 import { IMapItem } from "./IMapItem";
-import Utils from "common/utils/Utils";
+import { Utils } from "common/utils/Utils";
 
-export class MapItem implements IMapItem {
+export class MapItem extends Listener implements IMapItem {
+	static EVENTS = {
+		changedTitle: "changedTitle"
+	};
+
 	private readonly _id;
 	private _title = "";
 
 	constructor(id?: string) {
-		this._id = id || Utils.getUid();
+		super();
+		this._id = id || Utils.getUid(this);
 	}
 
 	id(): string {
@@ -14,7 +20,11 @@ export class MapItem implements IMapItem {
 	}
 
 	setTitle(title: string) {
+		if (this._title == title) {
+			return;
+		}
 		this._title = title;
+		this.dispatch(MapItem.EVENTS.changedTitle);
 	}
 
 	title(): string {

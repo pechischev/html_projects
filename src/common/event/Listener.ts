@@ -7,11 +7,7 @@ import Handler = Types.Handler;
 export class Listener implements IListener {
 	private readonly _handlers: Map<string, IDispatcher> = new Map<string, Dispatcher>();
 
-	constructor(events: string[] = []) {
-		events.forEach((event: string) => this._handlers.set(event, new Dispatcher()));
-	}
-
-	listen(event: string, handler: Handler) {
+	listen(event: string, handler: Handler, scope?: object) {
 		if (!this._handlers.has(event)) {
 			this._handlers.set(event, new Dispatcher());
 		}
@@ -19,15 +15,15 @@ export class Listener implements IListener {
 		if (!item) {
 			return;
 		}
-		item.addListener(handler);
+		item.addListener(handler, scope);
 	}
 
-	unlisten(event: string, handler: Handler) {
+	unlisten(event: string, handler: Handler, scope?: object) {
 		const item = this._handlers.get(event);
 		if (!item) {
 			return;
 		}
-		item.removeListener(handler);
+		item.removeListener(handler, scope);
 	}
 
 	dispatch<T>(event: string, value?: T) {
