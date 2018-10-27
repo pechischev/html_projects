@@ -1,10 +1,11 @@
 import { Listener } from "common/event/Listener";
 import { INode } from "map/model/node/INode";
-import { SelectController } from "map/controller/SelectController";
+import { SelectionController } from "map/controller/SelectionController";
 import { NodeGroup } from "map/model/node/NodeGroup";
+import { INodeGroup } from "map/model/node/INodeGroup";
 
 export class NodePresenter extends Listener {
-	private _selectController = new SelectController();
+	private _selectController = new SelectionController();
 	private _nodes: INode[] = [];
 	private _groups: string[] = [];
 
@@ -22,12 +23,12 @@ export class NodePresenter extends Listener {
 	}
 
 	appendNodes(nodes: INode[] = []) {
-		const addedNodes = nodes.filter((node: INode) => !this.hasNodeById(node.id()));
-		if (!addedNodes.length) {
+		const newNodes = nodes.filter((node: INode) => !this.hasNodeById(node.id()));
+		if (!newNodes.length) {
 			return;
 		}
-		this._nodes.push(...addedNodes);
-		this.setSelection(addedNodes);
+		this._nodes.push(...newNodes);
+		this.setSelection(newNodes);
 	}
 
 	removeNodes(nodes: INode[] = []) {
@@ -45,11 +46,13 @@ export class NodePresenter extends Listener {
 		return this._nodes;
 	}
 
-	group() {
-
+	appendGroups(groups: INodeGroup[]) {
+		const newGroups = groups.filter((group: INodeGroup) => !this.hasGroup(group));
+		this._groups.push(...newGroups.map((group: INodeGroup) => group.id()));
+		this.appendNodes(newGroups);
 	}
 
-	ungroup() {
+	removeGroups(groups: INodeGroup[]) {
 
 	}
 
@@ -62,6 +65,10 @@ export class NodePresenter extends Listener {
 	}
 
 	private getNodeIndex(id: string): number {
-		return this._nodes.findIndex((node: INode) => node.id() == id)
+		return this._nodes.findIndex((node: INode) => node.id() == id);
+	}
+
+	private hasGroup(group: INodeGroup): boolean {
+		return this._groups.indexOf(group.id()) > -1;
 	}
 }

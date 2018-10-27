@@ -1,6 +1,6 @@
 import { Listener } from "common/event/Listener";
 
-export class SelectController extends Listener {
+export class SelectionController extends Listener {
 	private _selectedItems: string[] = [];
 
 	setSelection(items: string[], isMulti?: boolean) {

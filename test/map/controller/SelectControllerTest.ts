@@ -1,11 +1,11 @@
 import { expect } from "chai";
-import { SelectController } from "map/controller/SelectController";
+import { SelectionController } from "map/controller/SelectionController";
 
-describe("SelectController", () => {
-	let controller: SelectController;
+describe("SelectionController", () => {
+	let controller: SelectionController;
 
 	beforeEach(() => {
-		controller = new SelectController();
+		controller = new SelectionController();
 	});
 
 	describe("select", () => {

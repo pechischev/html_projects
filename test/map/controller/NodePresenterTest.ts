@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { NodePresenter } from "map/controller/NodePresenter";
 import { Node } from "map/model/node/Node";
+import { NodeGroup } from "map/model/node/NodeGroup";
 
 describe("NodePresenter", () => {
 	let list: NodePresenter;
@@ -11,6 +12,14 @@ describe("NodePresenter", () => {
 			nodes.push(new Node());
 		}
 		return nodes;
+	}
+
+	function createGroups(count: number): NodeGroup[] {
+		const groups = [];
+		for (let i = 0; i < count; ++i) {
+			groups.push(new NodeGroup());
+		}
+		return groups;
 	}
 
 	beforeEach(() => {
@@ -86,28 +95,40 @@ describe("NodePresenter", () => {
 			list.removeNodes([node]);
 			expect(list.nodes().length).to.be.equal(2);
 		});
+
+		it("should remove some nodes", () => {
+			const nodes = createNodes(2);
+			list.appendNodes(nodes);
+			list.removeNodes(nodes);
+			expect(list.nodes().length).to.be.equal(0);
+		});
 	});
 
-	/*
-	 * Логика групп
-	 * добавить группу -> группу можно создать из мин 2 узлов
-	 * 1) можно добавить другую группу
-	 * удаление группы -> полное удаление всех элементов
-	 * разруппировка -> группа распадается на узлы, которые содеражала
-	 * */
+	it("empty groups after constructs", () => {
+		expect(list.getGroupNodes().length).to.be.equal(0);
+	});
 
-	describe.skip("group", () => {
-
-		it("should be grouped if several nodes was selected", () => {
-			const expectedCount = 5;
-			expect(list.selection().length).to.be.equal(expectedCount);
-			list.group();
+	describe("appendGroups", () => {
+		it("should append group and select it", () => {
+			const group = new NodeGroup();
+			list.appendGroups([group]);
 			expect(list.getGroupNodes().length).to.be.equal(1);
+			expect(list.getSelectionNodes().length).to.be.equal(1);
 		});
 
-		it("should not be grouped if one node has been allocated", () => {
-			list.group();
-			expect(list.getGroupNodes().length).to.be.equal(0);
+		it("should append some groups", () => {
+			list.appendGroups(createGroups(2));
+			expect(list.getGroupNodes().length).to.be.equal(2);
+			expect(list.getSelectionNodes().length).to.be.equal(2);
+		});
+
+		it("should append group as simple node", () => {
+			list.appendGroups(createGroups(1));
+			expect(list.nodes().length).to.be.equal(1);
+		});
+
+		it("should append children if they contains in group", () => {
+
 		});
 	});
 });
