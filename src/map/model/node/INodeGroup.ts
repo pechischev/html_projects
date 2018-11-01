@@ -6,7 +6,7 @@ export interface INodeGroup extends INode, IListener {
 
 	removeChild(child: INode);
 
-	children(): INode[];
+	children(): string[];
 
 	contains(item: INode): boolean;
 }

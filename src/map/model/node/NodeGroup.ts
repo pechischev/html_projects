@@ -3,7 +3,7 @@ import { INodeGroup } from "./INodeGroup";
 import { AbstractNode } from "./AbstractNode";
 
 export class NodeGroup extends AbstractNode implements INodeGroup {
-	private readonly _children: INode[] = [];
+	private readonly _children: string[] = [];
 
 	addChild(child: INode) {
 		if (child.id() == this.id()) {
@@ -12,7 +12,8 @@ export class NodeGroup extends AbstractNode implements INodeGroup {
 		if (this.contains(child)) {
 			return;
 		}
-		this._children.push(child);
+		child.setParent(this.id());
+		this._children.push(child.id());
 	}
 
 	removeChild(child: INode) {
@@ -22,15 +23,16 @@ export class NodeGroup extends AbstractNode implements INodeGroup {
 		if (!this.contains(child)) {
 			return;
 		}
-		const index = this._children.findIndex((item: INode) => item.id() == child.id());
+		child.setParent(null);
+		const index = this._children.findIndex((id: string) => id == child.id());
 		this._children.splice(index, 1);
 	}
 
-	children(): INode[] {
+	children(): string[] {
 		return this._children;
 	}
 
 	contains(item: INode): boolean {
-		return !!this._children.find((child: INode) => child.id() == item.id());
+		return !!this._children.find((id: string) => id == item.id());
 	}
 }
