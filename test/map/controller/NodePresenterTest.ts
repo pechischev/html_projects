@@ -22,11 +22,6 @@ describe("NodePresenter", () => {
 		return nodes;
 	}
 
-	function runAction(selection: INode[], handler: (nodes: INode[]) => void) {
-		list.setSelection(selection);
-		handler(selection);
-	}
-
 	beforeEach(() => {
 		list = new NodePresenter();
 	});
@@ -99,29 +94,22 @@ describe("NodePresenter", () => {
 	});
 
 	describe("group", () => {
-		it("not should group items if nodes wasn't selected", function () {
+		it("not should group items when they wasn't selected", function () {
 			const nodes = appendNodesToList(2);
-			list.setSelection([]);
-			runAction([], () => list.group());
+			list.group([]);
 			expect(list.getGroupNodes().length).to.be.equal(0);
 		});
 
-		it("not should group items if nodes was selected less 2", () => {
-			const nodes = appendNodesToList(1);
-			runAction(nodes, () => list.group());
-			expect(list.getGroupNodes().length).to.be.equal(0);
-		});
-
-		it("should group items if nodes was selected", () => {
+		it("should group items when they was selected", () => {
 			const nodes = appendNodesToList(2);
-			runAction(nodes, () => list.group());
+			list.group(nodes);
 			expect(list.getGroupNodes().length).to.be.equal(1);
 			expect(list.getChildrenByGroup(list.getGroupNodes()[0])).to.deep.equals(nodes);
 		});
 
 		it("should select new group item", function () {
 			const nodes = appendNodesToList(2);
-			runAction(nodes, () => list.group());
+			list.group(nodes);
 			const group = list.getGroupNodes()[0];
 			expect(list.getSelectionNodes()).to.deep.equals([group]);
 		});
@@ -129,72 +117,92 @@ describe("NodePresenter", () => {
 		it("should append group to nodes list", () => {
 			const nodes = appendNodesToList(2);
 			expect(list.nodes().length).to.be.equal(2);
-			runAction(nodes, () => list.group());
+			list.group(nodes);
 			expect(list.nodes().length).to.be.equal(3);
 		});
 
-		it("should group items if this items inside the group", () => {
+		it("should group items when they located inside the group", () => {
 			const nodes = appendNodesToList(5);
-			runAction([nodes[0], nodes[1], nodes[2]], () => list.group());
+			list.group([nodes[0], nodes[1], nodes[2]]);
 
-			const group1 = list.getGroupNodes()[0] as INodeGroup;
-			runAction(list.getChildrenByGroup(group1), () => list.group());
+			const parentGroup = list.getGroupNodes()[0] as INodeGroup;
+			list.group(list.getChildrenByGroup(parentGroup), parentGroup);
 
 			expect(list.getGroupNodes().length).to.be.equal(2);
 
-			const group2 = list.getGroupNodes()[1];
+			const childGroup = list.getGroupNodes()[1];
 
-			expect(list.getChildrenByGroup(group1)).to.deep.equals([group2]);
-			expect(group1.contains(group2)).to.be.true;
-			expect(list.getChildrenByGroup(group2)).to.deep.equals([nodes[0], nodes[1], nodes[2]]);
+			expect(list.getChildrenByGroup(parentGroup)).to.deep.equals([childGroup]);
+			expect(parentGroup.contains(childGroup)).to.be.true;
+			expect(list.getChildrenByGroup(childGroup)).to.deep.equals([nodes[0], nodes[1], nodes[2]]);
 		});
 
 		it("should group items with other group", () => {
 			const nodes = appendNodesToList(4);
-			runAction([nodes[0], nodes[1], nodes[2]], () => list.group());
-			const group1 = list.getGroupNodes()[0];
+			list.group([nodes[0], nodes[1], nodes[2]]);
 
-			runAction([nodes[3], group1], () => list.group());
+			const childGroup = list.getGroupNodes()[0];
+			list.group([nodes[3], childGroup]);
 			expect(list.getGroupNodes().length).to.be.equal(2);
-			const group2 = list.getGroupNodes()[1] as INodeGroup;
-
-			expect(group2.contains(group1)).to.be.true;
+			const parentGroup = list.getGroupNodes()[1];
+			expect(parentGroup.contains(childGroup)).to.be.true;
 		});
 	});
 
 	describe("ungroup", () => {
-		it("should ungroup item if item is group", () => {
+		it("should ungroup item if it is group", () => {
 			const nodes = appendNodesToList(4);
-			runAction([nodes[0], nodes[1], nodes[2]], () => list.group());
-			runAction(list.getGroupNodes(), () => list.ungroup());
+			list.group([nodes[0], nodes[1], nodes[2]]);
+			list.ungroup(list.getGroupNodes());
+
 			expect(list.getGroupNodes().length).to.be.equal(0);
 		});
 
 		it("not should ungroup item if selected item is not group", () => {
 			const nodes = appendNodesToList(4);
-			runAction([nodes[0], nodes[1], nodes[2]], () => list.group());
-			runAction([], () => list.ungroup());
+			list.group([nodes[0], nodes[1], nodes[2]]);
+			list.ungroup([]);
 			expect(list.getGroupNodes().length).to.be.equal(1);
 		});
 
 		it("should ungroup some items", () => {
 			const nodes = appendNodesToList(6);
-			runAction([nodes[0], nodes[1]], () => list.group());
-			runAction([nodes[2], nodes[3]], () => list.group());
+			list.group([nodes[0], nodes[1]]);
+			list.group([nodes[2], nodes[3]]);
 			expect(list.getGroupNodes().length).to.be.equal(2);
-			runAction(list.getGroupNodes(), () => list.ungroup());
+			list.ungroup(list.getGroupNodes());
 			expect(list.getGroupNodes().length).to.be.equal(0);
 		});
 
 		it("should remove group from nodes list", function () {
 			const nodes = appendNodesToList(4);
-			runAction([nodes[0], nodes[1], nodes[2]], () => list.group());
-			runAction(list.getGroupNodes(), () => list.ungroup());
+			list.group([nodes[0], nodes[1], nodes[2]]);
+			list.ungroup(list.getGroupNodes());
 			expect(list.nodes().length).to.be.equal(4);
 		});
 
 		it("should ungroup group when group are located in parent group", () => {
+			const nodes = appendNodesToList(4);
+			list.group([nodes[0], nodes[1], nodes[2]]);
+			const childGroup = list.getGroupNodes()[0];
+			list.group([nodes[3], childGroup]);
+			const parentGroup = list.getGroupNodes()[1];
+			list.ungroup([childGroup], parentGroup);
+			expect(list.getGroupNodes().length).to.be.equal(1);
+			expect(parentGroup.contains(childGroup)).to.be.false;
+			expect(list.getChildrenByGroup(parentGroup).length).to.be.equal(4);
+		});
 
+		it("should ungroup group when group are located other group", () => {
+			const nodes = appendNodesToList(4);
+			list.group([nodes[0], nodes[1], nodes[2]]);
+			const childGroup = list.getGroupNodes()[0];
+			list.group([nodes[3], childGroup]);
+			const parentGroup = list.getGroupNodes()[1];
+			list.ungroup([parentGroup]);
+			expect(list.getGroupNodes().length).to.be.equal(1);
+			expect(list.getChildrenByGroup(parentGroup).length).to.be.equal(0);
+			expect(childGroup.parent()).to.be.null;
 		});
 	});
 
@@ -217,16 +225,22 @@ describe("NodePresenter", () => {
 
 		it("not should remove no contains node", () => {
 			const node = new Node();
-			list.appendNodes(createNodes(2));
+			appendNodesToList(2);
 			list.removeNodes([node]);
 			expect(list.nodes().length).to.be.equal(2);
 		});
 
 		it("should remove some nodes", () => {
-			const nodes = createNodes(2);
-			list.appendNodes(nodes);
+			const nodes = appendNodesToList(2);
 			list.removeNodes(nodes);
 			expect(list.nodes().length).to.be.equal(0);
+		});
+
+		it("should remove group with children", () => {
+			const nodes = appendNodesToList(5);
+			list.group([nodes[0], nodes[1], nodes[2]]);
+			list.removeNodes(list.getGroupNodes());
+			expect(list.nodes().length).to.be.equal(2);
 		});
 	});
 });
