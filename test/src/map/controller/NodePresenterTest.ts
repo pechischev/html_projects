@@ -28,7 +28,7 @@ describe("NodePresenter", () => {
 
 	it("empty list ", () => {
 		expect(list.nodes()).to.deep.equals([]);
-		expect(list.selection()).to.deep.equals([]);
+		expect(list.getSelectionNodes()).to.deep.equals([]);
 	});
 
 	describe("appendNodes", () => {
@@ -57,7 +57,7 @@ describe("NodePresenter", () => {
 			const count = 3;
 			const nodes = createNodes(count);
 			list.appendNodes(nodes);
-			expect(list.selection().length).to.be.equal(count);
+			expect(list.getSelectionNodes().length).to.be.equal(count);
 		});
 
 		it("should added nodes which no contains in list", () => {
@@ -83,9 +83,9 @@ describe("NodePresenter", () => {
 		it("should reset select items if this items was selected", () => {
 			const nodes = createNodes(5);
 			list.appendNodes(nodes);
-			expect(list.selection().length).to.be.equal(5);
+			expect(list.getSelectionNodes().length).to.be.equal(5);
 			list.setSelection([]);
-			expect(list.selection().length).to.be.equal(0);
+			expect(list.getSelectionNodes().length).to.be.equal(0);
 		});
 	});
 
@@ -218,9 +218,9 @@ describe("NodePresenter", () => {
 		it("should deselect node when node was removed", () => {
 			const node = new Node();
 			list.appendNodes([node]);
-			expect(list.selection().length).to.be.equal(1);
+			expect(list.getSelectionNodes().length).to.be.equal(1);
 			list.removeNodes([node]);
-			expect(list.selection().length).to.be.equal(0);
+			expect(list.getSelectionNodes().length).to.be.equal(0);
 		});
 
 		it("not should remove no contains node", () => {

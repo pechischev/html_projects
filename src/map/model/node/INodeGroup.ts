@@ -1,10 +1,11 @@
 import { INode } from "map/model/node/INode";
-import { IListener } from "common/event/IListener";
 
-export interface INodeGroup extends INode, IListener {
+export interface INodeGroup extends INode {
 	addChild(child: INode);
-
 	removeChild(child: INode);
+
+	appendChildren(children: INode[]);
+	removeChildren(children: INode[]);
 
 	children(): string[];
 

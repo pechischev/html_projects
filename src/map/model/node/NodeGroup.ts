@@ -28,6 +28,18 @@ export class NodeGroup extends AbstractNode implements INodeGroup {
 		this._children.splice(index, 1);
 	}
 
+	appendChildren(children: INode[]) {
+		for (const child of children) {
+			this.addChild(child);
+		}
+	}
+
+	removeChildren(children: INode[]) {
+		for (const child of children) {
+			this.removeChild(child);
+		}
+	}
+
 	children(): string[] {
 		return this._children;
 	}
