@@ -1,13 +1,35 @@
-import { AbstractNode } from "./AbstractNode";
+import { Listener } from "common/event/Listener";
+import { Utils } from "common/utils/Utils";
+import { IContent } from "map/model/content/IContent";
+import { INode } from "./INode";
 
-export class Node extends AbstractNode {
-	private _type = "";
+export abstract class Node extends Listener implements INode {
+	protected _parent?: string = null;
+	protected _content?: IContent = null;
+	private readonly _id;
 
-	setType(type: string) {
-		this._type = type;
+	constructor(id?: string) {
+		super();
+		this._id = id || Utils.getUid(this);
 	}
 
-	type(): string {
-		return this._type;
+	id(): string {
+		return this._id;
+	}
+
+	setParent(id: string = null) {
+		this._parent = id;
+	}
+
+	parent(): string|null {
+		return this._parent;
+	}
+
+	setContent(content: IContent) {
+		this._content = content;
+	}
+
+	content(): IContent|null {
+		return this._content;
 	}
 }

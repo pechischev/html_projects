@@ -27,7 +27,7 @@ export class SelectionController extends Listener {
 		return this._selectedItems.indexOf(id) > -1;
 	}
 
-	getSelectedItems(): string[] {
+	getSelection(): string[] {
 		return this._selectedItems;
 	}
 

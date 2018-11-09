@@ -1,32 +1,9 @@
 import { INode } from "./INode";
 import { INodeGroup } from "./INodeGroup";
-import { AbstractNode } from "./AbstractNode";
+import { Node } from "./Node";
 
-export class NodeGroup extends AbstractNode implements INodeGroup {
+export class NodeGroup extends Node implements INodeGroup {
 	private readonly _children: string[] = [];
-
-	addChild(child: INode) {
-		if (child.id() == this.id()) {
-			return;
-		}
-		if (this.contains(child)) {
-			return;
-		}
-		child.setParent(this.id());
-		this._children.push(child.id());
-	}
-
-	removeChild(child: INode) {
-		if (child.id() == this.id()) {
-			return;
-		}
-		if (!this.contains(child)) {
-			return;
-		}
-		child.setParent(null);
-		const index = this._children.findIndex((id: string) => id == child.id());
-		this._children.splice(index, 1);
-	}
 
 	appendChildren(children: INode[]) {
 		for (const child of children) {
@@ -46,5 +23,28 @@ export class NodeGroup extends AbstractNode implements INodeGroup {
 
 	contains(item: INode): boolean {
 		return !!this._children.find((id: string) => id == item.id());
+	}
+
+	private addChild(child: INode) {
+		if (child.id() == this.id()) {
+			return;
+		}
+		if (this.contains(child)) {
+			return;
+		}
+		child.setParent(this.id());
+		this._children.push(child.id());
+	}
+
+	private removeChild(child: INode) {
+		if (child.id() == this.id()) {
+			return;
+		}
+		if (!this.contains(child)) {
+			return;
+		}
+		child.setParent(null);
+		const index = this._children.findIndex((id: string) => id == child.id());
+		this._children.splice(index, 1);
 	}
 }

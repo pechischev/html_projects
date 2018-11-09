@@ -1,8 +1,14 @@
-import { IMapItem } from "map/model/item/IMapItem";
-import { IRouteItem } from "map/model/route/IRouteItem";
+import { IListener } from "common/event/IListener";
+import { IContent } from "map/model/content/IContent";
 
-export interface INode extends IMapItem, IRouteItem {
-	parent(): string|null;
+export interface INode extends IListener {
+	id(): string;
 
 	setParent(id: string);
+
+	parent(): string|null;
+
+	setContent(content: IContent);
+
+	content(): IContent|null;
 }

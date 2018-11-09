@@ -14,7 +14,7 @@ export class NodePresenter extends Listener {
 		this._selectController.setSelection(ids);
 	}
 
-	getSelectionNodes(): INode[] {
+	getSelection(): INode[] {
 		return this._nodes.filter((node: INode) => this._selectController.isSelected(node.id()));
 	}
 
@@ -30,7 +30,7 @@ export class NodePresenter extends Listener {
 	removeNodes(nodes: INode[] = []) {
 		nodes.forEach((node: INode) => {
 			if (this.isGroup(node.id())) {
-				this.removeNodes(this.getChildrenByGroup(node));
+				this.removeNodes(this.getChildren(node));
 				this.removeGroup(node as INodeGroup);
 			}
 			const index = this.getNodeIndex(node.id());
@@ -51,12 +51,12 @@ export class NodePresenter extends Listener {
 		if (!length) {
 			return;
 		}
-		const group = new NodeGroup();
+		const group = new NodeGroup(); // TODO: don't create group
 		group.appendChildren(items);
 
 		if (parent) {
 			parent.removeChildren(items);
-			parent.addChild(group);
+			parent.appendChildren([group]);
 		}
 		this.appendNodes([group]);
 		this._groups.push(group.id());
@@ -69,13 +69,12 @@ export class NodePresenter extends Listener {
 		}
 		const groups = items.filter((item: INode) => this.isGroup(item.id())) as INodeGroup[];
 		for (const group of groups) {
-			const children = this.getChildrenByGroup(group);
-
+			const children = this.getChildren(group);
 			group.removeChildren(children);
 			this.removeGroup(group);
 
 			if (parent) {
-				parent.removeChild(group);
+				parent.removeChildren([group]);
 				parent.appendChildren(children);
 			}
 		}
@@ -86,7 +85,7 @@ export class NodePresenter extends Listener {
 		return this._nodes.filter((node: INode) => this.isGroup(node.id())) as INodeGroup[];
 	}
 
-	getChildrenByGroup(group: INode): INode[] {
+	getChildren(group: INode): INode[] {
 		const groupItem = this.getNodeById(group.id()) as INodeGroup;
 		if (!groupItem) {
 			return [];

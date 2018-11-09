@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { NodeGroup } from "map/model/node/NodeGroup";
-import { Node } from "map/model/node/Node";
+import { NodeItem } from "map/model/node/NodeItem";
 
 describe("NodeGroup", () => {
 	let group: NodeGroup;
@@ -17,70 +17,68 @@ describe("NodeGroup", () => {
 		expect(group.children().length).to.be.equal(0);
 	});
 
-	describe("addChild", () => {
+	describe("appendChildren", () => {
 		it("should append node as child", () => {
-			group.addChild(new Node());
+			group.appendChildren([new NodeItem()]);
 			expectChildrenCount(1);
 		});
 
 		it("should append other group as child", () => {
-			group.addChild(new NodeGroup());
+			group.appendChildren([new NodeGroup()]);
 			expectChildrenCount(1);
 		});
 
 		it("should append some other items to group", () =>  {
-			group.addChild(new Node());
-			group.addChild(new NodeGroup());
-			group.addChild(new Node());
+			group.appendChildren([new NodeItem(), new NodeGroup(), new NodeGroup()]);
 			expectChildrenCount(3);
 		});
 
 		it("not should append group if this group was added later", () => {
-			const node = new Node();
-			group.addChild(node);
-			group.addChild(node);
+			const node = new NodeItem();
+			group.appendChildren([node]);
+			group.appendChildren([node]);
 			expectChildrenCount(1);
 		});
 
 		it("not should append group to itself", () => {
-			group.addChild(group);
+			group.appendChildren([group]);
 			expectChildrenCount(0);
 		});
 	});
 
-	describe("removeChild", () => {
+	describe("removeChildren", () => {
 		it("should remove node from group", () => {
-			const node = new Node();
-			group.addChild(node);
+			const node = new NodeItem();
+			group.appendChildren([node]);
 			expectChildrenCount(1);
-			group.removeChild(node);
+			group.removeChildren([node]);
 			expectChildrenCount(0);
 		});
 
 		it("should remove other group from parent group", () => {
 			const itemGroup = new NodeGroup();
-			group.addChild(itemGroup);
-			group.removeChild(itemGroup);
+			group.appendChildren([itemGroup]);
+			group.removeChildren([itemGroup]);
 			expectChildrenCount(0);
 		});
 
-		it("not should remove item if this item no contains in group", function () {
-			const node = new Node();
+		it("not should remove content if this content no contains in group", () => {
+			const node = new NodeItem();
 			expectChildrenCount(0);
-			group.removeChild(node);
+			group.removeChildren([node]);
 			expectChildrenCount(0);
 		});
 
 		it("should remove some other items from group", () =>  {
-			const items = [new Node(), new NodeGroup(), new Node()];
-			items.forEach((item) => group.addChild(item));
+			const items = [new NodeItem(), new NodeGroup(), new NodeItem()];
+			group.appendChildren(items);
 			expectChildrenCount(3);
-			items.forEach((item) => group.removeChild(item));
+			group.removeChildren(items);
 			expectChildrenCount(0);
 		});
 
 		it("not should remove group from itself", () => {
-			group.removeChild(group);
+			group.removeChildren([group]);
 			expectChildrenCount(0);
 		});
 	});
