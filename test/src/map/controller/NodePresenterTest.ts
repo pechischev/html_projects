@@ -3,6 +3,7 @@ import { NodePresenter } from "map/controller/NodePresenter";
 import { NodeItem } from "map/model/node/NodeItem";
 import { INode } from "map/model/node/INode";
 import { INodeGroup } from "map/model/node/INodeGroup";
+import { SelectionList } from "map/controller/SelectionList";
 
 // tslint:disable
 describe("NodePresenter", () => {
@@ -23,7 +24,7 @@ describe("NodePresenter", () => {
 	}
 
 	beforeEach(() => {
-		list = new NodePresenter();
+		list = new NodePresenter(new SelectionList());
 	});
 
 	it("empty list ", () => {

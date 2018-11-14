@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { LinkPresenter } from "map/controller/LinkPresenter";
 import { ConnectionService } from "map/service/ConnectionService";
+import { SelectionList } from "map/controller/SelectionList";
 
 // tslint:disable
 describe("ConnectionService", () => {
@@ -18,7 +19,7 @@ describe("ConnectionService", () => {
 	}
 
 	beforeEach(() => {
-		presenter = new LinkPresenter();
+		presenter = new LinkPresenter(new SelectionList());
 		service = new ConnectionService(presenter);
 	});
 

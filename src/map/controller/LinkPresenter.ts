@@ -1,8 +1,15 @@
 import { Listener } from "common/event/Listener";
 import { ILink } from "map/model/link/ILink";
+import { SelectionList } from "map/controller/SelectionList";
 
 export class LinkPresenter extends Listener {
+	private _selectionList: SelectionList;
 	private _links: ILink[] = [];
+
+	constructor(list: SelectionList) {
+		super();
+		this._selectionList = list;
+	}
 
 	appendLink(link: ILink) {
 		if (this.hasLink(link)) {

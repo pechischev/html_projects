@@ -1,13 +1,11 @@
-import { IMap } from "map/IMap";
+import { MapController } from "map/controller/MapController";
+import { MapView } from "map/view/MapView";
 
-export class Map implements IMap {
+export class Map {
+	private _controller = new MapController();
+	private _view = new MapView();
 
-	createNode() {}
-	removeNode() {}
-
-	group() {}
-	ungroup() {}
-
-	connect() {}
-	disconnect() {}
+	container() {
+		return this._view.element();
+	}
 }
