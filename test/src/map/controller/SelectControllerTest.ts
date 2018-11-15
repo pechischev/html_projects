@@ -1,66 +1,11 @@
 import { expect } from "chai";
-import { SelectionList } from "map/controller/SelectionList";
+import { SelectionPresenter } from "map/controller/SelectionPresenter";
 
 describe("SelectionList", () => {
-	let controller: SelectionList;
+	let controller: SelectionPresenter;
 
 	beforeEach(() => {
-		controller = new SelectionList();
-	});
-
-	describe("select", () => {
-		it("should select content", () => {
-			controller.select("1");
-			expect(controller.getSelection()).to.deep.equals(["1"]);
-		});
-
-		it("should deselect content if this content was selected again", () => {
-			controller.select("1");
-			expect(controller.getSelection()).to.deep.equals(["1"]);
-			controller.select("1");
-			expect(controller.getSelection()).to.deep.equals([]);
-		});
-
-		it("should select other content", () => {
-			controller.select("1");
-			expect(controller.getSelection()).to.deep.equals(["1"]);
-			controller.select("2");
-			expect(controller.getSelection()).to.deep.equals(["2"]);
-		});
-
-		it("should select several items", () => {
-			const itemsCount = 5;
-			for (let i = 1; i < itemsCount; ++i) {
-				controller.select(`${i}`, true);
-			}
-			expect(controller.getSelection()).to.deep.equals(["1", "2", "3", "4"]);
-		});
-
-		it("should remove multiple items from selected items", () => {
-			const itemsCount = 5;
-			for (let i = 1; i < itemsCount; ++i) {
-				controller.select(`${i}`, true);
-			}
-			controller.select("2", true);
-			controller.select("3", true);
-			expect(controller.getSelection()).to.deep.equals(["1", "4"]);
-		});
-	});
-
-	describe("deselect", () => {
-		it("should deselect content if content was selected", () => {
-			controller.select("1");
-			expect(controller.getSelection()).to.deep.equals(["1"]);
-			controller.deselect("1");
-			expect(controller.getSelection()).to.deep.equals([]);
-		});
-
-		it("should not deselect content if content was not selected", () => {
-			controller.select("1");
-			expect(controller.getSelection()).to.deep.equals(["1"]);
-			controller.deselect("2");
-			expect(controller.getSelection()).to.deep.equals(["1"]);
-		});
+		controller = new SelectionPresenter();
 	});
 
 	describe("setSelection", () => {

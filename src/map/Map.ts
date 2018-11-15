@@ -1,5 +1,6 @@
 import { MapController } from "map/controller/MapController";
 import { MapView } from "map/view/MapView";
+import { notImplement } from "common/utils/tools";
 
 export class Map {
 	private _controller = new MapController();
@@ -7,5 +8,13 @@ export class Map {
 
 	container() {
 		return this._view.element();
+	}
+
+	load() {
+		notImplement();
+	}
+
+	save() {
+		notImplement();
 	}
 }

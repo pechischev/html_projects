@@ -1,27 +1,11 @@
 import { Listener } from "common/event/Listener";
 import { INode } from "map/model/node/INode";
-import { SelectionList } from "map/controller/SelectionList";
 import { INodeGroup } from "map/model/node/INodeGroup";
 import { NodeGroup } from "map/model/node/NodeGroup";
 
 export class NodePresenter extends Listener {
-	private _selectionList: SelectionList;
 	private _nodes: INode[] = [];
 	private _groups: string[] = [];
-	
-	constructor(list: SelectionList) {
-		super();
-		this._selectionList = list;
-	}
-
-	setSelection(items: INode[]) {
-		const ids = items.map((item: INode) => item.id());
-		this._selectionList.setSelection(ids);
-	}
-
-	getSelection(): INode[] {
-		return this._nodes.filter((node: INode) => this._selectionList.isSelected(node.id()));
-	}
 
 	appendNodes(nodes: INode[] = []) {
 		const newNodes = nodes.filter((node: INode) => !this.hasNodeById(node.id()));
@@ -29,7 +13,6 @@ export class NodePresenter extends Listener {
 			return;
 		}
 		this._nodes.push(...newNodes);
-		this.setSelection(newNodes);
 	}
 
 	removeNodes(nodes: INode[] = []) {
@@ -43,7 +26,6 @@ export class NodePresenter extends Listener {
 				return;
 			}
 			this._nodes.splice(index, 1);
-			this._selectionList.deselect(node.id());
 		});
 	}
 

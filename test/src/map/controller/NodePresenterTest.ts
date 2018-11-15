@@ -3,7 +3,6 @@ import { NodePresenter } from "map/controller/NodePresenter";
 import { NodeItem } from "map/model/node/NodeItem";
 import { INode } from "map/model/node/INode";
 import { INodeGroup } from "map/model/node/INodeGroup";
-import { SelectionList } from "map/controller/SelectionList";
 
 // tslint:disable
 describe("NodePresenter", () => {
@@ -24,20 +23,18 @@ describe("NodePresenter", () => {
 	}
 
 	beforeEach(() => {
-		list = new NodePresenter(new SelectionList());
+		list = new NodePresenter();
 	});
 
 	it("empty list ", () => {
 		expect(list.nodes()).to.deep.equals([]);
-		expect(list.getSelection()).to.deep.equals([]);
 	});
 
 	describe("appendNodes", () => {
-		it("should add node and select it", () => {
+		it("should add node", () => {
 			const node = new NodeItem();
 			list.appendNodes([node]);
 			expect(list.nodes()).to.deep.equals([node]);
-			expect(list.getSelection()).to.deep.equals([node]);
 		});
 
 		it("not should add node if node was added", () => {
@@ -45,20 +42,12 @@ describe("NodePresenter", () => {
 			list.appendNodes([node]);
 			list.appendNodes([node]);
 			expect(list.nodes()).to.deep.equals([node]);
-			expect(list.getSelection()).to.deep.equals([node]);
 		});
 
 		it("should add several nodes", () => {
 			const nodes = createNodes(2);
 			list.appendNodes(nodes);
 			expect(list.nodes().length).to.be.equal(2);
-		});
-
-		it("should select added nodes", () => {
-			const count = 3;
-			const nodes = createNodes(count);
-			list.appendNodes(nodes);
-			expect(list.getSelection().length).to.be.equal(count);
 		});
 
 		it("should added nodes which no contains in list", () => {
@@ -70,23 +59,6 @@ describe("NodePresenter", () => {
 			list.appendNodes([node, ...nodes]);
 			const expectedCount = 3;
 			expect(list.nodes().length).to.be.equal(expectedCount);
-		});
-	});
-
-	describe("setSelection", () => {
-		it("should set new select items", () => {
-			const nodes = createNodes(5);
-			list.appendNodes(nodes);
-			list.setSelection([nodes[1], nodes[2], nodes[4]]);
-			expect(list.getSelection()).to.deep.equals([nodes[1], nodes[2], nodes[4]]);
-		});
-
-		it("should reset select items if this items was selected", () => {
-			const nodes = createNodes(5);
-			list.appendNodes(nodes);
-			expect(list.getSelection().length).to.be.equal(5);
-			list.setSelection([]);
-			expect(list.getSelection().length).to.be.equal(0);
 		});
 	});
 
@@ -106,13 +78,6 @@ describe("NodePresenter", () => {
 			list.group(nodes);
 			expect(list.getGroupNodes().length).to.be.equal(1);
 			expect(list.getChildren(list.getGroupNodes()[0])).to.deep.equals(nodes);
-		});
-
-		it("should select new group content", function () {
-			const nodes = appendNodesToList(2);
-			list.group(nodes);
-			const group = list.getGroupNodes()[0];
-			expect(list.getSelection()).to.deep.equals([group]);
 		});
 
 		it("should append group to nodes list", () => {
@@ -214,14 +179,6 @@ describe("NodePresenter", () => {
 			expect(list.nodes().length).to.be.equal(1);
 			list.removeNodes([node]);
 			expect(list.nodes().length).to.be.equal(0);
-		});
-
-		it("should deselect node when node was removed", () => {
-			const node = new NodeItem();
-			list.appendNodes([node]);
-			expect(list.getSelection().length).to.be.equal(1);
-			list.removeNodes([node]);
-			expect(list.getSelection().length).to.be.equal(0);
 		});
 
 		it("not should remove no contains node", () => {

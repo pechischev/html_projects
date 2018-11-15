@@ -1,26 +1,10 @@
 import { Listener } from "common/event/Listener";
 
-export class SelectionList extends Listener {
+export class SelectionPresenter extends Listener {
 	private _selectedItems: string[] = [];
 
 	setSelection(items: string[], isMulti?: boolean) {
 		this.selectImpl(items, isMulti);
-	}
-
-	deselect(id: string) {
-		const index = this._selectedItems.indexOf(id);
-		if (index === -1) {
-			return;
-		}
-		this._selectedItems.splice(index, 1);
-	}
-
-	select(id: string, isMulti?: boolean) {
-		if (this.isSelected(id)) {
-			this.deselect(id);
-			return;
-		}
-		this.selectImpl([id], isMulti);
 	}
 
 	isSelected(id: string): boolean {
