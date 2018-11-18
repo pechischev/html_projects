@@ -1,27 +1,35 @@
 import { TagName } from "common/dom/TagName";
+import { BemInfo } from "./BemInfo";
 
 interface IComponentConfig {
-	className?: string;
-	tagName?: string;
+	blockName?: string;
+	tagName?: TagName;
+	element?: HTMLElement;
+	content?: string;
 }
 
-export class Component<T extends HTMLElement = HTMLElement> {
-	private _element: T;
-	private _x: number;
-	private _y: number;
+export class Component {
+	private _element: HTMLElement;
+	private _bemInfo: BemInfo[] = [];
 
 	constructor(config?: IComponentConfig) {
-		const {className, tagName} = config;
-
-		this._element = this._createElement((tagName || TagName.DIV), className);
+		const {blockName, tagName, element, content} = config;
+		this.initBaseElement(tagName, element);
+		if (blockName) {
+			this._bemInfo.push(new BemInfo(config.blockName));
+		}
+		if (content) {
+			this._element.innerHTML = config.content;
+		}
+		this.invalidateClassName();
 	}
 
-	addChild(child: T | Component | Node) {
+	addChild(child: Component | Node) {
 		const node = (child instanceof Component) ? child.element() : child;
 		this._element.appendChild(node);
 	}
 
-	removeChild(child: T | Component | Node) {
+	removeChild(child: Component | Node) {
 		const node = (child instanceof Component) ? child.element() : child;
 		if (this._element.contains(node)) {
 			this._element.removeChild(node);
@@ -34,58 +42,89 @@ export class Component<T extends HTMLElement = HTMLElement> {
 		}
 	}
 
-	element(): T {
+	element(): HTMLElement {
 		return this._element;
 	}
 
-	addClassNames(classNames: any) {
-		const classNameValues = (classNames instanceof Array && classNames.length) ? classNames : [classNames];
-		for (const className of classNameValues) {
-			this._element.classList.add(className);
-		}
+	setPosition(x: number, y: number) {
+		this.setStyle("left", `${x}px`);
+		this.setStyle("top", `${y}px`);
 	}
 
-	hasClassName(className: string): boolean {
-		return this._element.classList.contains(className);
+	x(): number {
+		return this._element.offsetLeft;
 	}
 
-	removeClassNames(classNames: string[] | string) {
-		if (classNames instanceof Array) {
-			for (const name of classNames) {
-				if (this.hasClassName(name)) {
-					this._element.classList.remove(name);
-				}
-			}
-			return;
-		}
-		if (this.hasClassName(classNames)) {
-			this._element.classList.remove(classNames);
+	y(): number {
+		return this._element.offsetTop;
+	}
+
+	setTextContent(text: string) {
+		this.addChild(document.createTextNode(text));
+	}
+
+	textContent(): string {
+		return this._element.textContent || "";
+	}
+
+	setWidth(width: number) {
+		this.setStyle("width", `${width}px`);
+	}
+
+	setHeight(height: number) {
+		this.setStyle("height", `${height}px`);
+	}
+
+	width(): number {
+		return this._element.offsetWidth;
+	}
+
+	height(): number {
+		return this._element.offsetHeight;
+	}
+
+	getClientRect(): ClientRect {
+		return this._element.getBoundingClientRect();
+	}
+
+	applyStyles(stylesList: {[key: string]: string|number}) {
+		for (const style in stylesList) {
+			this.setStyle(style, stylesList[style]);
 		}
 	}
 
 	setVisible(value: boolean) {
-		this._element.style.display = (value) ? "" : "none";
+		this.setStyle("display", (value) ? "" : "none");
 	}
 
-	setPosition(x: number, y: number) {
-		this._element.style.left = `${x}px`;
-		this._element.style.top = `${y}px`;
+	visible(): boolean {
+		return this._element.style.getPropertyValue("display") != "none";
 	}
 
-	x(): number {
-		return this._x;
-	}
-
-	y(): number {
-		return this._y;
-	}
-
-	setTextContent(text: string) {
-		this._element.textContent = text;
+	setStyle(style: string, value: string|number) {
+		style = style.toLowerCase();
+		const styles = [];
+		if (!this._element.style.hasOwnProperty(style)) {
+			const styleName = style.substr(0, 1).toUpperCase() + style.substr(1, style.length);
+			styles.push([
+				style,
+				`Webkit${styleName}`,
+				`Moz${styleName}`,
+				`ms${styleName}`,
+				`O${styleName}`,
+			]);
+		}
+		for (const style of styles) {
+			this.setStyleImpl(style, value);
+		}
 	}
 
 	setAttribute(attr: { name: string, value: string }) {
 		this._element.setAttribute(attr.name, attr.value);
+	}
+
+	removeAttribute(name: string) {
+		this._element.removeAttribute(name);
 	}
 
 	listen(eventType: string, handler: EventListenerOrEventListenerObject) {
@@ -96,11 +135,36 @@ export class Component<T extends HTMLElement = HTMLElement> {
 		this._element.removeEventListener(eventType, handler);
 	}
 
-	private _createElement(elementTag: string, className?: string): T {
-		const element = document.createElement(elementTag) as T;
-		if (className) {
-			element.setAttribute("class", className);
+	updateModifier(modifier: string, value: string|number|boolean) {
+		this._bemInfo[0].updateModifier(modifier, value);
+		this.invalidateClassName();
+	}
+
+	createChildBemInfo(elementName: string): BemInfo {
+		return new BemInfo(this._bemInfo[0].blockName(), elementName);
+	}
+
+	private invalidateClassName() {
+		let className = "";
+		for (const bemInfo of this._bemInfo) {
+			className += className ? ` ${bemInfo.getClassName()}` : bemInfo.getClassName();
 		}
-		return element;
+		this._element.setAttribute("class", className);
+	}
+
+	private initBaseElement(tagName: TagName = TagName.DIV, element?: HTMLElement) {
+		if (element && tagName) {
+			throw new Error("Undefined behavior: tagName and element is set");
+		}
+		if (element) {
+			this._element = element;
+		}
+		if (tagName || !element) {
+			this._element = document.createElement(tagName);
+		}
+	}
+
+	private setStyleImpl(style: string, value: string|number) {
+		this._element.style.setProperty(style, value.toString());
 	}
 }

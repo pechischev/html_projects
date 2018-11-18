@@ -2,14 +2,14 @@ import { Component } from "common/component/Component";
 import { TagName } from "common/dom/TagName";
 import { Dispatcher } from "common/event/Dispatcher";
 
-export class TextInput extends Component<HTMLInputElement> {
+export class TextInput extends Component {
 	private _changedEvent: Dispatcher;
 	private _blurEvent: Dispatcher;
 	private _focusEvent: Dispatcher;
 
 	constructor(placeholder?: string) {
 		super({
-			className: "text-input",
+			blockName: "text-input",
 			tagName: TagName.INPUT
 		});
 
@@ -29,13 +29,11 @@ export class TextInput extends Component<HTMLInputElement> {
 	}
 
 	setValue(value: string) {
-		const element = this.element();
-		element.value = value;
+		this.setTextContent(value);
 	}
 
 	value() {
-		const element = this.element();
-		return element.value;
+		return this.textContent();
 	}
 
 	changedEvent(): Dispatcher {
