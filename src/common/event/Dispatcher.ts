@@ -1,6 +1,7 @@
 import { IDispatcher } from "common/event/IDispatcher";
 import { ArrayUtils } from "common/utils/ArrayUtils";
 import { Types } from "common/types/Types";
+import { IDisposable } from "common/component/IDisposable";
 import { isFunction } from "util";
 
 interface IDispatcherItem {
@@ -9,7 +10,7 @@ interface IDispatcherItem {
 	priority?: number;
 }
 
-export class Dispatcher implements IDispatcher {
+export class Dispatcher implements IDispatcher, IDisposable {
 	private _listeners: IDispatcherItem[] = [];
 
 	addListener(callback: Types.Handler, scope: object = null) {
@@ -23,7 +24,7 @@ export class Dispatcher implements IDispatcher {
 	}
 
 	dispatch<T>(args?: T) {
-		const params = arguments;
+		const params = args;
 		this._listeners.forEach((listener) => {
 			if (!listener.callback) {
 				return;
@@ -40,6 +41,10 @@ export class Dispatcher implements IDispatcher {
 			return;
 		}
 		this._listeners.splice(index, 1);
+	}
+
+	dispose() {
+		this._listeners = [];
 	}
 
 	private _hasListener(callback: Types.Handler): boolean {

@@ -18,9 +18,9 @@ export class TextInput extends Component {
 		this._blurEvent = new Dispatcher();
 		this._focusEvent = new Dispatcher();
 
-		this.listen('change', () => this._changedEvent.dispatch());
-		this.listen('blur', () => this._blurEvent.dispatch());
-		this.listen('focus', (event: Event) => {
+		this.listen('change', this, () => this._changedEvent.dispatch());
+		this.listen('blur', this, () => this._blurEvent.dispatch());
+		this.listen('focus', this, (event: Event) => {
 			this._focusEvent.dispatch();
 		});
 
