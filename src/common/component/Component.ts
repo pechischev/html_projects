@@ -140,6 +140,11 @@ export class Component {
 		this.invalidateClassName();
 	}
 
+	applyBemInfo(blockName: string | BemInfo, elementName?: string) { // TODO: rename
+		const bemInfo = (blockName instanceof BemInfo) ? blockName : new BemInfo(blockName, elementName);
+		this._bemInfo.push(bemInfo);
+	}
+
 	createChildBemInfo(elementName: string): BemInfo {
 		return new BemInfo(this._bemInfo[0].blockName(), elementName);
 	}

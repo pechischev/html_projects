@@ -8,6 +8,7 @@
     "@types/react": "15.6.6",
     "@types/react-dom": "0.14.22",
     "gulp": "3.9.1",
+    "konva": "^2.5.1",
     "react": "15.4.2",
     "react-dom": "15.4.2",
     "react-scripts-ts": "1.0.6",

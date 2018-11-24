@@ -23,7 +23,7 @@ export class Dispatcher implements IDispatcher {
 	}
 
 	dispatch<T>(args?: T) {
-		const params = arguments;
+		const params = args;
 		this._listeners.forEach((listener) => {
 			if (!listener.callback) {
 				return;

@@ -1,0 +1,15 @@
+.button {
+  outline: none;
+  border: 1px solid;
+  min-width: 50px;
+  min-height: 25px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.5;
+  }
+
+  &:active {
+    opacity: 0.7;
+  }
+}

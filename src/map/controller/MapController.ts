@@ -24,6 +24,7 @@ export class MapController extends Listener {
 		const node = NodeFactory.createItem("Node");
 		this._nodePresenter.appendNodes([node]);
 		this._selectionList.setSelection([node.id()]);
+		this.dispatch("createNode", node);
 	}
 
 	removeNode() {

@@ -32,6 +32,7 @@
       "no-public",
       "check-constructor"
     ],
+    "object-literal-sort-keys": ["ignore-case"],
     "comment-format": false,
     "triple-equals": false,
     "no-namespace": false,
