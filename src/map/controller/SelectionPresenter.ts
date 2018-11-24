@@ -1,7 +1,13 @@
-import { Listener } from "common/event/Listener";
+import { Disposable } from "common/component/Disposable";
+import { IDispatcher } from "common/event/IDispatcher";
 
-export class SelectionPresenter extends Listener {
+export class SelectionPresenter extends Disposable {
 	private _selectedItems: string[] = [];
+	private _changeSelectionEvent = this.createDispatcher();
+
+	changeSelectionEvent(): IDispatcher {
+		return this._changeSelectionEvent;
+	}
 
 	setSelection(items: string[], isMulti?: boolean) {
 		this.selectImpl(items, isMulti);
@@ -21,5 +27,6 @@ export class SelectionPresenter extends Listener {
 			selectedItems = [...this._selectedItems, ...selectedItems];
 		}
 		this._selectedItems = selectedItems;
+		this._changeSelectionEvent.dispatch();
 	}
 }

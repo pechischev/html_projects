@@ -1,7 +1,7 @@
 import { Dispatcher } from "common/event/Dispatcher";
 import { IDispatcher } from "common/event/IDispatcher";
 import { Types } from "common/types/Types";
-import Component from "./Component";
+import { Component } from "./Component";
 import { IDisposable } from "./IDisposable";
 
 export class Disposable implements IDisposable {
@@ -81,8 +81,8 @@ export class Disposable implements IDisposable {
 
 			const dispatchEvent = (browserEvent: Event) => event.dispatch(browserEvent);
 
-			target.displayObject().addEventListener(type, dispatchEvent);
-			componentEventsCleaner.set(type, () => target.displayObject().removeEventListener(type, dispatchEvent));
+			target.element().addEventListener(type, dispatchEvent);
+			componentEventsCleaner.set(type, () => target.element().removeEventListener(type, dispatchEvent));
 		}
 		const handlerId = this.addListener(componentEvents.get(type), handler);
 

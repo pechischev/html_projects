@@ -1,16 +1,28 @@
-import { Listener } from "common/event/Listener";
 import { NodePresenter } from "map/controller/NodePresenter";
-import { LinkPresenter } from "map/controller/LinkPresenter";
 import { SelectionPresenter } from "map/controller/SelectionPresenter";
-import { ConnectionService } from "map/service/ConnectionService";
 import { notImplement } from "common/utils/tools";
 import { NodeFactory } from "map/controller/factory/NodeFactory";
+import { Disposable } from "common/component/Disposable";
+import { IDispatcher } from "common/event/IDispatcher";
 
-export class MapController extends Listener {
+export class MapController extends Disposable {
 	private _selectionList = new SelectionPresenter();
-	private _nodePresenter = new NodePresenter();
-	private _linkPresenter = new LinkPresenter();
-	private _connection = new ConnectionService(this._linkPresenter);
+	private _nodeList = new NodePresenter();
+
+	private _createdNodeEvent = this.createDispatcher();
+	private _removeEvent = this.createDispatcher();
+
+	createdNodeEvent(): IDispatcher {
+		return this._createdNodeEvent;
+	}
+
+	removeEvent(): IDispatcher {
+		return this._removeEvent;
+	}
+
+	selectionList(): SelectionPresenter {
+		return this._selectionList;
+	}
 
 	connect() {
 		notImplement();
@@ -21,14 +33,23 @@ export class MapController extends Listener {
 	}
 
 	appendNode() {
-		const node = NodeFactory.createItem("Node");
-		this._nodePresenter.appendNodes([node]);
+		const node = NodeFactory.createItem(`Node ${this._nodeList.nodes().length + 1}`);
+		this._nodeList.appendNodes([node]);
+		this._createdNodeEvent.dispatch(node);
 		this._selectionList.setSelection([node.id()]);
-		this.dispatch("createNode", node);
 	}
 
 	removeNode() {
-		notImplement();
+		const selection = this._selectionList.getSelection();
+		const nodes = [];
+		for (const id of selection) {
+			const node = this._nodeList.getNodeById(id);
+			if (node) {
+				nodes.push(node);
+			}
+		}
+		this._nodeList.removeNodes(nodes);
+		this._removeEvent.dispatch();
 	}
 
 	group() {

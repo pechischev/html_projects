@@ -1,10 +1,9 @@
 import { Component } from "common/component/Component";
 import { TagName } from "common/dom/TagName";
-import { Dispatcher } from "common/event/Dispatcher";
 import { IDispatcher } from "common/event/IDispatcher";
 
 export class Button extends Component {
-	private _clickEvent = new Dispatcher();
+	private _clickEvent = this.createDispatcher();
 
 	constructor({content}: {content?: string}) {
 		super({
@@ -13,7 +12,7 @@ export class Button extends Component {
 			content
 		});
 
-		this.listen("click", () => this._clickEvent.dispatch());
+		this.listen("click", this, () => this._clickEvent.dispatch());
 	}
 
 	clickEvent(): IDispatcher {

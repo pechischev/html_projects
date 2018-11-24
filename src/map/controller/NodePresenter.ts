@@ -91,18 +91,18 @@ export class NodePresenter extends Listener {
 		return this.getNodeById(child.parent()) as INodeGroup;
 	}
 
+	getNodeById(id: string): INode|null  {
+		const index = this.getNodeIndex(id);
+		const node = this._nodes[index];
+		return node || null;
+	}
+
 	private hasNodeById(id: string): boolean {
 		return this.getNodeIndex(id) > -1;
 	}
 
 	private getNodeIndex(id: string): number {
 		return this._nodes.findIndex((node: INode) => node.id() == id);
-	}
-	
-	private getNodeById(id: string): INode|null  {
-		const index = this.getNodeIndex(id); 
-		const node = this._nodes[index];
-		return node || null;
 	}
 
 	private removeGroup(group: INodeGroup) {
