@@ -1,5 +1,6 @@
 import { TagName } from "common/dom/TagName";
 import { BemInfo } from "./BemInfo";
+import { Disposable } from "./Disposable";
 
 interface IComponentConfig {
 	blockName?: string;
@@ -8,11 +9,12 @@ interface IComponentConfig {
 	content?: string;
 }
 
-export class Component {
-	private _element: HTMLElement;
+export class Component extends Disposable {
+	private _element: HTMLElement ;
 	private _bemInfo: BemInfo[] = [];
 
 	constructor(config?: IComponentConfig) {
+		super();
 		const {blockName, tagName, element, content} = config;
 		this.initBaseElement(tagName, element);
 		if (blockName) {
@@ -125,14 +127,6 @@ export class Component {
 
 	removeAttribute(name: string) {
 		this._element.removeAttribute(name);
-	}
-
-	listen(eventType: string, handler: EventListenerOrEventListenerObject) {
-		this._element.addEventListener(eventType, handler);
-	}
-
-	unlisten(eventType: string, handler: EventListenerOrEventListenerObject) {
-		this._element.removeEventListener(eventType, handler);
 	}
 
 	updateModifier(modifier: string, value: string|number|boolean) {
