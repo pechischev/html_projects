@@ -1,11 +1,23 @@
 import { INode } from "map/model/node/INode";
 import { INodeGroup } from "map/model/node/INodeGroup";
-import { NodeGroup } from "map/model/node/NodeGroup";
 import { Disposable } from "common/component/Disposable";
+import { IDispatcher } from "common/event/IDispatcher";
+import { ArrayUtils } from "common/utils/ArrayUtils";
 
 export class NodeList extends Disposable {
 	private _nodes: INode[] = [];
 	private _groups: string[] = [];
+
+	private _groupEvent = this.createDispatcher();
+	private _ungroupEvent = this.createDispatcher();
+
+	groupEvent(): IDispatcher {
+		return this._groupEvent;
+	}
+
+	ungroupEvent(): IDispatcher {
+		return this._ungroupEvent;
+	}
 
 	appendNodes(nodes: INode[] = []) {
 		const newNodes = nodes.filter((node: INode) => !this.hasNodeById(node.id()));
@@ -33,37 +45,48 @@ export class NodeList extends Disposable {
 		return this._nodes;
 	}
 
-	group(items: INode[], parent: INodeGroup = null) {
+	group(items: INode[], group: INodeGroup) {
 		const length = items.length;
 		if (!length) {
 			return;
 		}
-		const group = new NodeGroup(); // TODO: don't create group
-		group.appendChildren(items);
 
+		const parents = ArrayUtils.uniq(items.map((item) => this.getParent(item))).filter((value) => !!value);
+		if (parents.length > 1) {
+			throw new Error("There should be only one parent");
+		}
+		const parent = parents[0];
 		if (parent) {
-			parent.removeChildren(items);
+			parent.removeChildren(items.slice());
 			parent.appendChildren([group]);
 		}
+
+		group.appendChildren(items);
+
 		this.appendNodes([group]);
+
 		this._groups.push(group.id());
+		this._groupEvent.dispatch([group], items);
 	}
 
-	ungroup(items: INode[], parent: INodeGroup = null) {
-		const length = items.length;
+	ungroup(groups: INodeGroup[]) {
+		const length = groups.length;
 		if (!length) {
 			return;
 		}
-		const groups = items.filter((item: INode) => this.isGroup(item.id())) as INodeGroup[];
 		for (const group of groups) {
-			const children = this.getChildren(group);
-			group.removeChildren(children);
 			this.removeGroup(group);
 
+			const children = this.getChildren(group);
+			group.removeChildren(children);
+
+			const parent = this.getParent(group);
 			if (parent) {
 				parent.removeChildren([group]);
 				parent.appendChildren(children);
 			}
+
+			this._ungroupEvent.dispatch(parent ? [] : children, [group]);
 		}
 		this.removeNodes(groups);
 	}

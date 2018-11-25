@@ -42,24 +42,27 @@ export class WorkArea extends Component {
 
 	update(appendedNodes: INode[], removedNodes: INode[] = []) {
 		removedNodes.forEach((node) => {
-			const index = this._shapes.findIndex((shape) => shape.getId() == node.id());
+			const index = this.getIndex(node.id());
 			if (index === -1) {
 				return;
 			}
 			const shape = this._shapes[index];
-			shape.destroy();
-			this._shapes.splice(index, -1);
+			shape.remove();
+			this._shapes.splice(index, 1);
 		});
 
 		appendedNodes.forEach((node) => {
 			this.appendNode(node);
 		});
 
-		this._layer.draw();
+		this.invalidate();
 	}
 
 	invalidate() {
-		this._layer.add(...this._shapes);
+		this._layer.removeChildren();
+		if (this._shapes.length) {
+			this._layer.add(...this._shapes);
+		}
 		this._layer.draw();
 	}
 
@@ -79,8 +82,9 @@ export class WorkArea extends Component {
 		shape.x(Math.random() * 1000);
 		shape.y(Math.random() * 700);
 		this._shapes.push(shape);
+	}
 
-		this._layer.add(shape);
-		this._layer.draw();
+	private getIndex(id: string): number {
+		return this._shapes.findIndex((shape) => shape.getId() == id);
 	}
 }

@@ -27,4 +27,8 @@ export namespace ArrayUtils {
 		}
 		return arr[index];
 	};
+
+	export const uniq = <T>(arr: T[]): T[] => {
+		return Array.from(new Set(arr));
+	};
 }
