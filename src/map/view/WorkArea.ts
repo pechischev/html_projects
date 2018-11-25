@@ -75,12 +75,12 @@ export class WorkArea extends Component {
 
 	private appendNode(node: INode) {
 		const shape = new NodeItemView(node);
-		shape.on("click", (event) => {
+		shape.on("mousedown", (event) => {
 			const isCtrl = event.evt.ctrlKey;
 			this._clickItemEvent.dispatch(node.id(), isCtrl);
 		});
-		shape.x(Math.random() * 1000);
-		shape.y(Math.random() * 700);
+		shape.x(50);
+		shape.y(50);
 		this._shapes.push(shape);
 	}
 
