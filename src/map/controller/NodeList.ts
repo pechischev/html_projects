@@ -1,9 +1,9 @@
-import { Listener } from "common/event/Listener";
 import { INode } from "map/model/node/INode";
 import { INodeGroup } from "map/model/node/INodeGroup";
 import { NodeGroup } from "map/model/node/NodeGroup";
+import { Disposable } from "common/component/Disposable";
 
-export class NodePresenter extends Listener {
+export class NodeList extends Disposable {
 	private _nodes: INode[] = [];
 	private _groups: string[] = [];
 
@@ -95,6 +95,10 @@ export class NodePresenter extends Listener {
 		const index = this.getNodeIndex(id);
 		const node = this._nodes[index];
 		return node || null;
+	}
+
+	getNodesById(ids: string[]): INode[] {
+		return this._nodes.filter((node) => ids.indexOf(node.id()) > -1);
 	}
 
 	private hasNodeById(id: string): boolean {

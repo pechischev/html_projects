@@ -23,13 +23,13 @@ export class Dispatcher implements IDispatcher, IDisposable {
 		this._listeners.push({callback, scope});
 	}
 
-	dispatch<T>(args?: T) {
+	dispatch<T>(...args: any[]) {
 		const params = args;
 		this._listeners.forEach((listener) => {
 			if (!listener.callback) {
 				return;
 			}
-			listener.callback.call(listener.scope, params);
+			listener.callback.call(listener.scope, ...params);
 		});
 	}
 

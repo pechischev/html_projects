@@ -1,7 +1,7 @@
 import { Disposable } from "common/component/Disposable";
 import { IDispatcher } from "common/event/IDispatcher";
 
-export class SelectionPresenter extends Disposable {
+export class SelectionList extends Disposable {
 	private _selectedItems: string[] = [];
 	private _changeSelectionEvent = this.createDispatcher();
 

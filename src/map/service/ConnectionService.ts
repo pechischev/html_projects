@@ -1,12 +1,12 @@
-import { LinkPresenter } from "map/controller/LinkPresenter";
+import { LinkList } from "map/controller/LinkList";
 import { Link } from "map/model/link/Link";
 import { ConnectionList } from "map/controller/ConnectionList";
 
 export class ConnectionService {
-	private _presenter: LinkPresenter;
+	private _presenter: LinkList;
 	private _list = new ConnectionList();
 
-	constructor(presenter: LinkPresenter) {
+	constructor(presenter: LinkList) {
 		this._presenter = presenter;
 	}
 

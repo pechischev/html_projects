@@ -1,32 +1,18 @@
 import { MapController } from "map/controller/MapController";
 import { MapView } from "map/view/MapView";
-import { notImplement } from "common/utils/tools";
 import { Disposable } from "common/component/Disposable";
 
 export class Map extends Disposable {
 	private _view = new MapView();
-	private _controller = new MapController();
+	private _controller = new MapController(this._view);
 
 	constructor() {
 		super();
 		this.initCommands();
-
-		const workArea = this._view.workArea();
-		workArea.setSelectionList(this._controller.selectionList());
-
-		this.addListener(this._controller.createdNodeEvent(), <INode>(node) => workArea.createNode(node));
 	}
 
 	container() {
 		return this._view.element();
-	}
-
-	load() {
-		notImplement();
-	}
-
-	save() {
-		notImplement();
 	}
 
 	private initCommands() {

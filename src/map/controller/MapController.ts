@@ -1,26 +1,21 @@
-import { NodePresenter } from "map/controller/NodePresenter";
-import { SelectionPresenter } from "map/controller/SelectionPresenter";
+import { SelectionList } from "map/controller/SelectionList";
 import { notImplement } from "common/utils/tools";
-import { NodeFactory } from "map/controller/factory/NodeFactory";
 import { Disposable } from "common/component/Disposable";
-import { IDispatcher } from "common/event/IDispatcher";
+import { MapView } from "map/view/MapView";
+import { NodeController } from "map/controller/NodeController";
 
 export class MapController extends Disposable {
-	private _selectionList = new SelectionPresenter();
-	private _nodeList = new NodePresenter();
+	private _selectionList = new SelectionList();
+	private _nodeController: NodeController;
+	private _view: MapView;
 
-	private _createdNodeEvent = this.createDispatcher();
-	private _removeEvent = this.createDispatcher();
-
-	createdNodeEvent(): IDispatcher {
-		return this._createdNodeEvent;
+	constructor(view: MapView) {
+		super();
+		this._view = view;
+		this._nodeController = new NodeController(this._selectionList, this._view.workArea());
 	}
 
-	removeEvent(): IDispatcher {
-		return this._removeEvent;
-	}
-
-	selectionList(): SelectionPresenter {
+	selectionList(): SelectionList {
 		return this._selectionList;
 	}
 
@@ -33,30 +28,18 @@ export class MapController extends Disposable {
 	}
 
 	appendNode() {
-		const node = NodeFactory.createItem(`Node ${this._nodeList.nodes().length + 1}`);
-		this._nodeList.appendNodes([node]);
-		this._createdNodeEvent.dispatch(node);
-		this._selectionList.setSelection([node.id()]);
+		this._nodeController.appendNode();
 	}
 
 	removeNode() {
-		const selection = this._selectionList.getSelection();
-		const nodes = [];
-		for (const id of selection) {
-			const node = this._nodeList.getNodeById(id);
-			if (node) {
-				nodes.push(node);
-			}
-		}
-		this._nodeList.removeNodes(nodes);
-		this._removeEvent.dispatch();
+		this._nodeController.removeNode();
 	}
 
 	group() {
-		notImplement();
+		this._nodeController.group();
 	}
 
 	ungroup() {
-		notImplement();
+		this._nodeController.ungroup();
 	}
 }

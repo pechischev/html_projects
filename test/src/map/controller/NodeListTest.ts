@@ -1,12 +1,12 @@
 import { expect } from "chai";
-import { NodePresenter } from "map/controller/NodePresenter";
+import { NodeList } from "map/controller/NodeList";
 import { NodeItem } from "map/model/node/NodeItem";
 import { INode } from "map/model/node/INode";
 import { INodeGroup } from "map/model/node/INodeGroup";
 
 // tslint:disable
-describe("NodePresenter", () => {
-	let list: NodePresenter;
+describe("NodeList", () => {
+	let list: NodeList;
 
 	function createNodes(count: number): NodeItem[] {
 		const nodes = [];
@@ -23,7 +23,7 @@ describe("NodePresenter", () => {
 	}
 
 	beforeEach(() => {
-		list = new NodePresenter();
+		list = new NodeList();
 	});
 
 	it("empty list ", () => {
