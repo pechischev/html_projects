@@ -1,7 +1,6 @@
-import { IListener } from "common/event/IListener";
 import { IContent } from "map/model/content/IContent";
 
-export interface INode extends IListener {
+export interface INode {
 	id(): string;
 
 	setParent(id: string);

@@ -1,9 +1,9 @@
-import { Listener } from "common/event/Listener";
 import { Utils } from "common/utils/Utils";
 import { IContent } from "map/model/content/IContent";
+import { Disposable } from "common/component/Disposable";
 import { INode } from "./INode";
 
-export abstract class Node extends Listener implements INode {
+export abstract class Node extends Disposable implements INode {
 	protected _parent?: string = null;
 	protected _content?: IContent = null;
 	private readonly _id;

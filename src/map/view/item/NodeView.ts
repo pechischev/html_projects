@@ -1,7 +1,7 @@
 import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
 
-export class NodeItemView extends Konva.Group {
+export class NodeView extends Konva.Group {
 	private _item: INode;
 	private _selected = false;
 	private _rect: Konva.Rect;

@@ -1,43 +1,21 @@
 import * as Konva from "konva";
-import { Component } from "common/component/Component";
 import { INode } from "map/model/node/INode";
-import { NodeItemView } from "map/view/item/NodeItemView";
+import { NodeView } from "map/view/item/NodeView";
 import { IDispatcher } from "common/event/IDispatcher";
+import { Disposable } from "common/component/Disposable";
 
-export class WorkArea extends Component {
-	private _layer =  new Konva.Layer();
-	private _shapes: NodeItemView[] = [];
+export class NodeLayer extends Disposable {
+	private _layer = new Konva.Layer();
+	private _shapes: NodeView[] = [];
 
 	private _clickItemEvent = this.createDispatcher();
-	private _clickLayerEvent = this.createDispatcher();
-
-	constructor() {
-		super({blockName: "work-area"});
-
-		const stage = new Konva.Stage({
-			container: this.element(),
-			name: "stage"
-		});
-		stage.add(this._layer);
-		stage.on("click", (event) => {
-			if (event.target.name() != stage.name()) {
-				return;
-			}
-			this._clickLayerEvent.dispatch();
-		});
-
-		window.addEventListener("DOMContentLoaded", () => {
-			stage.setWidth(this.width());
-			stage.setHeight(this.height());
-		});
-	}
 
 	clickItemEvent(): IDispatcher {
 		return this._clickItemEvent;
 	}
 
-	clickLayerEvent(): IDispatcher {
-		return this._clickLayerEvent;
+	layer(): Konva.Layer {
+		return this._layer;
 	}
 
 	update(appendedNodes: INode[], removedNodes: INode[] = []) {
@@ -74,7 +52,7 @@ export class WorkArea extends Component {
 	}
 
 	private appendNode(node: INode) {
-		const shape = new NodeItemView(node);
+		const shape = new NodeView(node);
 		shape.on("mousedown", (event) => {
 			const isCtrl = event.evt.ctrlKey;
 			this._clickItemEvent.dispatch(node.id(), isCtrl);

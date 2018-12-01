@@ -18,14 +18,14 @@
   &-tools {
     background-color: #4F4F4F;
   }
+}
 
-  .work-area {
+.canvas-container {
+  display: flex;
+
+  > * {
     display: flex;
-
-    > * {
-      display: flex;
-      margin: auto;
-      outline: 1px solid;
-    }
+    margin: auto;
+    outline: 1px solid;
   }
 }
