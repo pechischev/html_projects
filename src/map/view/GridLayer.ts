@@ -1,12 +1,11 @@
-import { Disposable } from "common/component/Disposable";
 import * as Konva from "konva";
 import { Coordinate } from "common/math/Coordinate";
 import { Creator } from "map/view/item/Creator";
 import { MovementController } from "map/controller/MovementController";
+import { Layer } from "common/canvas/Layer";
 
-export class GridLayer extends Disposable {
+export class GridLayer extends Layer {
 	readonly clickItemEvent = this.createDispatcher();
-	private _layer = new Konva.Layer();
 	private _cell = new Creator();
 
 	constructor() {
@@ -17,15 +16,16 @@ export class GridLayer extends Disposable {
 		this._layer.draw();
 	}
 
-	layer(): Konva.Layer {
-		return this._layer;
-	}
-
 	updateCellPosition(pos: Coordinate) {
 		this._layer.removeChildren();
 		this.renderGrid();
 		this._cell.position(MovementController.toAbsolute(pos));
 		this._layer.add(this._cell);
+		this._layer.batchDraw();
+	}
+
+	showCell(show: boolean) {
+		this._cell.visible(show);
 		this._layer.batchDraw();
 	}
 

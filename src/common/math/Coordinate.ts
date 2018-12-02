@@ -1,3 +1,5 @@
+import { isNumber } from "util";
+
 export class Coordinate {
 	x: number;
 	y: number;
@@ -19,5 +21,18 @@ export class Coordinate {
 
 	distance(coordinate: Coordinate): Coordinate {
 		return new Coordinate(this.x - coordinate.x, this.y - coordinate.y);
+	}
+
+	translate(tx: Coordinate|number, ty?: number): Coordinate {
+		if (tx instanceof Coordinate) {
+			this.x += tx.x;
+			this.y += tx.y;
+		} else {
+			this.x += tx;
+			if (isNumber(ty)) {
+				this.y += ty;
+			}
+		}
+		return this;
 	}
 }

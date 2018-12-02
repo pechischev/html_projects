@@ -1,5 +1,6 @@
 import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
+import { Coordinate } from "common/math/Coordinate";
 
 export class NodeView extends Konva.Group {
 	private _node: INode;
@@ -59,5 +60,12 @@ export class NodeView extends Konva.Group {
 
 	selected(): boolean {
 		return this._selected;
+	}
+
+	setPosition(position: Coordinate) {
+		const offsetX = 15;
+		const offsetY = 5;
+		this.x(position.x + offsetX);
+		this.y(position.y + offsetY);
 	}
 }

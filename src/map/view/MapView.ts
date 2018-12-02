@@ -55,8 +55,11 @@ export class MapView extends Component {
 		this._canvas.add(this._nodeLayer.layer());
 
 		// grid layer
-		this.addListener(this._gridLayer.clickItemEvent, (pos) => this.createItemEvent.dispatch(pos));
-		this._gridLayer.layer().on("click", () => this._canvas.fire("click")); // TODO: to need refactor, change on addListener
+		this.addListener(this._gridLayer.clickItemEvent, (pos) => {
+			this._gridLayer.showCell(false);
+			this.createItemEvent.dispatch(pos);
+		});
+		this.addListener(this._gridLayer.clickLayerEvent, () => this._canvas.fire("click"));
 
 		// node layer
 		this.addListener(this._nodeLayer.clickLayerEvent, () => this._canvas.fire("click"));
@@ -70,7 +73,9 @@ export class MapView extends Component {
 		this._movementController = controller;
 		this._canvas.on("mousemove", (event) => {
 			const mouseEvent = event.evt;
-			this._movementController.updateCell(new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY));
+			const position = new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY);
+			this._gridLayer.showCell(this._movementController.isEmptyCell(MovementController.toRelative(position)));
+			this._movementController.updateCell(position);
 		});
 		this.addListener(controller.changedCellEvent, this._gridLayer.updateCellPosition, this._gridLayer);
 	}

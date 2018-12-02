@@ -1,24 +1,11 @@
-import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
 import { NodeView } from "map/view/item/NodeView";
-import { Disposable } from "common/component/Disposable";
 import { MovementController } from "map/controller/MovementController";
+import { Layer } from "common/canvas/Layer";
 
-export class NodeLayer extends Disposable {
+export class NodeLayer extends Layer {
 	readonly clickItemEvent = this.createDispatcher();
-	readonly clickLayerEvent = this.createDispatcher();
-	private _layer = new Konva.Layer();
 	private _shapes: NodeView[] = [];
-
-	constructor() {
-		super();
-
-		this._layer.on("click", () => this.clickLayerEvent.dispatch());
-	}
-
-	layer(): Konva.Layer {
-		return this._layer;
-	}
 
 	update(appendedNodes: INode[], removedNodes: INode[] = []) {
 		removedNodes.forEach((node) => {
@@ -60,9 +47,10 @@ export class NodeLayer extends Disposable {
 			this.clickItemEvent.dispatch(node.id(), isCtrl);
 		});
 		shape.on("click", (event) => event.cancelBubble = true);
-		shape.position(MovementController.toAbsolute(node.position()));
+		const position = MovementController.toAbsolute(node.position());
+		shape.setPosition(position);
 		this.addListener(node.changedPositionEvent, () => {
-			shape.position(MovementController.toAbsolute(node.position()));
+			shape.setPosition(MovementController.toAbsolute(node.position()));
 			this._layer.batchDraw();
 		});
 		this._shapes.push(shape);

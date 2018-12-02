@@ -36,13 +36,13 @@ export class MovementController extends Disposable {
 		this.changedCellEvent.dispatch(newPos);
 	}
 
+	isEmptyCell(position: Coordinate): boolean {
+		return !this.getNodeByPosition(position);
+	}
+
 	private getNodeByPosition(position: Coordinate): INode|null {
 		const nodes = this._nodeList.nodes();
 		return nodes.find((node) => position.equals(node.position())) || null;
-	}
-
-	private isEmptyCell(position: Coordinate): boolean {
-		return !this.getNodeByPosition(position);
 	}
 
 	static toRelative(position: Coordinate): Coordinate {
