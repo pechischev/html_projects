@@ -42,7 +42,7 @@ export class MovementController extends Disposable {
 
 	private getNodeByPosition(position: Coordinate): INode|null {
 		const nodes = this._nodeList.nodes();
-		return nodes.find((node) => position.equals(node.position())) || null;
+		return nodes.filter((node) => !node.parent()).find((node) => position.equals(node.position())) || null;
 	}
 
 	static toRelative(position: Coordinate): Coordinate {

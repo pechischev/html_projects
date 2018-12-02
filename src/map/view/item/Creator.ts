@@ -18,9 +18,8 @@ export class Creator extends Konva.Group {
 		this.add(this._rect);
 
 		this._point = new Konva.Rect({
-			fill: "grey",
-			stroke: "black",
-			strokeWidth: 1,
+			fill: "#F0F4F7",
+			cornerRadius: 50,
 			width: CLICKABLE_SIZE,
 			height: CLICKABLE_SIZE,
 		});

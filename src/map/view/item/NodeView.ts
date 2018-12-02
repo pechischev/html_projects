@@ -36,7 +36,7 @@ export class NodeView extends Konva.Group {
 		this.on("dragstart dragend mouseover", () => {
 			document.body.style.cursor = "grab";
 		});
-		this.on("dragmove", () => {
+		this.on("dragmove mousedown", () => {
 			document.body.style.cursor = "grabbing";
 		});
 		this.on("mouseout", () => {

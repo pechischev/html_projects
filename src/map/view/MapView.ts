@@ -62,8 +62,8 @@ export class MapView extends Component {
 		this.addListener(this._gridLayer.clickLayerEvent, () => this._canvas.fire("click"));
 
 		// node layer
-		this.addListener(this._nodeLayer.clickLayerEvent, () => this._canvas.fire("click"));
-		this.addListener(this._nodeLayer.clickItemEvent, () => this.clickItemEvent.dispatch());
+		this.addListener(this._nodeLayer.clickLayerEvent, () => this.clickCanvasEvent.dispatch());
+		this.addListener(this._nodeLayer.clickItemEvent, (id, isCtrl) => this.clickItemEvent.dispatch(id, isCtrl));
 
 		window.addEventListener("DOMContentLoaded", this.resizeCanvas.bind(this));
 		window.addEventListener("resize", this.resizeCanvas.bind(this));

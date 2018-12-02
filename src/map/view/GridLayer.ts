@@ -11,7 +11,10 @@ export class GridLayer extends Layer {
 	constructor() {
 		super();
 		this._cell.setSize({width: MovementController.CELL_WIDTH, height: MovementController.CELL_HEIGHT});
-		this._cell.on("click", () => this.clickItemEvent.dispatch(new Coordinate(this._cell.x(), this._cell.y())));
+		this._cell.on("click", (event) => {
+			event.cancelBubble = true;
+			this.clickItemEvent.dispatch(new Coordinate(this._cell.x(), this._cell.y()));
+		});
 		this._layer.add(this._cell);
 		this._layer.draw();
 	}
