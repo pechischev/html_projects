@@ -17,7 +17,6 @@ export class Map extends Disposable {
 
 	private initCommands() {
 		const toolbar = this._view.toolbar();
-		toolbar.register(() => this._controller.appendNode(), "Add node");
 		toolbar.register(() => this._controller.group(), "Group");
 		toolbar.register(() => this._controller.ungroup(), "Ungroup");
 		toolbar.register(() => this._controller.removeNode(), "Remove node");

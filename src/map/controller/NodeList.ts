@@ -1,23 +1,14 @@
 import { INode } from "map/model/node/INode";
 import { INodeGroup } from "map/model/node/INodeGroup";
 import { Disposable } from "common/component/Disposable";
-import { IDispatcher } from "common/event/IDispatcher";
 import { ArrayUtils } from "common/utils/ArrayUtils";
 
 export class NodeList extends Disposable {
+	readonly groupEvent = this.createDispatcher();
+	readonly ungroupEvent = this.createDispatcher();
+
 	private _nodes: INode[] = [];
 	private _groups: string[] = [];
-
-	private _groupEvent = this.createDispatcher();
-	private _ungroupEvent = this.createDispatcher();
-
-	groupEvent(): IDispatcher {
-		return this._groupEvent;
-	}
-
-	ungroupEvent(): IDispatcher {
-		return this._ungroupEvent;
-	}
 
 	appendNodes(nodes: INode[] = []) {
 		const newNodes = nodes.filter((node: INode) => !this.hasNodeById(node.id()));
@@ -66,7 +57,7 @@ export class NodeList extends Disposable {
 		this.appendNodes([group]);
 
 		this._groups.push(group.id());
-		this._groupEvent.dispatch([group], items);
+		this.groupEvent.dispatch([group], items);
 	}
 
 	ungroup(groups: INodeGroup[]) {
@@ -86,7 +77,7 @@ export class NodeList extends Disposable {
 				parent.appendChildren(children);
 			}
 
-			this._ungroupEvent.dispatch(parent ? [] : children, [group]);
+			this.ungroupEvent.dispatch(parent ? [] : children, [group]);
 		}
 		this.removeNodes(groups);
 	}

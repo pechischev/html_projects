@@ -1,20 +1,30 @@
 import { Component } from "common/component/Component";
 import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
-import { IDispatcher } from "common/event/IDispatcher";
+import { Coordinate } from "common/math/Coordinate";
+import { MovementController } from "map/controller/MovementController";
+import { NodeView } from "map/view/item/NodeView";
 import { GridLayer } from "./GridLayer";
 import { Toolbar } from "./Toolbar";
 import { NodeLayer } from "./NodeLayer";
 
 export class MapView extends Component {
+	readonly clickCanvasEvent = this.createDispatcher();
+	readonly clickItemEvent = this.createDispatcher();
+	readonly createItemEvent = this.createDispatcher();
+
 	private _toolbar = new Toolbar({blockName: "map-toolbar"});
 	private _nodeLayer = new NodeLayer();
 	private _gridLayer = new GridLayer();
+	private _canvas: Konva.Stage;
 
-	private _clickCanvasEvent = this.createDispatcher();
+	private _movementController: MovementController;
 
 	constructor() {
 		super({blockName: "map"});
+
+		this.addDisposable(this._nodeLayer);
+		this.addDisposable(this._gridLayer);
 
 		this.addChild(this._toolbar);
 
@@ -24,31 +34,45 @@ export class MapView extends Component {
 		const canvasContainer = new Component({blockName: "canvas-container"});
 		this.addChild(canvasContainer);
 
-		const stage = new Konva.Stage({
+		this._canvas = new Konva.Stage({
 			container: canvasContainer.element(),
 			name: "stage"
 		});
-		stage.on("click", (event) => {
-			if (event.target.name() != stage.name()) {
+		this._canvas.on("click", (event) => {
+			if (event.target.name() != this._canvas.name()) {
 				return;
 			}
-			this._clickCanvasEvent.dispatch();
+			this.clickCanvasEvent.dispatch();
 		});
-		stage.add(this._gridLayer.layer());
-		stage.add(this._nodeLayer.layer());
+		this._canvas.on("dragend", (event) => {
+			const mouseEvent = event.evt;
+			const view = event.target;
+			if (view instanceof NodeView) {
+				this._movementController.move(view.node(), new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY));
+			}
+		});
+		this._canvas.add(this._gridLayer.layer());
+		this._canvas.add(this._nodeLayer.layer());
 
-		window.addEventListener("DOMContentLoaded", () => {
-			stage.setWidth(this.width());
-			stage.setHeight(this.height());
-		});
+		// grid layer
+		this.addListener(this._gridLayer.clickItemEvent, (pos) => this.createItemEvent.dispatch(pos));
+		this._gridLayer.layer().on("click", () => this._canvas.fire("click")); // TODO: to need refactor, change on addListener
+
+		// node layer
+		this.addListener(this._nodeLayer.clickLayerEvent, () => this._canvas.fire("click"));
+		this.addListener(this._nodeLayer.clickItemEvent, () => this.clickItemEvent.dispatch());
+
+		window.addEventListener("DOMContentLoaded", this.resizeCanvas.bind(this));
+		window.addEventListener("resize", this.resizeCanvas.bind(this));
 	}
 
-	clickItemEvent(): IDispatcher {
-		return this._nodeLayer.clickItemEvent();
-	}
-
-	clickCanvasEvent(): IDispatcher {
-		return this._clickCanvasEvent;
+	setController(controller: MovementController) {
+		this._movementController = controller;
+		this._canvas.on("mousemove", (event) => {
+			const mouseEvent = event.evt;
+			this._movementController.updateCell(new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY));
+		});
+		this.addListener(controller.changedCellEvent, this._gridLayer.updateCellPosition, this._gridLayer);
 	}
 
 	toolbar(): Toolbar {
@@ -61,5 +85,10 @@ export class MapView extends Component {
 
 	update(appendedNodes: INode[], removedNodes: INode[] = []) {
 		this._nodeLayer.update(appendedNodes, removedNodes);
+	}
+
+	private resizeCanvas() {
+		this._canvas.setWidth(this.width());
+		this._canvas.setHeight(this.height());
 	}
 }

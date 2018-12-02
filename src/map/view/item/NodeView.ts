@@ -2,7 +2,7 @@ import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
 
 export class NodeView extends Konva.Group {
-	private _item: INode;
+	private _node: INode;
 	private _selected = false;
 	private _rect: Konva.Rect;
 
@@ -10,7 +10,7 @@ export class NodeView extends Konva.Group {
 		super({
 			draggable: true
 		});
-		this._item = item;
+		this._node = item;
 
 		this._rect = new Konva.Rect({
 			height: 100,
@@ -44,7 +44,11 @@ export class NodeView extends Konva.Group {
 	}
 
 	getId(): string {
-		return this._item.id();
+		return this._node.id();
+	}
+
+	node(): INode {
+		return this._node;
 	}
 
 	setSelected(selected: boolean) {

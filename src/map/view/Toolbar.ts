@@ -7,7 +7,7 @@ export class Toolbar extends Component {
 
 	register(action: Types.Handler, name: string) {
 		const btn = new Button({content: name});
-		btn.clickEvent().addListener(action);
+		btn.clickEvent.addListener(action);
 		this._buttons.push(btn);
 		this.addChild(btn);
 	}

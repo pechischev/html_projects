@@ -6,22 +6,30 @@ import { NodeList } from "map/controller/NodeList";
 import { INode } from "map/model/node/INode";
 import { NodeFactory } from "map/controller/factory/NodeFactory";
 import { INodeGroup } from "map/model/node/INodeGroup";
+import { Coordinate } from "common/math/Coordinate";
+import { MovementController } from "map/controller/MovementController";
 
 export class MapController extends Disposable {
 	private _selectionList = new SelectionList();
 	private _nodeList = new NodeList();
+	private _movementController: MovementController;
 	private _view: MapView;
 
 	constructor(view: MapView) {
 		super();
 		this._view = view;
 
-		this.addListener(this._view.clickItemEvent(), this.changeSelection, this);
-		this.addListener(this._view.clickCanvasEvent(), () => this._selectionList.setSelection([]));
-		this.addListener(this._selectionList.changeSelectionEvent(), this.updateSelection, this);
+		this._movementController = new MovementController(this._nodeList);
+		this._view.setController(this._movementController);
 
-		this.addListener(this._nodeList.groupEvent(), this.renderView, this);
-		this.addListener(this._nodeList.ungroupEvent(), this.renderView, this);
+		this.addListener(this._view.clickItemEvent, this.changeSelection, this);
+		this.addListener(this._view.clickCanvasEvent, () => this._selectionList.setSelection([]));
+		this.addListener(this._view.createItemEvent, this.appendNode, this);
+
+		this.addListener(this._selectionList.changeSelectionEvent, this.updateSelection, this);
+
+		this.addListener(this._nodeList.groupEvent, this.renderView, this);
+		this.addListener(this._nodeList.ungroupEvent, this.renderView, this);
 	}
 
 	connect() {
@@ -32,8 +40,9 @@ export class MapController extends Disposable {
 		notImplement();
 	}
 
-	appendNode() {
+	appendNode(position: Coordinate) {
 		const node = NodeFactory.createItem();
+		node.setPosition(MovementController.toRelative(position));
 		this._nodeList.appendNodes([node]);
 		this.renderView([node], []);
 		this.changeSelection(node.id());

@@ -7,6 +7,12 @@ export class Coordinate {
 		this.y = y;
 	}
 
+	floor(): Coordinate {
+		this.x = Math.floor(this.x);
+		this.y = Math.floor(this.y);
+		return this;
+	}
+
 	equals(coordinate: Coordinate): boolean {
 		return (this.x == coordinate.x) && (this.y == coordinate.y);
 	}

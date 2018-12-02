@@ -28,6 +28,24 @@
       true,
       "CRLF"
     ],
+    "member-ordering": [true, {
+        "order": [
+          "public-static-field",
+          "public-instance-field",
+          "protected-static-field",
+          "protected-instance-field",
+          "private-static-field",
+          "private-instance-field",
+          "public-constructor",
+          "public-instance-method",
+          "protected-instance-method",
+          "private-instance-method",
+          "public-static-method",
+          "protected-static-method",
+          "private-static-method"
+        ]
+      }
+    ],
     "member-access": [
       true,
       "no-public",
@@ -43,12 +61,6 @@
     "indent": [true, "tabs", 4],
     "prefer-function-over-method": false,
     "type-literal-delimiter": false,
-    "member-ordering": [
-      true,
-      "public-before-private",
-      "static-before-instance",
-      "variables-before-functions"
-    ],
     "no-parameter-reassignment": false,
     "no-null-keyword": false,
     "newline-per-chained-call": false,

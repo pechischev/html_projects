@@ -1,11 +1,15 @@
 import { Utils } from "common/utils/Utils";
 import { IContent } from "map/model/content/IContent";
 import { Disposable } from "common/component/Disposable";
+import { Coordinate } from "common/math/Coordinate";
 import { INode } from "./INode";
 
 export abstract class Node extends Disposable implements INode {
+	readonly changedPositionEvent = this.createDispatcher();
+
 	protected _parent?: string = null;
 	protected _content?: IContent = null;
+	protected _position = new Coordinate();
 	private readonly _id;
 
 	constructor(id?: string) {
@@ -31,5 +35,14 @@ export abstract class Node extends Disposable implements INode {
 
 	content(): IContent|null {
 		return this._content;
+	}
+
+	setPosition(position: Coordinate) {
+		this._position = position;
+		this.changedPositionEvent.dispatch();
+	}
+
+	position(): Coordinate {
+		return this._position;
 	}
 }

@@ -1,17 +1,19 @@
 import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
 import { NodeView } from "map/view/item/NodeView";
-import { IDispatcher } from "common/event/IDispatcher";
 import { Disposable } from "common/component/Disposable";
+import { MovementController } from "map/controller/MovementController";
 
 export class NodeLayer extends Disposable {
+	readonly clickItemEvent = this.createDispatcher();
+	readonly clickLayerEvent = this.createDispatcher();
 	private _layer = new Konva.Layer();
 	private _shapes: NodeView[] = [];
 
-	private _clickItemEvent = this.createDispatcher();
+	constructor() {
+		super();
 
-	clickItemEvent(): IDispatcher {
-		return this._clickItemEvent;
+		this._layer.on("click", () => this.clickLayerEvent.dispatch());
 	}
 
 	layer(): Konva.Layer {
@@ -41,7 +43,7 @@ export class NodeLayer extends Disposable {
 		if (this._shapes.length) {
 			this._layer.add(...this._shapes);
 		}
-		this._layer.draw();
+		this._layer.batchDraw();
 	}
 
 	updateSelection(selection: string[]) {
@@ -55,10 +57,14 @@ export class NodeLayer extends Disposable {
 		const shape = new NodeView(node);
 		shape.on("mousedown", (event) => {
 			const isCtrl = event.evt.ctrlKey;
-			this._clickItemEvent.dispatch(node.id(), isCtrl);
+			this.clickItemEvent.dispatch(node.id(), isCtrl);
 		});
-		shape.x(50);
-		shape.y(50);
+		shape.on("click", (event) => event.cancelBubble = true);
+		shape.position(MovementController.toAbsolute(node.position()));
+		this.addListener(node.changedPositionEvent, () => {
+			shape.position(MovementController.toAbsolute(node.position()));
+			this._layer.batchDraw();
+		});
 		this._shapes.push(shape);
 	}
 
