@@ -18,6 +18,25 @@ export class MovementController extends Disposable {
 		this._nodeList = list;
 	}
 
+	getPositionByItems(nodes: INode[]): Coordinate {
+		let pos: Coordinate = null;
+		for (const node of nodes) {
+			const itemPosition = node.position();
+			if (!pos) {
+				pos = itemPosition;
+				continue;
+			}
+			const isLeft = pos.x > itemPosition.x;
+			const isTop = pos.y > itemPosition.y;
+			if (isLeft && isTop) {
+				pos = itemPosition;
+			} else if (isLeft) {
+				pos = itemPosition;
+			}
+		}
+		return pos;
+	}
+
 	move(node: INode, position: Coordinate) {
 		let newPos = MovementController.toRelative(position);
 		if (!this.isEmptyCell(newPos)) {

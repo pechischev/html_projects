@@ -33,7 +33,7 @@ export class NodeView extends Konva.Group {
 		this.add(simpleText);
 
 		// add cursor styling
-		this.on("dragstart dragend mouseover", () => {
+		this.on("dragstart dragend mouseover mouseup", () => {
 			document.body.style.cursor = "grab";
 		});
 		this.on("dragmove mousedown", () => {
@@ -63,6 +63,9 @@ export class NodeView extends Konva.Group {
 	}
 
 	setPosition(position: Coordinate) {
+		if (position.x == this.x() && position.y == this.y()) {
+			return;
+		}
 		const offsetX = 15;
 		const offsetY = 5;
 		this.x(position.x + offsetX);

@@ -62,6 +62,7 @@ export class MapController extends Disposable {
 		}
 		const nodes = this._nodeList.getNodesById(selection);
 		const group = NodeFactory.createGroup("group");
+		group.setPosition(this._movementController.getPositionByItems(nodes));
 		this._nodeList.group(nodes, group);
 	}
 
