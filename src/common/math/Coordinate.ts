@@ -16,7 +16,7 @@ export class Coordinate {
 	}
 
 	equals(coordinate: Coordinate): boolean {
-		return (this.x == coordinate.x) && (this.y == coordinate.y);
+		return Coordinate.equals(this, coordinate);
 	}
 
 	distance(coordinate: Coordinate): Coordinate {
@@ -34,5 +34,9 @@ export class Coordinate {
 			}
 		}
 		return this;
+	}
+
+	static equals(first: Coordinate, second: Coordinate): boolean {
+		return (first.x == second.x) && (first.y == second.y);
 	}
 }

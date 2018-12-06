@@ -12,13 +12,12 @@ export class MapView extends Component {
 	readonly clickCanvasEvent = this.createDispatcher();
 	readonly clickItemEvent = this.createDispatcher();
 	readonly createItemEvent = this.createDispatcher();
+	readonly dropItemEvent = this.createDispatcher();
 
 	private _toolbar = new Toolbar({blockName: "map-toolbar"});
 	private _nodeLayer = new NodeLayer();
 	private _gridLayer = new GridLayer();
 	private _canvas: Konva.Stage;
-
-	private _movementController: MovementController;
 
 	constructor() {
 		super({blockName: "map"});
@@ -48,16 +47,23 @@ export class MapView extends Component {
 			const mouseEvent = event.evt;
 			const view = event.target;
 			if (view instanceof NodeView) {
-				this._movementController.move(view.node(), new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY));
+				this.dropItemEvent.dispatch(view.node(), MovementController.toRelative(new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY)));
 			}
+		});
+		this._canvas.on("mousemove", (event) => {
+			const mouseEvent = event.evt;
+			const position = new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY);
+			const intersects = this._nodeLayer.intersects(position); // TODO: определять пересечения в movementController
+			this._gridLayer.showCell(!intersects);
+			this._gridLayer.updateCellPosition(position);
 		});
 		this._canvas.add(this._gridLayer.layer());
 		this._canvas.add(this._nodeLayer.layer());
 
 		// grid layer
-		this.addListener(this._gridLayer.clickItemEvent, (pos) => {
+		this.addListener(this._gridLayer.clickItemEvent, (pos: Coordinate) => {
 			this._gridLayer.showCell(false);
-			this.createItemEvent.dispatch(pos);
+			this.createItemEvent.dispatch(MovementController.toRelative(pos));
 		});
 		this.addListener(this._gridLayer.clickLayerEvent, () => this._canvas.fire("click"));
 
@@ -67,17 +73,6 @@ export class MapView extends Component {
 
 		window.addEventListener("DOMContentLoaded", this.resizeCanvas.bind(this));
 		window.addEventListener("resize", this.resizeCanvas.bind(this));
-	}
-
-	setController(controller: MovementController) {
-		this._movementController = controller;
-		this._canvas.on("mousemove", (event) => {
-			const mouseEvent = event.evt;
-			const position = new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY);
-			this._gridLayer.showCell(this._movementController.isEmptyCell(MovementController.toRelative(position)));
-			this._movementController.updateCell(position);
-		});
-		this.addListener(controller.changedCellEvent, this._gridLayer.updateCellPosition, this._gridLayer);
 	}
 
 	toolbar(): Toolbar {

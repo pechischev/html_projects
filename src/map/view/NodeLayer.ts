@@ -2,6 +2,7 @@ import { INode } from "map/model/node/INode";
 import { NodeView } from "map/view/item/NodeView";
 import { MovementController } from "map/controller/MovementController";
 import { Layer } from "common/canvas/Layer";
+import { Coordinate } from "common/math/Coordinate";
 
 export class NodeLayer extends Layer {
 	readonly clickItemEvent = this.createDispatcher();
@@ -37,6 +38,13 @@ export class NodeLayer extends Layer {
 		this._shapes.forEach((shape) => {
 			const isSelected = selection.indexOf(shape.getId()) > -1;
 			shape.setSelected(isSelected);
+		});
+	}
+
+	intersects(coordinate: Coordinate): boolean {
+		return this._shapes.some((shape) => {
+			const i = shape.getAllIntersections(coordinate);
+			return !!i.length;
 		});
 	}
 

@@ -2,6 +2,7 @@ import { INode } from "map/model/node/INode";
 import { INodeGroup } from "map/model/node/INodeGroup";
 import { Disposable } from "common/component/Disposable";
 import { ArrayUtils } from "common/utils/ArrayUtils";
+import { Coordinate } from "common/math/Coordinate";
 
 export class NodeList extends Disposable {
 	readonly groupEvent = this.createDispatcher();
@@ -9,6 +10,25 @@ export class NodeList extends Disposable {
 
 	private _nodes: INode[] = [];
 	private _groups: string[] = [];
+
+	calculateGroupPosition(children: INode[]): Coordinate {
+		let pos: Coordinate = null;
+		for (const child of children) {
+			const itemPosition = child.position();
+			if (!pos) {
+				pos = itemPosition;
+				continue;
+			}
+			const isLeft = pos.x > itemPosition.x;
+			const isTop = pos.y > itemPosition.y;
+			if (isLeft && isTop) {
+				pos = itemPosition;
+			} else if (isLeft) {
+				pos = itemPosition;
+			}
+		}
+		return pos;
+	}
 
 	appendNodes(nodes: INode[] = []) {
 		const newNodes = nodes.filter((node: INode) => !this.hasNodeById(node.id()));
@@ -113,6 +133,19 @@ export class NodeList extends Disposable {
 
 	getNodesById(ids: string[]): INode[] {
 		return this._nodes.filter((node) => ids.indexOf(node.id()) > -1);
+	}
+
+	move(node: INode, position: Coordinate) {
+		const isEmptyCell = !this.getNodeByPosition(position);
+		if (!isEmptyCell) {
+			position = node.position();
+		}
+		node.setPosition(position);
+	}
+
+	getNodeByPosition(position: Coordinate): INode|null {
+		const nodes = this.nodes();
+		return nodes.filter((node) => !node.parent()).find((node) => position.equals(node.position())) || null;
 	}
 
 	private hasNodeById(id: string): boolean {
