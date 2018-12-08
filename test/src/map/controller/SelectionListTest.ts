@@ -27,6 +27,13 @@ describe("SelectionList", () => {
 			expect(list.getSelection()).to.deep.equals(["1", "2", "3", "4"]);
 		});
 
+		it("should deselect items by multiselect if they are selected again", () => {
+			expect(list.getSelection()).to.deep.equals([]);
+			list.setSelection(["1", "2", "3", "4"], true);
+			list.setSelection(["1", "2", "3"], true);
+			expect(list.getSelection()).to.deep.equals(["4"]);
+		});
+
 		it("should reset selection if is no items", () => {
 			list.setSelection(["1", "2"]);
 			list.setSelection([]);

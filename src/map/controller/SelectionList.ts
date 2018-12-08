@@ -19,7 +19,9 @@ export class SelectionList extends Disposable {
 	private selectImpl(items: string[], isMulti: boolean = false) {
 		let selectedItems = items;
 		if (isMulti) {
-			selectedItems = [...this._selectedItems, ...selectedItems];
+			const removed = items.filter((item) => this.isSelected(item));
+			const appended = items.filter((item) => !this.isSelected(item));
+			selectedItems = [...this._selectedItems, ...appended].filter((item) => removed.indexOf(item) == -1);
 		}
 		this._selectedItems = selectedItems;
 		this.changeSelectionEvent.dispatch();
