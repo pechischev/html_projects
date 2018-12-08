@@ -33,7 +33,7 @@ export class Coordinate {
 				this.y += ty;
 			}
 		}
-		return this;
+		return new Coordinate(this.x, this.y);
 	}
 
 	static equals(first: Coordinate, second: Coordinate): boolean {

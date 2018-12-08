@@ -7,10 +7,12 @@ import { INode } from "map/model/node/INode";
 import { NodeFactory } from "map/controller/factory/NodeFactory";
 import { INodeGroup } from "map/model/node/INodeGroup";
 import { Coordinate } from "common/math/Coordinate";
+import { Grid } from "map/controller/Grid";
 
 export class MapController extends Disposable {
 	private _selectionList = new SelectionList();
 	private _nodeList = new NodeList();
+	private _grid = new Grid();
 	private _view: MapView;
 
 	constructor(view: MapView) {
@@ -20,7 +22,7 @@ export class MapController extends Disposable {
 		this.addListener(this._view.clickItemEvent, this.changeSelection, this);
 		this.addListener(this._view.clickCanvasEvent, () => this._selectionList.setSelection([]));
 		this.addListener(this._view.createItemEvent, this.appendNode, this);
-		this.addListener(this._view.dropItemEvent, this._nodeList.move, this._nodeList);
+		this.addListener(this._view.dropItemEvent, this._grid.insert, this._grid);
 
 		this.addListener(this._selectionList.changeSelectionEvent, this.updateSelection, this);
 
@@ -38,7 +40,8 @@ export class MapController extends Disposable {
 
 	appendNode(position: Coordinate) {
 		const node = NodeFactory.createItem();
-		node.setPosition(position);
+		this.addListener(node.changeParentEvent, () => this._grid.changeLayer(node));
+		this._grid.insert(node, position);
 		this._nodeList.appendNodes([node]);
 		this.renderView([node], []);
 		this.changeSelection(node.id());
@@ -49,6 +52,9 @@ export class MapController extends Disposable {
 		const nodes = this._nodeList.getNodesById(selection);
 		this._nodeList.removeNodes(nodes);
 		this.renderView([], nodes);
+		for (const node of nodes) {
+			this._grid.pop(node);
+		}
 	}
 
 	group() {
@@ -58,14 +64,21 @@ export class MapController extends Disposable {
 		}
 		const nodes = this._nodeList.getNodesById(selection);
 		const group = NodeFactory.createGroup("group");
-		group.setPosition(this._nodeList.calculateGroupPosition(nodes));
+		this.addListener(group.changeParentEvent, () => this._grid.changeLayer(group));
 		this._nodeList.group(nodes, group);
+		this._grid.insert(group, this._grid.getLeftTopPosition(nodes));
 	}
 
 	ungroup() {
 		const selection = this._selectionList.getSelection();
 		const nodes = this._nodeList.getNodesById(selection);
 		const groups = nodes.filter((item: INode) => this._nodeList.isGroup(item.id())) as INodeGroup[];
+		if (!groups.length) {
+			return;
+		}
+		for (const group of groups) {
+			this._grid.pop(group);
+		}
 		this._nodeList.ungroup(groups);
 	}
 

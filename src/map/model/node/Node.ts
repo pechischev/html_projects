@@ -6,6 +6,7 @@ import { INode } from "./INode";
 
 export abstract class Node extends Disposable implements INode {
 	readonly changedPositionEvent = this.createDispatcher();
+	readonly changeParentEvent = this.createDispatcher();
 
 	protected _parent?: string = null;
 	protected _content?: IContent = null;
@@ -22,7 +23,11 @@ export abstract class Node extends Disposable implements INode {
 	}
 
 	setParent(id: string = null) {
+		if (this._parent == id) {
+			return;
+		}
 		this._parent = id;
+		this.changeParentEvent.dispatch();
 	}
 
 	parent(): string|null {
