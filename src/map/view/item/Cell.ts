@@ -1,9 +1,8 @@
-import { Coordinate } from "common/math/Coordinate";
 import * as Konva from "konva";
 
 const CLICKABLE_SIZE = 50;
 
-export class Creator extends Konva.Group {
+export class Cell extends Konva.Group {
 	private _rect: Konva.Rect;
 	private _point: Konva.Rect;
 
