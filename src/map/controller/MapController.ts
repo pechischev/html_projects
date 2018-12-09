@@ -19,15 +19,18 @@ export class MapController extends Disposable {
 		super();
 		this._view = view;
 
-		this.addListener(this._view.clickItemEvent, this.changeSelection, this);
-		this.addListener(this._view.clickCanvasEvent, () => this._selectionList.setSelection([]));
+		this.addListener(this._view.clickItemEvent, (id: string, isCtrl: boolean) =>
+			this.changeSelection(this._nodeList.getNodesById([id]), isCtrl));
+		this.addListener(this._view.clickCanvasEvent, () => this.changeSelection([]));
 		this.addListener(this._view.createItemEvent, this.appendNode, this);
 		this.addListener(this._view.dropItemEvent, this._grid.insert, this._grid);
 
 		this.addListener(this._selectionList.changeSelectionEvent, this.updateSelection, this);
 
 		this.addListener(this._nodeList.groupEvent, this.renderView, this);
+		this.addListener(this._nodeList.groupEvent, this.changeSelection, this);
 		this.addListener(this._nodeList.ungroupEvent, this.renderView, this);
+		this.addListener(this._nodeList.ungroupEvent, this.changeSelection, this);
 	}
 
 	connect() {
@@ -44,7 +47,7 @@ export class MapController extends Disposable {
 		this._grid.insert(node, position);
 		this._nodeList.appendNodes([node]);
 		this.renderView([node], []);
-		this.changeSelection(node.id());
+		this.changeSelection([node]);
 	}
 
 	removeNode() {
@@ -82,8 +85,8 @@ export class MapController extends Disposable {
 		this._nodeList.ungroup(groups);
 	}
 
-	private changeSelection(id: string, isMulti?: boolean) {
-		this._selectionList.setSelection([id], isMulti);
+	private changeSelection(items: INode[], isMulti?: boolean) {
+		this._selectionList.setSelection(items.map((item) => item.id()), isMulti);
 	}
 
 	private updateSelection() {

@@ -18,7 +18,7 @@ export class EditableText extends Konva.Text {
 
 		this._inputField.applyBemInfo("editable-field");
 
-		this.on("click", () => {
+		this.on("dblclick", () => {
 			document.body.appendChild(this._inputField.element());
 
 			this.updateInputFieldPosition();
