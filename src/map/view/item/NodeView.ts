@@ -38,7 +38,8 @@ export class NodeView extends Konva.Group {
 		this.add(textField);
 
 		// add cursor styling
-		this.on("dragstart dragend mouseover mouseup", () => {
+		this.on("dragstart dragend mouseover mouseup", (event) => {
+			event.currentTarget.moveToTop();
 			document.body.style.cursor = "grab";
 		});
 		this.on("dragmove mousedown", () => {
