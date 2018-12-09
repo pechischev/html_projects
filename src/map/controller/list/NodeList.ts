@@ -4,18 +4,14 @@ import { Disposable } from "common/component/Disposable";
 import { ArrayUtils } from "common/utils/ArrayUtils";
 
 export class NodeList extends Disposable {
-	readonly groupEvent = this.createDispatcher();
-	readonly ungroupEvent = this.createDispatcher();
+	readonly changedListEvent = this.createDispatcher();
 
 	private _nodes: INode[] = [];
 	private _groups: string[] = [];
 
 	appendNodes(nodes: INode[] = []) {
-		const newNodes = nodes.filter((node: INode) => !this.hasNodeById(node.id()));
-		if (!newNodes.length) {
-			return;
-		}
-		this._nodes.push(...newNodes);
+		this.appendNodesImpl(nodes);
+		this.changedListEvent.dispatch(nodes, []);
 	}
 
 	removeNodes(nodes: INode[] = []) {
@@ -30,6 +26,7 @@ export class NodeList extends Disposable {
 			}
 			this._nodes.splice(index, 1);
 		});
+		this.changedListEvent.dispatch([], nodes);
 	}
 
 	nodes(): INode[] {
@@ -54,10 +51,10 @@ export class NodeList extends Disposable {
 
 		group.appendChildren(items);
 
-		this.appendNodes([group]);
+		this.appendNodesImpl([group]);
 
 		this._groups.push(group.id());
-		this.groupEvent.dispatch([group], items);
+		this.changedListEvent.dispatch([group], items);
 	}
 
 	ungroup(groups: INodeGroup[]) {
@@ -76,7 +73,7 @@ export class NodeList extends Disposable {
 				parent.removeChildren([group]);
 				parent.appendChildren(children);
 			}
-			this.ungroupEvent.dispatch(parent ? [] : children, [group]);
+			this.changedListEvent.dispatch(parent ? [] : children, [group]);
 		}
 		this.removeNodes(groups);
 	}
@@ -112,6 +109,14 @@ export class NodeList extends Disposable {
 
 	getNodesById(ids: string[]): INode[] {
 		return this._nodes.filter((node) => ids.indexOf(node.id()) > -1);
+	}
+
+	private appendNodesImpl(nodes: INode[] = []) {
+		const newNodes = nodes.filter((node: INode) => !this.hasNodeById(node.id()));
+		if (!newNodes.length) {
+			return;
+		}
+		this._nodes.push(...newNodes);
 	}
 
 	private hasNodeById(id: string): boolean {

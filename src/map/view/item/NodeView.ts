@@ -2,8 +2,11 @@ import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
 import { Coordinate } from "common/math/Coordinate";
 import { EditableText } from "map/view/EditableText";
+import { Dispatcher } from "common/event/Dispatcher";
 
 export class NodeView extends Konva.Group {
+	readonly updateEvent = new Dispatcher();
+
 	private _node: INode;
 	private _selected = false;
 	private _rect: Konva.Rect;
@@ -31,7 +34,7 @@ export class NodeView extends Konva.Group {
 		textField.changedValue.addListener((value: string) => content.setTitle(value));
 		content.changedTitle.addListener(() => {
 			textField.text(content.title());
-			this.draw();
+			this.updateEvent.dispatch();
 		});
 
 		this.add(this._rect);
@@ -61,7 +64,7 @@ export class NodeView extends Konva.Group {
 	setSelected(selected: boolean) {
 		this._selected = selected;
 		this._rect.stroke(selected ? "#58A8F7" : "#D5D5D5");
-		this.draw();
+		this.updateEvent.dispatch();
 	}
 
 	selected(): boolean {

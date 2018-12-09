@@ -18,6 +18,7 @@ export class MapView extends Component {
 	private _nodeLayer = new NodeLayer();
 	private _gridLayer = new GridLayer();
 	private _canvas: Konva.Stage;
+	private _movementController = new MovementController(this._nodeLayer, this._gridLayer);
 
 	constructor() {
 		super({blockName: "map"});
@@ -52,10 +53,7 @@ export class MapView extends Component {
 		});
 		this._canvas.on("mousemove", (event) => {
 			const mouseEvent = event.evt;
-			const position = new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY);
-			const intersects = this._nodeLayer.intersects(position); // TODO: определять пересечения в movementController
-			this._gridLayer.showCell(!intersects);
-			this._gridLayer.updateCellPosition(position);
+			this._movementController.updateGridLayer(new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY));
 		});
 		this._canvas.add(this._gridLayer.layer());
 		this._canvas.add(this._nodeLayer.layer());

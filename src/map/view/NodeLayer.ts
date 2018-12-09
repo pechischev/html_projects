@@ -31,7 +31,7 @@ export class NodeLayer extends Layer {
 		if (this._shapes.length) {
 			this._layer.add(...this._shapes);
 		}
-		this._layer.batchDraw();
+		this._layer.draw();
 	}
 
 	updateSelection(selection: string[]) {
@@ -61,6 +61,7 @@ export class NodeLayer extends Layer {
 			shape.setPosition(MovementController.toAbsolute(node.position()));
 			this._layer.batchDraw();
 		});
+		this.addListener(shape.updateEvent, () => this._layer.batchDraw());
 		this._shapes.push(shape);
 	}
 

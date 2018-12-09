@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { LinkList } from "map/controller/LinkList";
+import { LinkList } from "map/controller/list/LinkList";
 import { ConnectionService } from "map/service/ConnectionService";
 
 // tslint:disable

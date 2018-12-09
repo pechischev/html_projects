@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { SelectionList } from "map/controller/SelectionList";
+import { SelectionList } from "map/controller/list/SelectionList";
 
 describe("SelectionList", () => {
 	let list: SelectionList;

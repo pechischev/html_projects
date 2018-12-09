@@ -1,6 +1,6 @@
-import { LinkList } from "map/controller/LinkList";
+import { LinkList } from "map/controller/list/LinkList";
 import { Link } from "map/model/link/Link";
-import { ConnectionList } from "map/controller/ConnectionList";
+import { ConnectionList } from "map/controller/list/ConnectionList";
 
 export class ConnectionService {
 	private _presenter: LinkList;

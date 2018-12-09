@@ -1,8 +1,7 @@
 import { expect } from "chai";
-import { NodeList } from "map/controller/NodeList";
+import { NodeList } from "map/controller/list/NodeList";
 import { NodeItem } from "map/model/node/NodeItem";
 import { INode } from "map/model/node/INode";
-import { INodeGroup } from "map/model/node/INodeGroup";
 import { NodeGroup } from "map/model/node/NodeGroup";
 
 // tslint:disable

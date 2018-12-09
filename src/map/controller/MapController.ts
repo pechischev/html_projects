@@ -1,8 +1,8 @@
-import { SelectionList } from "map/controller/SelectionList";
+import { SelectionList } from "map/controller/list/SelectionList";
 import { notImplement } from "common/utils/tools";
 import { Disposable } from "common/component/Disposable";
 import { MapView } from "map/view/MapView";
-import { NodeList } from "map/controller/NodeList";
+import { NodeList } from "map/controller/list/NodeList";
 import { INode } from "map/model/node/INode";
 import { NodeFactory } from "map/controller/factory/NodeFactory";
 import { INodeGroup } from "map/model/node/INodeGroup";
@@ -20,17 +20,16 @@ export class MapController extends Disposable {
 		this._view = view;
 
 		this.addListener(this._view.clickItemEvent, (id: string, isCtrl: boolean) =>
-			this.changeSelection(this._nodeList.getNodesById([id]), isCtrl));
+			this.changeSelection(this._nodeList.getNodesById([id]), isCtrl)
+		);
 		this.addListener(this._view.clickCanvasEvent, () => this.changeSelection([]));
 		this.addListener(this._view.createItemEvent, this.appendNode, this);
 		this.addListener(this._view.dropItemEvent, this._grid.insert, this._grid);
 
 		this.addListener(this._selectionList.changeSelectionEvent, this.updateSelection, this);
 
-		this.addListener(this._nodeList.groupEvent, this.renderView, this);
-		this.addListener(this._nodeList.groupEvent, this.changeSelection, this);
-		this.addListener(this._nodeList.ungroupEvent, this.renderView, this);
-		this.addListener(this._nodeList.ungroupEvent, this.changeSelection, this);
+		this.addListener(this._nodeList.changedListEvent, this.renderView, this);
+		this.addListener(this._nodeList.changedListEvent, (items: INode[]) => this.changeSelection(items));
 	}
 
 	connect() {
@@ -46,18 +45,13 @@ export class MapController extends Disposable {
 		this.addListener(node.changeParentEvent, () => this._grid.changeLayer(node));
 		this._grid.insert(node, position);
 		this._nodeList.appendNodes([node]);
-		this.renderView([node], []);
-		this.changeSelection([node]);
 	}
 
 	removeNode() {
 		const selection = this._selectionList.getSelection();
 		const nodes = this._nodeList.getNodesById(selection);
 		this._nodeList.removeNodes(nodes);
-		this.renderView([], nodes);
-		for (const node of nodes) {
-			this._grid.pop(node);
-		}
+		this.removeFromGrid(nodes);
 	}
 
 	group() {
@@ -79,13 +73,11 @@ export class MapController extends Disposable {
 		if (!groups.length) {
 			return;
 		}
-		for (const group of groups) {
-			this._grid.pop(group);
-		}
+		this.removeFromGrid(groups);
 		this._nodeList.ungroup(groups);
 	}
 
-	private changeSelection(items: INode[], isMulti?: boolean) {
+	private changeSelection(items: INode[], isMulti: boolean = false) {
 		this._selectionList.setSelection(items.map((item) => item.id()), isMulti);
 	}
 
@@ -95,5 +87,11 @@ export class MapController extends Disposable {
 
 	private renderView(appended: INode[], removed: INode[]) {
 		this._view.update(appended, removed);
+	}
+
+	private removeFromGrid(items: INode[]) {
+		for (const item of items) {
+			this._grid.pop(item);
+		}
 	}
 }
