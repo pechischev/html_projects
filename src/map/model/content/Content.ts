@@ -1,10 +1,8 @@
-import { Listener } from "common/event/Listener";
+import { Disposable } from "common/component/Disposable";
 import { IContent } from "./IContent";
 
-export class Content extends Listener implements IContent {
-	static EVENTS = {
-		changedTitle: "changedTitle"
-	};
+export class Content extends Disposable implements IContent {
+	readonly changedTitle = this.createDispatcher();
 
 	private _title = "";
 
@@ -13,7 +11,7 @@ export class Content extends Listener implements IContent {
 			return;
 		}
 		this._title = title;
-		this.dispatch(Content.EVENTS.changedTitle);
+		this.changedTitle.dispatch();
 	}
 
 	title(): string {

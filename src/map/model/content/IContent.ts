@@ -1,6 +1,8 @@
-import { Listener } from "common/event/Listener";
+import { IDispatcher } from "common/event/IDispatcher";
 
-export interface IContent extends Listener {
+export interface IContent {
+	readonly changedTitle: IDispatcher;
+
 	title(): string;
 
 	setTitle(title: string);

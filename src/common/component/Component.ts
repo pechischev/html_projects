@@ -62,7 +62,7 @@ export class Component extends Disposable {
 	}
 
 	setTextContent(text: string) {
-		this.addChild(document.createTextNode(text));
+		this._element.textContent = text;
 	}
 
 	textContent(): string {
@@ -105,11 +105,10 @@ export class Component extends Disposable {
 
 	setStyle(style: string, value: string|number) {
 		style = style.toLowerCase();
-		const styles = [];
+		const styles = [style];
 		if (!this._element.style.hasOwnProperty(style)) {
 			const styleName = style.substr(0, 1).toUpperCase() + style.substr(1, style.length);
-			styles.push([
-				style,
+			styles.push(...[
 				`Webkit${styleName}`,
 				`Moz${styleName}`,
 				`ms${styleName}`,
@@ -137,6 +136,7 @@ export class Component extends Disposable {
 	applyBemInfo(blockName: string | BemInfo, elementName?: string) { // TODO: rename
 		const bemInfo = (blockName instanceof BemInfo) ? blockName : new BemInfo(blockName, elementName);
 		this._bemInfo.push(bemInfo);
+		this.invalidateClassName();
 	}
 
 	createChildBemInfo(elementName: string): BemInfo {

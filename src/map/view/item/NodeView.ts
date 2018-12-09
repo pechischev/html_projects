@@ -1,6 +1,7 @@
 import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
 import { Coordinate } from "common/math/Coordinate";
+import { EditableText } from "map/view/EditableText";
 
 export class NodeView extends Konva.Group {
 	private _node: INode;
@@ -22,15 +23,19 @@ export class NodeView extends Konva.Group {
 			cornerRadius: 10
 		});
 
-		const simpleText = new Konva.Text({
-			x: 20,
-			y: 20,
-			text: item.content().title(),
-			fontSize: 20,
+		const content = item.content();
+		const textField = new EditableText(content.title());
+		textField.align("center");
+		textField.verticalAlign("middle");
+		textField.setSize(this._rect.getSize());
+		textField.changedValue.addListener((value: string) => content.setTitle(value));
+		content.changedTitle.addListener(() => {
+			textField.text(content.title());
+			this.draw();
 		});
 
 		this.add(this._rect);
-		this.add(simpleText);
+		this.add(textField);
 
 		// add cursor styling
 		this.on("dragstart dragend mouseover mouseup", () => {

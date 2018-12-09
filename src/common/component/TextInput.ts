@@ -1,11 +1,10 @@
 import { Component } from "common/component/Component";
 import { TagName } from "common/dom/TagName";
-import { Dispatcher } from "common/event/Dispatcher";
 
 export class TextInput extends Component {
-	private _changedEvent: Dispatcher;
-	private _blurEvent: Dispatcher;
-	private _focusEvent: Dispatcher;
+	readonly changedEvent = this.createDispatcher();
+	readonly blurEvent = this.createDispatcher();
+	readonly focusEvent = this.createDispatcher();
 
 	constructor(placeholder?: string) {
 		super({
@@ -13,15 +12,12 @@ export class TextInput extends Component {
 			tagName: TagName.INPUT
 		});
 
-		this._changedEvent = new Dispatcher();
-		this._blurEvent = new Dispatcher();
-		this._focusEvent = new Dispatcher();
-
-		this.listen("change", this, () => this._changedEvent.dispatch());
-		this.listen("blur", this, () => this._blurEvent.dispatch());
-		this.listen("focus", this, (event: Event) => {
-			this._focusEvent.dispatch();
+		this.listen("change", this, (event: KeyboardEvent) => {
+			this.setValue((this.element() as HTMLInputElement).value);
+			this.changedEvent.dispatch(event);
 		});
+		this.listen("blur", this, () => this.blurEvent.dispatch());
+		this.listen("focus", this, () => this.focusEvent.dispatch());
 
 		if (placeholder) {
 			this.setAttribute({name: "placeholder", value: placeholder});
@@ -29,22 +25,11 @@ export class TextInput extends Component {
 	}
 
 	setValue(value: string) {
+		this.setAttribute({name: "value", value});
 		this.setTextContent(value);
 	}
 
 	value() {
 		return this.textContent();
-	}
-
-	changedEvent(): Dispatcher {
-		return this._changedEvent;
-	}
-
-	blurEvent(): Dispatcher {
-		return this._blurEvent;
-	}
-
-	focusEvent(): Dispatcher {
-		return this._focusEvent;
 	}
 }
