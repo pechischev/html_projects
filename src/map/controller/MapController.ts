@@ -24,7 +24,7 @@ export class MapController extends Disposable {
 		);
 		this.addListener(this._view.clickCanvasEvent, () => this.changeSelection([]));
 		this.addListener(this._view.createItemEvent, this.appendNode, this);
-		this.addListener(this._view.dropItemEvent, this._grid.insert, this._grid);
+		this.addListener(this._view.dropItemEvent, (id: string, pos: Coordinate) => this._grid.insert(this._nodeList.getNodeById(id), pos));
 
 		this.addListener(this._selectionList.changeSelectionEvent, this.updateSelection, this);
 

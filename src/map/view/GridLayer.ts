@@ -5,36 +5,25 @@ import { MovementController } from "map/controller/MovementController";
 import { Layer } from "common/canvas/Layer";
 
 export class GridLayer extends Layer {
-	readonly clickItemEvent = this.createDispatcher();
 	private _cell = new Cell();
 
 	constructor() {
 		super();
 		this._cell.setSize({width: MovementController.CELL_WIDTH, height: MovementController.CELL_HEIGHT}); // TODO: передавать размеры ячейки параметром
-		this._cell.on("click", (event) => {
-			event.cancelBubble = true;
-			this.clickItemEvent.dispatch(new Coordinate(this._cell.x(), this._cell.y()));
-		});
-		this._layer.add(this._cell);
-		this._layer.draw();
+		this.drawItem(this._cell);
 	}
 
 	updateCellPosition(pos: Coordinate) {
 		const newPos = MovementController.toGridPosition(pos);
-		const oldPos = MovementController.toGridPosition(new Coordinate(this._cell.x(), this._cell.y()));
+		const oldPos = MovementController.toGridPosition(this._cell.position());
 		if (Coordinate.equals(newPos, oldPos)) {
 			return;
 		}
-		this._layer.removeChildren();
-		this.renderGrid();
-		this._cell.position(newPos);
-		this._layer.add(this._cell);
-		this._layer.batchDraw();
+		this._cell.setPosition(newPos);
 	}
 
 	showCell(show: boolean) {
-		this._cell.visible(show);
-		this._layer.batchDraw();
+		this._cell.setVisible(show);
 	}
 
 	private renderGrid() {

@@ -3,7 +3,7 @@ import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
 import { Coordinate } from "common/math/Coordinate";
 import { MovementController } from "map/controller/MovementController";
-import { NodeView } from "map/view/item/NodeView";
+import { IShape } from "common/canvas/IShape";
 import { GridLayer } from "./GridLayer";
 import { Toolbar } from "./Toolbar";
 import { NodeLayer } from "./NodeLayer";
@@ -47,9 +47,8 @@ export class MapView extends Component {
 		this._canvas.on("dragend", (event) => {
 			const mouseEvent = event.evt;
 			const view = event.target;
-			if (view instanceof NodeView) {
-				this.dropItemEvent.dispatch(view.node(), MovementController.toRelative(new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY)));
-			}
+			// TODO: warning - current view is only NodeView
+			this.dropItemEvent.dispatch(view.id(), MovementController.toRelative(new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY)));
 		});
 		this._canvas.on("mousemove", (event) => {
 			const mouseEvent = event.evt;
@@ -59,15 +58,15 @@ export class MapView extends Component {
 		this._canvas.add(this._nodeLayer.layer());
 
 		// grid layer
-		this.addListener(this._gridLayer.clickItemEvent, (pos: Coordinate) => {
+		this.addListener(this._gridLayer.clickItemEvent, (item: IShape) => {
 			this._gridLayer.showCell(false);
-			this.createItemEvent.dispatch(MovementController.toRelative(pos));
+			this.createItemEvent.dispatch(MovementController.toRelative(item.position()));
 		});
 		this.addListener(this._gridLayer.clickLayerEvent, () => this._canvas.fire("click"));
 
 		// node layer
 		this.addListener(this._nodeLayer.clickLayerEvent, () => this.clickCanvasEvent.dispatch());
-		this.addListener(this._nodeLayer.clickItemEvent, (id, isCtrl) => this.clickItemEvent.dispatch(id, isCtrl));
+		this.addListener(this._nodeLayer.mouseDownItemEvent, (id, isCtrl) => this.clickItemEvent.dispatch(id, isCtrl));
 
 		window.addEventListener("DOMContentLoaded", this.resizeCanvas.bind(this));
 		window.addEventListener("resize", this.resizeCanvas.bind(this));

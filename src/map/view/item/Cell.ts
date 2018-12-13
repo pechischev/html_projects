@@ -1,8 +1,10 @@
 import * as Konva from "konva";
+import { AbstractShape } from "common/canvas/Shape";
+import { Size } from "common/math/Size";
 
 const CLICKABLE_SIZE = 50;
 
-export class Cell extends Konva.Group {
+export class Cell extends AbstractShape<Konva.Group> {
 	private _rect: Konva.Rect;
 	private _point: Konva.Rect;
 
@@ -14,7 +16,6 @@ export class Cell extends Konva.Group {
 			stroke: "black",
 			strokeWidth: 1,
 		});
-		this.add(this._rect);
 
 		this._point = new Konva.Rect({
 			fill: "#F0F4F7",
@@ -22,14 +23,20 @@ export class Cell extends Konva.Group {
 			width: CLICKABLE_SIZE,
 			height: CLICKABLE_SIZE,
 		});
-		this.add(this._point);
+
+		const shape = this.shape();
+		shape.add(this._rect);
+		shape.add(this._point);
 	}
 
-	setSize(size: { width: number, height: number }): this {
-		super.setSize(size);
+	setSize(size: Size) {
 		this._rect.setSize(size);
 		this._point.x((size.width - CLICKABLE_SIZE) / 2);
 		this._point.y((size.height - CLICKABLE_SIZE) / 2);
-		return this;
+		super.setSize(size);
+	}
+
+	protected createShape(): Konva.Group {
+		return new Konva.Group();
 	}
 }
