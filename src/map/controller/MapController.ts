@@ -1,5 +1,4 @@
 import { SelectionList } from "map/controller/list/SelectionList";
-import { notImplement } from "common/utils/tools";
 import { Disposable } from "common/component/Disposable";
 import { MapView } from "map/view/MapView";
 import { NodeList } from "map/controller/list/NodeList";
@@ -8,12 +7,15 @@ import { NodeFactory } from "map/controller/factory/NodeFactory";
 import { INodeGroup } from "map/model/node/INodeGroup";
 import { Coordinate } from "common/math/Coordinate";
 import { Grid } from "map/controller/Grid";
+import { LinkList } from "map/controller/list/LinkList";
+import { ConnectionManager } from "map/service/ConnectionManager";
 
 export class MapController extends Disposable {
 	private _selectionList = new SelectionList();
 	private _nodeList = new NodeList();
 	private _grid = new Grid();
 	private _view: MapView;
+	private _manager = new ConnectionManager(new LinkList());
 
 	constructor(view: MapView) {
 		super();
@@ -30,14 +32,8 @@ export class MapController extends Disposable {
 
 		this.addListener(this._nodeList.changedListEvent, this.renderView, this);
 		this.addListener(this._nodeList.changedListEvent, (items: INode[]) => this.changeSelection(items));
-	}
 
-	connect() {
-		notImplement();
-	}
-
-	disconnect() {
-		notImplement();
+		this.addListener(this._view.createLinkEvent, this.createLink, this);
 	}
 
 	appendNode(position: Coordinate) {
@@ -60,7 +56,7 @@ export class MapController extends Disposable {
 			return;
 		}
 		const nodes = this._nodeList.getNodesById(selection);
-		const group = NodeFactory.createGroup("group");
+		const group = NodeFactory.createGroup();
 		this.addListener(group.changeParentEvent, () => this._grid.changeLayer(group));
 		this._nodeList.group(nodes, group);
 		this._grid.insert(group, this._grid.getLeftTopPosition(nodes));
@@ -75,6 +71,10 @@ export class MapController extends Disposable {
 		}
 		this.removeFromGrid(groups);
 		this._nodeList.ungroup(groups);
+	}
+
+	private createLink(source: INode, target: INode) {
+		this._manager.connect(source.id(), target.id());
 	}
 
 	private changeSelection(items: INode[], isMulti: boolean = false) {

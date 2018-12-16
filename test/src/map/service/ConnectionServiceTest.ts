@@ -1,11 +1,11 @@
 import { expect } from "chai";
 import { LinkList } from "map/controller/list/LinkList";
-import { ConnectionService } from "map/service/ConnectionService";
+import { ConnectionManager } from "map/service/ConnectionManager";
 
 // tslint:disable
-describe("ConnectionService", () => {
+describe("ConnectionManager", () => {
 	let list: LinkList;
-	let service: ConnectionService;
+	let service: ConnectionManager;
 
 	function checkConnections(source: string, targets: string[], result) {
 		for (const target of targets) {
@@ -19,7 +19,7 @@ describe("ConnectionService", () => {
 
 	beforeEach(() => {
 		list = new LinkList();
-		service = new ConnectionService(list);
+		service = new ConnectionManager(list);
 	});
 
 	describe("connect", () => {

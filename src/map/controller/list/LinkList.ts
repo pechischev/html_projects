@@ -1,7 +1,10 @@
-import { Listener } from "common/event/Listener";
 import { ILink } from "map/model/link/ILink";
+import { Disposable } from "common/component/Disposable";
 
-export class LinkList extends Listener {
+export class LinkList extends Disposable {
+	readonly appendLinkEvent = this.createDispatcher();
+	readonly removeLinkEvent = this.createDispatcher();
+
 	private _links: ILink[] = [];
 
 	appendLink(link: ILink) {
@@ -9,6 +12,7 @@ export class LinkList extends Listener {
 			return;
 		}
 		this._links.push(link);
+		this.appendLinkEvent.dispatch(link);
 	}
 
 	removeLink(link: ILink) {
@@ -17,6 +21,7 @@ export class LinkList extends Listener {
 			return;
 		}
 		this._links.splice(index, 1);
+		this.removeLinkEvent.dispatch(link);
 	}
 
 	links(): ILink[] {
@@ -24,7 +29,8 @@ export class LinkList extends Listener {
 	}
 
 	getLink(link: ILink): ILink|null {
-		return this._links.find((value: ILink) => value.source() == link.source() && value.target() == link.target()) || null;
+		const index = this.getLinkIndex(link);
+		return this._links[index] || null;
 	}
 
 	private hasLink(link: ILink): boolean {

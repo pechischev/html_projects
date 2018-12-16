@@ -6,10 +6,25 @@ import { IShape } from "common/canvas/IShape";
 
 export abstract class AbstractShape<T extends Konva.Node = Konva.Node> extends Disposable implements IShape<T> {
 	readonly updateEvent = this.createDispatcher();
+	readonly removeEvent = this.createDispatcher();
+	readonly hoverEvent = this.createDispatcher();
+	readonly leaveEvent = this.createDispatcher();
 
-	private _shape = this.createShape();
+	private _shape: T;
 	private _selected = false;
 	private _visible = true;
+
+	constructor() {
+		super();
+		this._shape = this.createShape();
+
+		this._shape.on("mouseover", (event) => this.hoverEvent.dispatch(event));
+		this._shape.on("mouseleave", (event) => this.leaveEvent.dispatch(event));
+	}
+
+	redraw() {
+		this.updateEvent.dispatch();
+	}
 
 	setSelected(selected: boolean) {
 		this._selected = selected;
@@ -52,6 +67,12 @@ export abstract class AbstractShape<T extends Konva.Node = Konva.Node> extends D
 
 	visible(): boolean {
 		return this._visible;
+	}
+
+	remove() {
+		this._shape.remove();
+		this._shape.destroy();
+		this.removeEvent.dispatch();
 	}
 
 	protected setSelectedImpl(selected: boolean) {}

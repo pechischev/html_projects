@@ -3,9 +3,11 @@ import { NodeView } from "map/view/item/NodeView";
 import { MovementController } from "map/controller/MovementController";
 import { Layer } from "common/canvas/Layer";
 import { Coordinate } from "common/math/Coordinate";
+import { ConnectionFrame } from "map/view/item/ConnectionFrame";
 
 export class NodeLayer extends Layer<NodeView> {
 	readonly mouseDownItemEvent = this.createDispatcher();
+	readonly createConnectEvent = this.createDispatcher();
 
 	update(appendedNodes: INode[], removedNodes: INode[] = []) {
 		removedNodes.forEach((node) => {
@@ -14,8 +16,9 @@ export class NodeLayer extends Layer<NodeView> {
 				return;
 			}
 			const shape = this._items[index];
-			shape.shape().remove();
+			shape.remove();
 			this._items.splice(index, 1);
+			this.removeDisposable(shape);
 		});
 
 		appendedNodes.forEach((node) => {
@@ -39,8 +42,24 @@ export class NodeLayer extends Layer<NodeView> {
 		});
 	}
 
+	getItemByCoordinate(position: Coordinate): NodeView|null {
+		for (const item of this._items) {
+			const clientRect = item.shape().getClientRect();
+			const contains = (position.x >= clientRect.x &&
+				position.x <= clientRect.x + clientRect.width &&
+				position.y >= clientRect.y &&
+				position.y <= clientRect.y + clientRect.height
+			);
+			if (contains) {
+				return item;
+			}
+		}
+		return null;
+	}
+
 	private appendNode(node: INode) {
 		const nodeView = new NodeView(node);
+		this.addDisposable(nodeView);
 		nodeView.shape().on("mousedown", (event) => {
 			const isCtrl = event.evt.ctrlKey;
 			this.mouseDownItemEvent.dispatch(node.id(), isCtrl);
@@ -50,6 +69,8 @@ export class NodeLayer extends Layer<NodeView> {
 		this.addListener(node.changedPositionEvent, () => {
 			nodeView.setPosition(MovementController.toAbsolute(node.position()));
 		});
+		const frame = new ConnectionFrame(nodeView);
+		this.addListener(frame.mouseDownEvent, (...args) => this.createConnectEvent.dispatch(...args));
 		this.drawItem(nodeView);
 	}
 

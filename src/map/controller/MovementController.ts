@@ -2,11 +2,9 @@ import { Disposable } from "common/component/Disposable";
 import { Coordinate } from "common/math/Coordinate";
 import { GridLayer } from "map/view/GridLayer";
 import { NodeLayer } from "map/view/NodeLayer";
+import { Config } from "map/config/Config";
 
 export class MovementController extends Disposable {
-	static CELL_WIDTH = 150;
-	static CELL_HEIGHT = 110;
-
 	private _nodeLayer: NodeLayer;
 	private _gridLayer: GridLayer;
 
@@ -23,11 +21,11 @@ export class MovementController extends Disposable {
 	}
 
 	static toRelative(position: Coordinate): Coordinate {
-		return new Coordinate(position.x / this.CELL_WIDTH, position.y / this.CELL_HEIGHT).floor();
+		return new Coordinate(position.x / Config.CELL_WIDTH, position.y / Config.CELL_HEIGHT).floor();
 	}
 
 	static toAbsolute(position: Coordinate): Coordinate {
-		return new Coordinate(position.x * this.CELL_WIDTH, position.y * this.CELL_HEIGHT);
+		return new Coordinate(position.x * Config.CELL_WIDTH, position.y * Config.CELL_HEIGHT);
 	}
 
 	static toGridPosition(position: Coordinate): Coordinate {

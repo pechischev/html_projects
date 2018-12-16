@@ -3,25 +3,36 @@ import { INode } from "map/model/node/INode";
 import { Coordinate } from "common/math/Coordinate";
 import { EditableText } from "map/view/EditableText";
 import { AbstractShape } from "common/canvas/Shape";
-
-let node = null;
+import { Config } from "map/config/Config";
 
 export class NodeView extends AbstractShape<Konva.Group> {
 	private _node: INode;
 	private _rect: Konva.Rect;
 
 	constructor(item: INode) {
-		node = item;
 		super();
 		this._node = item;
 
+		this.shape().id(item.id());
+
+		const offsetX = (Config.CELL_WIDTH - Config.NODE_WIDTH) / 2;
+		const offsetY = (Config.CELL_HEIGHT - Config.NODE_HEIGHT) / 2;
+
+		const main = new Konva.Rect({
+			width: Config.CELL_WIDTH,
+			height: Config.CELL_HEIGHT,
+			preventDefault: false
+		});
+
 		this._rect = new Konva.Rect({
-			height: 100,
-			width: 120,
+			height: Config.NODE_HEIGHT,
+			width: Config.NODE_WIDTH,
 			fill: "white",
 			stroke: "#D5D5D5",
 			strokeWidth: 2,
-			cornerRadius: 10
+			cornerRadius: 10,
+			offsetX: -offsetX,
+			offsetY: -offsetY
 		});
 
 		const content = item.content();
@@ -29,6 +40,8 @@ export class NodeView extends AbstractShape<Konva.Group> {
 		textField.align("center");
 		textField.verticalAlign("middle");
 		textField.setSize(this._rect.getSize());
+		textField.offsetX(-offsetX);
+		textField.offsetY(-offsetY);
 		this.addListener(textField.changedValue, (value: string) => content.setTitle(value));
 		this.addListener(content.changedTitle, () => {
 			textField.text(content.title());
@@ -36,6 +49,7 @@ export class NodeView extends AbstractShape<Konva.Group> {
 		});
 
 		const shape = this.shape();
+		shape.add(main);
 		shape.add(this._rect);
 		shape.add(textField);
 
@@ -60,21 +74,9 @@ export class NodeView extends AbstractShape<Konva.Group> {
 		return this._node;
 	}
 
-	setPosition(position: Coordinate) {
-		const pos = this.position();
-		if (position.equals(pos)) {
-			return;
-		}
-		const offsetX = 15;
-		const offsetY = 5;
-		position.translate(offsetX, offsetY);
-		super.setPosition(position);
-	}
-
 	protected createShape(): Konva.Group {
 		return new Konva.Group({
 			draggable: true,
-			id: node.id()
 		});
 	}
 
