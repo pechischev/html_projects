@@ -10,7 +10,7 @@ export class ConnectionFrame extends Disposable {
 	private _nodeView: NodeView;
 	private _triggers: Konva.Circle[] = this.getTriggers();
 
-	constructor(nodeView: NodeView) {
+	constructor(nodeView: NodeView) { // TODO: IShape
 		super();
 		this._nodeView = nodeView;
 		this.addDisposable(nodeView);

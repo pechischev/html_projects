@@ -20,7 +20,10 @@ export class Layer<T extends IShape = IShape> extends Disposable {
 	}
 
 	invalidate() {
-		this._layer.removeChildren();
+		for (const item of this._items) {
+			const shape = item.shape();
+			shape.remove();
+		}
 		if (this._items.length) {
 			this._layer.add(...this._items.map((item) => item.shape()));
 		}

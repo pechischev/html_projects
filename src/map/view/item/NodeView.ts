@@ -1,6 +1,5 @@
 import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
-import { Coordinate } from "common/math/Coordinate";
 import { EditableText } from "map/view/EditableText";
 import { AbstractShape } from "common/canvas/Shape";
 import { Config } from "map/config/Config";

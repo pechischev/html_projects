@@ -9,6 +9,7 @@ export abstract class AbstractShape<T extends Konva.Node = Konva.Node> extends D
 	readonly removeEvent = this.createDispatcher();
 	readonly hoverEvent = this.createDispatcher();
 	readonly leaveEvent = this.createDispatcher();
+	readonly clickEvent = this.createDispatcher();
 
 	private _shape: T;
 	private _selected = false;
@@ -20,6 +21,7 @@ export abstract class AbstractShape<T extends Konva.Node = Konva.Node> extends D
 
 		this._shape.on("mouseover", (event) => this.hoverEvent.dispatch(event));
 		this._shape.on("mouseleave", (event) => this.leaveEvent.dispatch(event));
+		this._shape.on("click", this.onClickEvent.bind(this));
 	}
 
 	redraw() {
@@ -78,4 +80,8 @@ export abstract class AbstractShape<T extends Konva.Node = Konva.Node> extends D
 	protected setSelectedImpl(selected: boolean) {}
 
 	protected abstract createShape(): T;
+
+	protected onClickEvent(event: Konva.KonvaEventObject<MouseEvent>) {
+		this.clickEvent.dispatch(event);
+	}
 }

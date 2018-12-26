@@ -39,4 +39,13 @@ export class Cell extends AbstractShape<Konva.Group> {
 	protected createShape(): Konva.Group {
 		return new Konva.Group();
 	}
+
+	protected onClickEvent(event: Konva.KonvaEventObject<MouseEvent>) {
+		const isPoint = this._point.intersects({x: event.evt.offsetX, y: event.evt.offsetY});
+		if (!isPoint) {
+			return;
+		}
+		event.cancelBubble = true;
+		super.onClickEvent(event);
+	}
 }
