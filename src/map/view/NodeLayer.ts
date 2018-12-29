@@ -1,7 +1,6 @@
 import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
 import { NodeView } from "map/view/item/NodeView";
-import { MovementController } from "map/controller/MovementController";
 import { Layer } from "common/canvas/Layer";
 import { Coordinate } from "common/math/Coordinate";
 import { ConnectionFrame } from "map/view/item/ConnectionFrame";
@@ -9,19 +8,27 @@ import { Cell } from "map/view/item/Cell";
 import { Size } from "common/math/Size";
 import { Config } from "map/config/Config";
 import { CanvasApi } from "common/canvas/api/CanvasApi";
+import { CoordinateConverter } from "map/service/CoordinateConverter";
+import { ConnectionService } from "map/service/ConnectionService";
 
 export class NodeLayer extends Layer<NodeView> {
 	readonly mouseDownItemEvent = this.createDispatcher();
-	readonly createConnectEvent = this.createDispatcher();
+	readonly connectEvent = this.createDispatcher();
 	readonly createItemEvent = this.createDispatcher();
 
 	private _cell = new Cell();
+	private _canvasApi: CanvasApi;
+	private _line = new Konva.Line({
+		points: [],
+		stroke: "red",
+	});
 
 	constructor(api: CanvasApi) {
 		super();
 
 		this._cell.setSize(new Size(Config.CELL_WIDTH, Config.CELL_HEIGHT)); // TODO: передавать размеры ячейки параметром
 		this.layer().add(this._cell.shape());
+		this.layer().add(this._line);
 
 		this.addListener(this._cell.updateEvent, () => this._layer.batchDraw());
 		this.addListener(this._cell.clickEvent, () => {
@@ -32,13 +39,10 @@ export class NodeLayer extends Layer<NodeView> {
 		this.addListener(api.mouseMoveEvent, (event: Konva.KonvaEventObject<MouseEvent>) => {
 			const mouseEvent = event.evt;
 			const mousePos = new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY);
-			const isEmpty = !this.getItemByCoordinate(mousePos);
-			this._cell.setVisible(isEmpty);
-			if (!isEmpty) {
-				return;
-			}
 			this.updateCellPosition(mousePos);
 		});
+
+		this._canvasApi = api;
 	}
 
 	update(appendedNodes: INode[], removedNodes: INode[] = []) {
@@ -90,32 +94,62 @@ export class NodeLayer extends Layer<NodeView> {
 	}
 
 	private updateCellPosition(pos: Coordinate) {
-		const newPos = MovementController.toGridPosition(pos);
-		const oldPos = MovementController.toGridPosition(this._cell.position());
+		const isEmpty = !this.getItemByCoordinate(pos);
+		this._cell.setVisible(isEmpty);
+		if (!isEmpty) {
+			return;
+		}
+		const newPos = CoordinateConverter.toGridPosition(pos);
+		const oldPos = CoordinateConverter.toGridPosition(this._cell.position());
 		if (Coordinate.equals(newPos, oldPos)) {
 			return;
 		}
 		this._cell.setPosition(newPos);
 	}
 
-	private appendNode(node: INode) {
+	private appendNode(node: INode) { // TODO: упростить
 		const nodeView = new NodeView(node);
 		this.addDisposable(nodeView);
 		nodeView.shape().on("mousedown", (event) => {
 			const isCtrl = event.evt.ctrlKey;
 			this.mouseDownItemEvent.dispatch(node, isCtrl);
 		});
-		const position = MovementController.toAbsolute(node.position());
+		const position = CoordinateConverter.toAbsolute(node.position());
 		nodeView.setPosition(position);
 		this.addListener(node.changedPositionEvent, () => {
-			nodeView.setPosition(MovementController.toAbsolute(node.position()));
+			nodeView.setPosition(CoordinateConverter.toAbsolute(node.position()));
 		});
+
 		const frame = new ConnectionFrame(nodeView);
-		this.addListener(frame.mouseDownEvent, (...args) => this.createConnectEvent.dispatch(...args));
+		this.addListener(frame.mouseDownEvent, (position: Coordinate) => {
+			this._line.visible(true);
+
+			const mouseMoveKey = this.addListener(this._canvasApi.mouseMoveEvent, (event: Konva.KonvaEventObject<MouseEvent>) => {
+				const mousePos = new Coordinate(event.evt.offsetX, event.evt.offsetY);
+				this.drawLine(position, mousePos);
+			});
+			const mouseUpKey = this.addListener(this._canvasApi.mouseUpEvent, (event: Konva.KonvaEventObject<MouseEvent>) => {
+				const mousePos = new Coordinate(event.evt.offsetX, event.evt.offsetY);
+				const lastItem = this.getItemByCoordinate(mousePos);
+				this._line.visible(false);
+
+				if (lastItem) {
+					this.connectEvent.dispatch(ConnectionService.connect(nodeView, lastItem));
+				}
+				this.removeListener(mouseMoveKey);
+				this.removeListener(mouseUpKey);
+			});
+		});
 		this.drawItem(nodeView);
 	}
 
 	private getIndex(id: string): number {
 		return this._items.findIndex((shape) => shape.getId() == id);
+	}
+
+	private drawLine(startPos: Coordinate, endPos: Coordinate) {
+		this._line.points([startPos.x, startPos.y, endPos.x, endPos.y]);
+		this._line.moveToTop();
+		this._layer.batchDraw();
 	}
 }

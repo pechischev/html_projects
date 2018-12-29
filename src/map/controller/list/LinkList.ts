@@ -28,6 +28,10 @@ export class LinkList extends Disposable {
 		return this._links;
 	}
 
+	getLinkByTargets(source: string, target: string): ILink|null { // TODO: rename
+		return this._links.find((value: ILink) => value.source() == source && value.target() == target) || null;
+	}
+
 	getLink(link: ILink): ILink|null {
 		const index = this.getLinkIndex(link);
 		return this._links[index] || null;
