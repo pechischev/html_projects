@@ -30,15 +30,23 @@ export class ConnectionController extends Disposable {
 	}
 
 	removeConnection(link: ILink) {
-		this._linkList.removeLink(link);
 		this._connectionList.disconnect(link.source(), link.target());
+		this._linkList.removeLink(link);
+	}
+
+	removeAllConnections(item: string) {
+		const connections = this._connectionList.getConnections(item);
+		connections.forEach((connection) => {
+			const link = this._linkList.getLinkByItems(item, connection);
+			this.removeConnection(link);
+		});
 	}
 
 	private onConnect(source: string, target: string) {
-		this.connectEvent.dispatch(this._linkList.getLinkByTargets(source, target));
+		this.connectEvent.dispatch(this._linkList.getLinkByItems(source, target));
 	}
 
 	private onDisconnect(source: string, target: string) {
-		this.disconnectEvent.dispatch(this._linkList.getLinkByTargets(source, target));
+		this.disconnectEvent.dispatch(this._linkList.getLinkByItems(source, target));
 	}
 }

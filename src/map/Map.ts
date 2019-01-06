@@ -5,6 +5,7 @@ import { ConnectionController } from "map/controller/ConnectionController";
 import { Component } from "common/component/Component";
 import { Grid } from "map/view/Grid";
 import { Toolbar } from "map/view/Toolbar";
+import { INode } from "map/model/node/INode";
 
 export class Map extends Component {
 	private _selectionList: SelectionList;
@@ -34,6 +35,8 @@ export class Map extends Component {
 		this.addDisposable(this._selectionList);
 		this.addDisposable(this._nodeController);
 		this.addDisposable(this._connectionController);
+
+		this.addListener(this._nodeController.changedListEvent, this.onChangeList, this);
 	}
 
 	appendNode() {
@@ -65,5 +68,11 @@ export class Map extends Component {
 		toolbar.register(() => this.group(), "Group");
 		toolbar.register(() => this.ungroup(), "Ungroup");
 		toolbar.register(() => this.removeNodes(), "Remove node");
+	}
+
+	private onChangeList(appended: INode[], removed: INode[]) {
+		for (const item of removed) {
+			this._connectionController.removeAllConnections(item.id());
+		}
 	}
 }

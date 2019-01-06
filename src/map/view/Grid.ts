@@ -72,13 +72,14 @@ export class Grid extends Component {
 
 		this.addListener(this._nodeLayer.mouseDownItemEvent, (node: INode, isCtrl: boolean) => this._nodeController.setSelection([node], isCtrl));
 		this.addListener(this._nodeLayer.createItemEvent, (position: Coordinate) => this._nodeController.createNode(CoordinateConverter.toRelative(position)));
-		this.addListener(this._nodeLayer.clickLayerEvent, (event) => this._canvasApi.clickEvent.dispatch(event));
+		this.addListener(this._nodeLayer.clickLayerEvent, () => this._canvas.fire("click"));
 		this.addListener(this._nodeLayer.connectEvent, this._linkController.createConnection, this._linkController);
 
 		this.addListener(this._nodeController.changedListEvent, this._nodeLayer.update, this._nodeLayer);
 		this.addListener(this._nodeController.changedSelectionEvent, this._nodeLayer.updateSelection, this._nodeLayer);
 
 		this.addListener(this._linkController.connectEvent, this._lineLayer.drawLine, this._lineLayer);
+		this.addListener(this._linkController.disconnectEvent, this._lineLayer.removeLine, this._lineLayer);
 
 		window.addEventListener("DOMContentLoaded", this.resizeCanvas.bind(this));
 		window.addEventListener("resize", this.resizeCanvas.bind(this));

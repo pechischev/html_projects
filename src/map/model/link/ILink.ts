@@ -1,6 +1,9 @@
 import { Coordinate } from "common/math/Coordinate";
+import { IDispatcher } from "common/event/IDispatcher";
 
 export interface ILink {
+	readonly changedPointEvent: IDispatcher;
+
 	source(): string;
 
 	target(): string;

@@ -33,7 +33,7 @@ export class ConnectionList extends Disposable {
 	}
 
 	getConnections(item: string): string[] {
-		return this._connections.get(item) || [];
+		return (this._connections.get(item) || []).slice();
 	}
 
 	private appendConnection(item1: string, item2: string) {
