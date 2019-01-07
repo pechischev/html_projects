@@ -1,4 +1,5 @@
 import { Layer } from "common/canvas/Layer";
+import { KonvaEventObject } from "konva";
 import { LinkLine } from "map/view/item/LinkLine";
 import { ILink } from "map/model/link/ILink";
 
@@ -6,7 +7,7 @@ export class LineLayer extends Layer<LinkLine> {
 
 	drawLine(link: ILink) {
 		const line = new LinkLine(link);
-		line.shape().on("mousedown", (event) => {
+		this.addListener(line.clickEvent, (event: KonvaEventObject<MouseEvent>) => {
 			const isCtrl = event.evt.ctrlKey;
 			this.clickItemEvent.dispatch(link, isCtrl);
 		});
