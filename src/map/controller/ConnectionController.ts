@@ -27,8 +27,8 @@ export class ConnectionController extends Disposable {
 		this.addListener(this._selectionList.changeSelectionEvent, (selectedItems) => this.changedSelectionEvent.dispatch(selectedItems));
 	}
 
-	setSelection(nodes: ILink[], isMulti: boolean = false) {
-		this._selectionList.setSelection(nodes.map((item) => item.id()), isMulti);
+	setSelection(links: ILink[], isMulti: boolean = false) {
+		this._selectionList.setSelection(links.map((item) => item.id()), isMulti);
 	}
 
 	getSelectedLinks(): ILink[] {

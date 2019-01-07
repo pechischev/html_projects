@@ -27,8 +27,8 @@ export class NodeView extends AbstractShape<Konva.Group> {
 			height: Config.NODE_HEIGHT,
 			width: Config.NODE_WIDTH,
 			fill: "white",
-			stroke: "#D5D5D5",
-			strokeWidth: 2,
+			stroke: "#26A092",
+			strokeWidth: 1,
 			cornerRadius: 10,
 			offsetX: -offsetX,
 			offsetY: -offsetY
@@ -80,6 +80,6 @@ export class NodeView extends AbstractShape<Konva.Group> {
 	}
 
 	protected setSelectedImpl(selected: boolean) {
-		this._rect.stroke(selected ? "#58A8F7" : "#D5D5D5");
+		this._rect.strokeWidth(selected ? 4 : 1);
 	}
 }

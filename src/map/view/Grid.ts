@@ -9,6 +9,7 @@ import { INode } from "map/model/node/INode";
 import { Coordinate } from "common/math/Coordinate";
 import { CoordinateConverter } from "map/service/CoordinateConverter";
 import { ILink } from "map/model/link/ILink";
+import { Config } from "map/config/Config";
 
 export class Grid extends Component {
 	private _canvas: Konva.Stage;
@@ -21,6 +22,7 @@ export class Grid extends Component {
 	private _linkController: ConnectionController;
 
 	private _zoom = 1;
+	private _grid = new Konva.FastLayer();
 
 	constructor(nodeController: NodeController, linkController: ConnectionController) {
 		super({
@@ -39,7 +41,8 @@ export class Grid extends Component {
 		this.addDisposable(this._lineLayer);
 		this.addDisposable(this._nodeLayer);
 
-		this._canvas.add(this._nodeLayer.layer(), this._lineLayer.layer());
+		this.redrawCells();
+		this._canvas.add(this._grid, this._nodeLayer.layer(), this._lineLayer.layer());
 
 		this._nodeController = nodeController;
 		this.addDisposable(nodeController);
@@ -65,6 +68,7 @@ export class Grid extends Component {
 	private resizeCanvas() {
 		this._canvas.setWidth(this.width());
 		this._canvas.setHeight(this.height());
+		this.redrawCells();
 	}
 
 	private initListeners() {
@@ -79,7 +83,7 @@ export class Grid extends Component {
 		this.addListener(this._nodeController.changedListEvent, this._nodeLayer.update, this._nodeLayer);
 		this.addListener(this._nodeController.changedSelectionEvent, this._nodeLayer.updateSelection, this._nodeLayer);
 
-		this.addListener(this._lineLayer.clickItemEvent, (item: ILink, isCtrl: boolean) => this._linkController.setSelection([item], isCtrl));
+		this.addListener(this._lineLayer.mouseDownItemEvent, (item: ILink, isCtrl: boolean) => this._linkController.setSelection([item], isCtrl));
 
 		this.addListener(this._linkController.connectEvent, this._lineLayer.drawLine, this._lineLayer);
 		this.addListener(this._linkController.disconnectEvent, this._lineLayer.removeLine, this._lineLayer);
@@ -105,5 +109,28 @@ export class Grid extends Component {
 			return;
 		}
 		this._nodeController.setSelection([]);
+		this._linkController.setSelection([]);
+	}
+
+	private redrawCells() {
+		this._grid.removeChildren();
+		const size = this._canvas.getSize();
+		const columns = Math.ceil(size.width / Config.CELL_WIDTH);
+		const rows = Math.ceil(size.height / Config.CELL_HEIGHT);
+		for (let y = 0; y < rows; ++y) {
+			for (let x = 0; x < columns; ++x) {
+				const position = CoordinateConverter.toAbsolute(new Coordinate(x, y));
+				this._grid.add(new Konva.Rect({
+					width: Config.CELL_WIDTH,
+					height: Config.CELL_HEIGHT,
+					x: position.x,
+					y: position.y,
+					strokeWidth: 1,
+					stroke: "#B4CCCF",
+					opacity: 0.3
+				}));
+			}
+		}
+		this._grid.draw();
 	}
 }

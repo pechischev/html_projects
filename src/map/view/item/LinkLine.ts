@@ -26,15 +26,15 @@ export class LinkLine extends AbstractShape<Konva.Arrow> {
 	protected createShape(): Konva.Arrow {
 		return new Konva.Arrow({
 			points: [],
-			stroke: "#a8a8a8",
-			fill: "#a8a8a8",
+			stroke: "#5CB6AF",
+			fill: "#5CB6AF",
 			pointerLength: 10,
 			pointerWidth : 10,
 		});
 	}
 
 	protected setSelectedImpl(selected: boolean) {
-		this.shape().stroke(selected ? "black" : "#a8a8a8");
+		this.shape().stroke(selected ? "#017661" : "#5CB6AF");
 	}
 
 	private updatePath() {
