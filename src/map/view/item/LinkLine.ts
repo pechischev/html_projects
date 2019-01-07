@@ -3,7 +3,7 @@ import * as Konva from "konva";
 import { ILink } from "map/model/link/ILink";
 import { CoordinateConverter } from "map/service/CoordinateConverter";
 
-export class LinkLine extends AbstractShape<Konva.Line> {
+export class LinkLine extends AbstractShape<Konva.Arrow> {
 	private _link: ILink;
 
 	constructor(link: ILink) {
@@ -23,10 +23,13 @@ export class LinkLine extends AbstractShape<Konva.Line> {
 		this.updateEvent.dispatch();
 	}
 
-	protected createShape(): Konva.Line {
-		return new Konva.Line({
+	protected createShape(): Konva.Arrow {
+		return new Konva.Arrow({
 			points: [],
 			stroke: "#a8a8a8",
+			fill: "#a8a8a8",
+			pointerLength: 10,
+			pointerWidth : 10,
 		});
 	}
 
