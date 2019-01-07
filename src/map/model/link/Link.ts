@@ -1,6 +1,7 @@
 import { ILink } from "map/model/link/ILink";
 import { Coordinate } from "common/math/Coordinate";
 import { Disposable } from "common/component/Disposable";
+import { Utils } from "common/utils/Utils";
 
 export class Link extends Disposable implements ILink {
 	readonly changedPointEvent = this.createDispatcher();
@@ -9,11 +10,17 @@ export class Link extends Disposable implements ILink {
 	private _target: string;
 	private _startPoint: Coordinate;
 	private _endPoint: Coordinate;
+	private readonly _id = Utils.getUid(this);
 
 	constructor(source: string, target: string) {
 		super();
+
 		this._source = source;
 		this._target = target;
+	}
+
+	id(): string {
+		return this._id;
 	}
 
 	source(): string {

@@ -8,6 +8,7 @@ import { ConnectionController } from "map/controller/ConnectionController";
 import { INode } from "map/model/node/INode";
 import { Coordinate } from "common/math/Coordinate";
 import { CoordinateConverter } from "map/service/CoordinateConverter";
+import { ILink } from "map/model/link/ILink";
 
 export class Grid extends Component {
 	private _canvas: Konva.Stage;
@@ -38,7 +39,7 @@ export class Grid extends Component {
 		this.addDisposable(this._lineLayer);
 		this.addDisposable(this._nodeLayer);
 
-		this._canvas.add(this._lineLayer.layer(), this._nodeLayer.layer());
+		this._canvas.add(this._nodeLayer.layer(), this._lineLayer.layer());
 
 		this._nodeController = nodeController;
 		this.addDisposable(nodeController);
@@ -78,8 +79,11 @@ export class Grid extends Component {
 		this.addListener(this._nodeController.changedListEvent, this._nodeLayer.update, this._nodeLayer);
 		this.addListener(this._nodeController.changedSelectionEvent, this._nodeLayer.updateSelection, this._nodeLayer);
 
+		this.addListener(this._lineLayer.clickItemEvent, (item: ILink, isCtrl: boolean) => this._linkController.setSelection([item], isCtrl));
+
 		this.addListener(this._linkController.connectEvent, this._lineLayer.drawLine, this._lineLayer);
 		this.addListener(this._linkController.disconnectEvent, this._lineLayer.removeLine, this._lineLayer);
+		this.addListener(this._linkController.changedSelectionEvent, this._lineLayer.updateSelection, this._lineLayer);
 
 		window.addEventListener("DOMContentLoaded", this.resizeCanvas.bind(this));
 		window.addEventListener("resize", this.resizeCanvas.bind(this));

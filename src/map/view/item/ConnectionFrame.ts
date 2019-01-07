@@ -40,7 +40,7 @@ export class ConnectionFrame extends Disposable {
 
 	private createCircle(pos: Coordinate): Konva.Circle {
 		const circle = new Konva.Circle({
-			radius: 5,
+			radius: 7,
 			x: pos.x,
 			y: pos.y,
 			fill: "#818381",

@@ -35,13 +35,12 @@ export class LinkList extends Disposable {
 		return this._links.find((link: ILink) => check(first, second, link) || check(second, first, link)) || null;
 	}
 
-	getLink(link: ILink): ILink|null {
-		const index = this.getLinkIndex(link);
-		return this._links[index] || null;
+	getLink(id: string): ILink|null {
+		return this._links.find((link) => link.id() == id) || null;
 	}
 
 	private hasLink(link: ILink): boolean {
-		return !!this.getLink(link);
+		return !!~this.getLinkIndex(link);
 	}
 
 	private getLinkIndex(link: ILink): number {

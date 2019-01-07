@@ -1,27 +1,39 @@
 import { Disposable } from "common/component/Disposable";
 import { LinkList } from "map/controller/list/LinkList";
 import { ConnectionList } from "map/controller/list/ConnectionList";
-import { NodeList } from "map/controller/list/NodeList";
 import { ILink } from "map/model/link/ILink";
+import { SelectionList } from "map/controller/list/SelectionList";
 
 export class ConnectionController extends Disposable {
 	readonly connectEvent = this.createDispatcher();
 	readonly disconnectEvent = this.createDispatcher();
+	readonly changedSelectionEvent = this.createDispatcher();
 
 	private _linkList = new LinkList();
 	private _connectionList = new ConnectionList();
-	private _nodeList: NodeList;
+	private _selectionList: SelectionList;
 
-	constructor(nodeList: NodeList) {
+	constructor(selectionList: SelectionList) {
 		super();
-		this._nodeList = nodeList;
 
+		this._selectionList = selectionList;
+
+		this.addDisposable(selectionList);
 		this.addDisposable(this._linkList);
 		this.addDisposable(this._connectionList);
-		this.addDisposable(this._nodeList);
 
 		this.addListener(this._connectionList.connectEvent, this.onConnect, this);
 		this.addListener(this._connectionList.disconnectEvent, this.onDisconnect, this);
+		this.addListener(this._selectionList.changeSelectionEvent, (selectedItems) => this.changedSelectionEvent.dispatch(selectedItems));
+	}
+
+	setSelection(nodes: ILink[], isMulti: boolean = false) {
+		this._selectionList.setSelection(nodes.map((item) => item.id()), isMulti);
+	}
+
+	getSelectedLinks(): ILink[] {
+		const selection = this._selectionList.getSelection();
+		return selection.map((id) => this._linkList.getLink(id));
 	}
 
 	createConnection(link: ILink) {

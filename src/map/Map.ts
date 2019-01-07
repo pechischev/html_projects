@@ -26,7 +26,7 @@ export class Map extends Component {
 		this.addChild(tools);
 
 		this._nodeController = new NodeController(this._selectionList);
-		this._connectionController = new ConnectionController(this._nodeController.getNodeList());
+		this._connectionController = new ConnectionController(this._selectionList);
 		this._view = new Grid(this._nodeController, this._connectionController);
 		this.addChild(this._view);
 
@@ -62,12 +62,20 @@ export class Map extends Component {
 		this._nodeController.removeGroup(nodes);
 	}
 
+	removeLines() {
+		const links = this._connectionController.getSelectedLinks();
+		for (const link of links) {
+			this._connectionController.removeConnection(link);
+		}
+	}
+
 	private initCommands() {
 		const toolbar = this._toolbar;
 		toolbar.register(() => this.appendNode(), "Append node");
 		toolbar.register(() => this.group(), "Group");
 		toolbar.register(() => this.ungroup(), "Ungroup");
 		toolbar.register(() => this.removeNodes(), "Remove node");
+		toolbar.register(() => this.removeLines(), "Remove lines");
 	}
 
 	private onChangeList(appended: INode[], removed: INode[]) {

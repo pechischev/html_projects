@@ -26,8 +26,12 @@ export class LinkLine extends AbstractShape<Konva.Line> {
 	protected createShape(): Konva.Line {
 		return new Konva.Line({
 			points: [],
-			stroke: "black",
+			stroke: "#a8a8a8",
 		});
+	}
+
+	protected setSelectedImpl(selected: boolean) {
+		this.shape().stroke(selected ? "black" : "#a8a8a8");
 	}
 
 	private updatePath() {

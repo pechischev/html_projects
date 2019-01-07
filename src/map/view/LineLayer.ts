@@ -6,6 +6,10 @@ export class LineLayer extends Layer<LinkLine> {
 
 	drawLine(link: ILink) {
 		const line = new LinkLine(link);
+		line.shape().on("mousedown", (event) => {
+			const isCtrl = event.evt.ctrlKey;
+			this.clickItemEvent.dispatch(link, isCtrl);
+		});
 		this.drawItem(line);
 	}
 
@@ -18,9 +22,17 @@ export class LineLayer extends Layer<LinkLine> {
 		this._layer.batchDraw();
 	}
 
+	updateSelection(selection: string[]) {
+		this._items.forEach((shape) => {
+			const link = shape.link();
+			const isSelected = selection.indexOf(link.id()) > -1;
+			shape.setSelected(isSelected);
+		});
+	}
+
 	private getLineByLink(link: ILink): LinkLine {
 		return this._items.find((item) => {
-			return item.link() == link;
+			return item.link().id() == link.id();
 		});
 	}
 }
