@@ -4,7 +4,7 @@ import { ConnectionList } from "map/controller/list/ConnectionList";
 import { ILink } from "map/model/link/ILink";
 import { SelectionList } from "map/controller/list/SelectionList";
 
-export class ConnectionController extends Disposable {
+export class ConnectionPresenter extends Disposable {
 	readonly connectEvent = this.createDispatcher();
 	readonly disconnectEvent = this.createDispatcher();
 	readonly changedSelectionEvent = this.createDispatcher();

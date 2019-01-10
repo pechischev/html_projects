@@ -1,7 +1,7 @@
-import { NodeController } from "map/controller/NodeController";
+import { NodePresenter } from "map/controller/NodePresenter";
 import { SelectionList } from "map/controller/list/SelectionList";
 import { Coordinate } from "common/math/Coordinate";
-import { ConnectionController } from "map/controller/ConnectionController";
+import { ConnectionPresenter } from "map/controller/ConnectionPresenter";
 import { Component } from "common/component/Component";
 import { Grid } from "map/view/Grid";
 import { Toolbar } from "map/view/Toolbar";
@@ -9,8 +9,8 @@ import { INode } from "map/model/node/INode";
 
 export class Map extends Component {
 	private _selectionList: SelectionList;
-	private _nodeController: NodeController;
-	private _connectionController: ConnectionController;
+	private _nodeController: NodePresenter;
+	private _connectionController: ConnectionPresenter;
 
 	private _view: Grid;
 	private _toolbar: Toolbar;
@@ -25,8 +25,8 @@ export class Map extends Component {
 		const tools = new Component({blockName: "map-tools"});
 		this.addChild(tools);
 
-		this._nodeController = new NodeController(this._selectionList);
-		this._connectionController = new ConnectionController(this._selectionList);
+		this._nodeController = new NodePresenter(this._selectionList);
+		this._connectionController = new ConnectionPresenter(this._selectionList);
 		this._view = new Grid(this._nodeController, this._connectionController);
 		this.addChild(this._view);
 

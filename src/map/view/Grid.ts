@@ -3,13 +3,14 @@ import * as Konva from "konva";
 import { CanvasApi } from "common/canvas/api/CanvasApi";
 import { NodeLayer } from "map/view/NodeLayer";
 import { LineLayer } from "map/view/LineLayer";
-import { NodeController } from "map/controller/NodeController";
-import { ConnectionController } from "map/controller/ConnectionController";
+import { NodePresenter } from "map/controller/NodePresenter";
+import { ConnectionPresenter } from "map/controller/ConnectionPresenter";
 import { INode } from "map/model/node/INode";
 import { Coordinate } from "common/math/Coordinate";
 import { CoordinateConverter } from "map/service/CoordinateConverter";
 import { ILink } from "map/model/link/ILink";
 import { Config } from "map/config/Config";
+import { GridController } from "map/controller/GridController";
 
 export class Grid extends Component {
 	private _canvas: Konva.Stage;
@@ -18,13 +19,14 @@ export class Grid extends Component {
 	private _nodeLayer: NodeLayer;
 	private _lineLayer = new LineLayer();
 
-	private _nodeController: NodeController;
-	private _linkController: ConnectionController;
+	private _nodeController: NodePresenter;
+	private _linkController: ConnectionPresenter;
+	private _gridController: GridController;
 
 	private _zoom = 1;
 	private _grid = new Konva.FastLayer();
 
-	constructor(nodeController: NodeController, linkController: ConnectionController) {
+	constructor(nodeController: NodePresenter, linkController: ConnectionPresenter) {
 		super({
 			blockName: "canvas-container"
 		});
@@ -49,6 +51,8 @@ export class Grid extends Component {
 		this._linkController = linkController;
 		this.addDisposable(linkController);
 
+		this._gridController = new GridController(this);
+
 		this.initListeners();
 	}
 
@@ -65,6 +69,18 @@ export class Grid extends Component {
 		return this._zoom;
 	}
 
+	nodeLayer(): NodeLayer {
+		return this._nodeLayer;
+	}
+
+	lineLayer(): LineLayer {
+		return this._lineLayer;
+	}
+
+	canvasApi(): CanvasApi {
+		return this._canvasApi;
+	}
+
 	private resizeCanvas() {
 		this._canvas.setWidth(this.width());
 		this._canvas.setHeight(this.height());
@@ -75,19 +91,19 @@ export class Grid extends Component {
 		this.addListener(this._canvasApi.clickEvent, this.onCanvasClick, this);
 		this.addListener(this._canvasApi.dragEndEvent, this.onDragEnd, this);
 
-		this.addListener(this._nodeLayer.mouseDownItemEvent, (node: INode, isCtrl: boolean) => this._nodeController.setSelection([node], isCtrl));
-		this.addListener(this._nodeLayer.createItemEvent, (position: Coordinate) => this._nodeController.createNode(CoordinateConverter.toRelative(position)));
 		this.addListener(this._nodeLayer.clickLayerEvent, () => this._canvas.fire("click"));
-		this.addListener(this._nodeLayer.connectEvent, this._linkController.createConnection, this._linkController);
 
-		this.addListener(this._nodeController.changedListEvent, this._nodeLayer.update, this._nodeLayer);
-		this.addListener(this._nodeController.changedSelectionEvent, this._nodeLayer.updateSelection, this._nodeLayer);
+		this.addListener(this._nodeController.changedListEvent, this._gridController.updateNodes, this._gridController);
+		this.addListener(this._nodeController.changedSelectionEvent, this._gridController.updateSelection, this._gridController);
 
-		this.addListener(this._lineLayer.mouseDownItemEvent, (item: ILink, isCtrl: boolean) => this._linkController.setSelection([item], isCtrl));
+		this.addListener(this._gridController.selectNodeEvent, (node: INode, isCtrl: boolean) => this._nodeController.setSelection([node], isCtrl));
+		this.addListener(this._gridController.selectLinkEvent, (item: ILink, isCtrl: boolean) => this._linkController.setSelection([item], isCtrl));
+		this.addListener(this._gridController.createNodeEvent, this._nodeController.createNode, this._nodeController);
+		this.addListener(this._gridController.connectEvent, this._linkController.createConnection, this._linkController);
 
-		this.addListener(this._linkController.connectEvent, this._lineLayer.drawLine, this._lineLayer);
-		this.addListener(this._linkController.disconnectEvent, this._lineLayer.removeLine, this._lineLayer);
-		this.addListener(this._linkController.changedSelectionEvent, this._lineLayer.updateSelection, this._lineLayer);
+		this.addListener(this._linkController.connectEvent, this._gridController.appendLine, this._gridController);
+		this.addListener(this._linkController.disconnectEvent, this._gridController.removeLine, this._gridController);
+		this.addListener(this._linkController.changedSelectionEvent, this._gridController.updateSelection, this._gridController);
 
 		window.addEventListener("DOMContentLoaded", this.resizeCanvas.bind(this));
 		window.addEventListener("resize", this.resizeCanvas.bind(this));
@@ -97,7 +113,7 @@ export class Grid extends Component {
 		const mouseEvent = event.evt;
 		const view = event.target;
 		const position = new Coordinate(mouseEvent.offsetX, mouseEvent.offsetY);
-		const item = this._nodeLayer.getItemByCoordinate(position);
+		const item = this._nodeLayer.getViewByCoordinate(position);
 		if (item && item.node().id() == view.id()) {
 			// TODO: warning - current view is only NodeView
 			this._nodeController.insert(item.node(), CoordinateConverter.toRelative(position));

@@ -1,40 +1,27 @@
 import { Layer } from "common/canvas/Layer";
-import { KonvaEventObject } from "konva";
+import * as Konva from "konva";
 import { LinkLine } from "map/view/item/LinkLine";
-import { ILink } from "map/model/link/ILink";
+import { Coordinate } from "common/math/Coordinate";
 
 export class LineLayer extends Layer<LinkLine> {
-	readonly mouseDownItemEvent = this.createDispatcher();
+	private _line = new Konva.Line({
+		points: [],
+		stroke: "red",
+	});
 
-	drawLine(link: ILink) {
-		const line = new LinkLine(link);
-		this.addListener(line.clickEvent, (event: KonvaEventObject<MouseEvent>) => {
-			const isCtrl = event.evt.ctrlKey;
-			this.mouseDownItemEvent.dispatch(link, isCtrl);
-		});
-		this.drawItem(line);
+	constructor() {
+		super();
+		this.layer().add(this._line);
 	}
 
-	removeLine(link: ILink) {
-		const view = this.getLineByLink(link);
-		if (!view) {
-			return;
-		}
-		view.shape().destroy();
-		this._layer.batchDraw();
+	showConnectionLine(show: boolean) {
+		this._line.visible(show);
+		this.redraw();
 	}
 
-	updateSelection(selection: string[]) {
-		this._items.forEach((shape) => {
-			const link = shape.link();
-			const isSelected = selection.indexOf(link.id()) > -1;
-			shape.setSelected(isSelected);
-		});
-	}
-
-	private getLineByLink(link: ILink): LinkLine {
-		return this._items.find((item) => {
-			return item.link().id() == link.id();
-		});
+	drawConnectionLine(startPos: Coordinate, endPos: Coordinate) {
+		this._line.points([startPos.x, startPos.y, endPos.x, endPos.y]);
+		this._line.moveToTop();
+		this.redraw();
 	}
 }

@@ -3,10 +3,14 @@ import { INode } from "map/model/node/INode";
 import { EditableText } from "map/view/EditableText";
 import { AbstractShape } from "common/canvas/Shape";
 import { Config } from "map/config/Config";
+import { CoordinateConverter } from "map/service/CoordinateConverter";
+import { ConnectionFrame } from "map/view/item/ConnectionFrame";
 
 export class NodeView extends AbstractShape<Konva.Group> {
 	private _node: INode;
 	private _rect: Konva.Rect;
+
+	private _frame: ConnectionFrame;
 
 	constructor(item: INode) {
 		super();
@@ -63,6 +67,12 @@ export class NodeView extends AbstractShape<Konva.Group> {
 		shape.on("mouseout", () => {
 			document.body.style.cursor = "default";
 		});
+
+		const position = CoordinateConverter.toAbsolute(item.position());
+		this.setPosition(position);
+		this.addListener(item.changedPositionEvent, () => {
+			this.setPosition(CoordinateConverter.toAbsolute(item.position()));
+		});
 	}
 
 	getId(): string {
@@ -71,6 +81,14 @@ export class NodeView extends AbstractShape<Konva.Group> {
 
 	node(): INode {
 		return this._node;
+	}
+
+	setFrame(frame: ConnectionFrame) {
+		this._frame = frame;
+	}
+
+	frame(): ConnectionFrame {
+		return this._frame;
 	}
 
 	protected createShape(): Konva.Group {

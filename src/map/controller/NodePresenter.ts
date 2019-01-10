@@ -12,7 +12,7 @@ interface ICell {
 	layer: string|null;
 }
 
-export class NodeController extends Disposable {
+export class NodePresenter extends Disposable {
 	readonly changedListEvent = this.createDispatcher();
 	readonly changedSelectionEvent = this.createDispatcher();
 
