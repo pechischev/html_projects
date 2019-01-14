@@ -15,9 +15,9 @@ export abstract class AbstractShape<T extends Konva.Node = Konva.Node> extends D
 	private _selected = false;
 	private _visible = true;
 
-	constructor() {
+	constructor(config?: object) {
 		super();
-		this._shape = this.createShape();
+		this._shape = this.createShape(config);
 
 		this._shape.on("mouseover", (event) => this.hoverEvent.dispatch(event));
 		this._shape.on("mouseleave", (event) => this.leaveEvent.dispatch(event));
@@ -31,7 +31,7 @@ export abstract class AbstractShape<T extends Konva.Node = Konva.Node> extends D
 	setSelected(selected: boolean) {
 		this._selected = selected;
 		this.setSelectedImpl(selected);
-		this.updateEvent.dispatch();
+		this.redraw();
 	}
 
 	selected(): boolean {
@@ -40,7 +40,7 @@ export abstract class AbstractShape<T extends Konva.Node = Konva.Node> extends D
 
 	setSize(size: Size) {
 		this._shape.setSize(size);
-		this.updateEvent.dispatch();
+		this.redraw();
 	}
 
 	size(): Size {
@@ -49,7 +49,7 @@ export abstract class AbstractShape<T extends Konva.Node = Konva.Node> extends D
 
 	setPosition(pos: Coordinate) {
 		this._shape.position(pos);
-		this.updateEvent.dispatch();
+		this.redraw();
 	}
 
 	position(): Coordinate {
@@ -64,7 +64,7 @@ export abstract class AbstractShape<T extends Konva.Node = Konva.Node> extends D
 	setVisible(visible: boolean) {
 		this._visible = visible;
 		this._shape.visible(visible);
-		this.updateEvent.dispatch();
+		this.redraw();
 	}
 
 	visible(): boolean {
@@ -79,7 +79,7 @@ export abstract class AbstractShape<T extends Konva.Node = Konva.Node> extends D
 
 	protected setSelectedImpl(selected: boolean) {}
 
-	protected abstract createShape(): T;
+	protected abstract createShape(config?: object): T;
 
 	protected onClickEvent(event: Konva.KonvaEventObject<MouseEvent>) {
 		this.clickEvent.dispatch(event);

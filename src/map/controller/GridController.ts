@@ -58,7 +58,7 @@ export class GridController extends Disposable {
 
 			this.addDisposable(view);
 
-			const frame = new ConnectionFrame(view);
+			const frame = new ConnectionFrame();
 			view.setFrame(frame);
 
 			this.addListener(frame.mouseDownEvent, (position: Coordinate) => {

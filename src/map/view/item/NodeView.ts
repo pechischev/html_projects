@@ -1,19 +1,21 @@
 import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
 import { EditableText } from "map/view/EditableText";
-import { AbstractShape } from "common/canvas/Shape";
+import { Group } from "common/canvas/Group";
 import { Config } from "map/config/Config";
 import { CoordinateConverter } from "map/service/CoordinateConverter";
 import { ConnectionFrame } from "map/view/item/ConnectionFrame";
 
-export class NodeView extends AbstractShape<Konva.Group> {
+export class NodeView extends Group {
 	private _node: INode;
 	private _rect: Konva.Rect;
 
 	private _frame: ConnectionFrame;
 
 	constructor(item: INode) {
-		super();
+		super({
+			draggable: true,
+		});
 		this._node = item;
 
 		this.shape().id(item.id());
@@ -26,6 +28,7 @@ export class NodeView extends AbstractShape<Konva.Group> {
 			height: Config.CELL_HEIGHT,
 			preventDefault: false
 		});
+		this.add(main);
 
 		this._rect = new Konva.Rect({
 			height: Config.NODE_HEIGHT,
@@ -37,6 +40,7 @@ export class NodeView extends AbstractShape<Konva.Group> {
 			offsetX: -offsetX,
 			offsetY: -offsetY
 		});
+		this.add(this._rect);
 
 		const content = item.content();
 		const textField = new EditableText(content.title());
@@ -50,11 +54,9 @@ export class NodeView extends AbstractShape<Konva.Group> {
 			textField.text(content.title());
 			this.updateEvent.dispatch();
 		});
+		this.add(textField);
 
 		const shape = this.shape();
-		shape.add(main);
-		shape.add(this._rect);
-		shape.add(textField);
 
 		// add cursor styling
 		shape.on("dragstart dragend mouseover mouseup", (event) => {
@@ -85,16 +87,22 @@ export class NodeView extends AbstractShape<Konva.Group> {
 
 	setFrame(frame: ConnectionFrame) {
 		this._frame = frame;
+		this.addDisposable(frame);
+		this.addListener(this.removeEvent, this.dispose, this);
+		this.addListener(this.hoverEvent, () => {
+			this._frame.setVisible(true);
+			this.redraw();
+		});
+		this.addListener(this.leaveEvent, () => {
+			this._frame.setVisible(false);
+			this.redraw();
+		});
+		this._frame.createFrame(this._rect);
+		this.add(this._frame);
 	}
 
 	frame(): ConnectionFrame {
 		return this._frame;
-	}
-
-	protected createShape(): Konva.Group {
-		return new Konva.Group({
-			draggable: true,
-		});
 	}
 
 	protected setSelectedImpl(selected: boolean) {

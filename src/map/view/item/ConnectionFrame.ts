@@ -1,41 +1,31 @@
 import * as Konva from "konva";
-import { Config } from "map/config/Config";
-import { Disposable } from "common/component/Disposable";
 import { Coordinate } from "common/math/Coordinate";
-import { NodeView } from "./NodeView";
+import { Group } from "common/canvas/Group";
 
-export class ConnectionFrame extends Disposable {
+export class ConnectionFrame extends Group {
 	readonly mouseDownEvent = this.createDispatcher();
 
-	private _nodeView: NodeView;
-	private _triggers: Konva.Circle[] = this.getTriggers();
+	private _triggers: Konva.Circle[] = [];
 
-	constructor(nodeView: NodeView) { // TODO: IShape
-		super();
-		this._nodeView = nodeView;
-		this.addDisposable(nodeView);
-		const shape = nodeView.shape();
-		shape.add(...this._triggers);
-
-		this.addListener(nodeView.removeEvent, () => this.dispose());
-		this.addListener(nodeView.hoverEvent, () => {
-			this.setVisibleTriggers(true);
-			nodeView.redraw();
-		});
-		this.addListener(nodeView.leaveEvent, () => {
-			this.setVisibleTriggers(false);
-			nodeView.redraw();
+	createFrame(shape: Konva.Node) {
+		this.shape().offset(shape.offset());
+		const {width, height} = shape.getSize();
+		this._triggers = [
+			this.createCircle(new Coordinate(width / 2, 0)),
+			this.createCircle(new Coordinate(width, height / 2)),
+			this.createCircle(new Coordinate(width / 2, height)),
+			this.createCircle(new Coordinate(0, height / 2))
+		];
+		this._triggers.forEach((value) => {
+			this.add(value);
 		});
 	}
 
-	private getTriggers(): Konva.Circle[] {
-		const offset = 10;
-		return [
-			this.createCircle(new Coordinate(Config.CELL_WIDTH / 2, offset)),
-			this.createCircle(new Coordinate(Config.CELL_WIDTH - offset, Config.CELL_HEIGHT / 2)),
-			this.createCircle(new Coordinate(Config.CELL_WIDTH / 2, Config.CELL_HEIGHT - offset)),
-			this.createCircle(new Coordinate(offset, Config.CELL_HEIGHT / 2))
-		];
+	setVisible(visible: boolean) {
+		for (const trigger of this._triggers) {
+			trigger.visible(visible);
+		}
+		this.redraw();
 	}
 
 	private createCircle(pos: Coordinate): Konva.Circle {
@@ -50,11 +40,5 @@ export class ConnectionFrame extends Disposable {
 			this.mouseDownEvent.dispatch(circle.getAbsolutePosition());
 		});
 		return circle;
-	}
-
-	private setVisibleTriggers(value: boolean) {
-		for (const trigger of this._triggers) {
-			trigger.visible(value);
-		}
 	}
 }
