@@ -19,14 +19,14 @@ export class Grid extends Component {
 	private _nodeLayer: NodeLayer;
 	private _lineLayer = new LineLayer();
 
-	private _nodeController: NodePresenter;
-	private _linkController: ConnectionPresenter;
+	private _nodePresenter: NodePresenter;
+	private _linkPresenter: ConnectionPresenter;
 	private _gridController: GridController;
 
 	private _zoom = 1;
 	private _grid = new Konva.FastLayer();
 
-	constructor(nodeController: NodePresenter, linkController: ConnectionPresenter) {
+	constructor(nodePresenter: NodePresenter, linkPresenter: ConnectionPresenter) {
 		super({
 			blockName: "canvas-container"
 		});
@@ -46,10 +46,10 @@ export class Grid extends Component {
 		this.redrawCells();
 		this._canvas.add(this._grid, this._nodeLayer.layer(), this._lineLayer.layer());
 
-		this._nodeController = nodeController;
-		this.addDisposable(nodeController);
-		this._linkController = linkController;
-		this.addDisposable(linkController);
+		this._nodePresenter = nodePresenter;
+		this.addDisposable(nodePresenter);
+		this._linkPresenter = linkPresenter;
+		this.addDisposable(linkPresenter);
 
 		this._gridController = new GridController(this);
 
@@ -93,17 +93,17 @@ export class Grid extends Component {
 
 		this.addListener(this._nodeLayer.clickLayerEvent, () => this._canvas.fire("click"));
 
-		this.addListener(this._nodeController.changedListEvent, this._gridController.updateNodes, this._gridController);
-		this.addListener(this._nodeController.changedSelectionEvent, this._gridController.updateSelection, this._gridController);
+		this.addListener(this._nodePresenter.changedListEvent, this._gridController.updateNodes, this._gridController);
+		this.addListener(this._nodePresenter.changedSelectionEvent, this._gridController.updateSelection, this._gridController);
 
-		this.addListener(this._gridController.selectNodeEvent, (node: INode, isCtrl: boolean) => this._nodeController.setSelection([node], isCtrl));
-		this.addListener(this._gridController.selectLinkEvent, (item: ILink, isCtrl: boolean) => this._linkController.setSelection([item], isCtrl));
-		this.addListener(this._gridController.createNodeEvent, this._nodeController.createNode, this._nodeController);
-		this.addListener(this._gridController.connectEvent, this._linkController.createConnection, this._linkController);
+		this.addListener(this._gridController.selectNodeEvent, (node: INode, isCtrl: boolean) => this._nodePresenter.setSelection([node], isCtrl));
+		this.addListener(this._gridController.selectLinkEvent, (item: ILink, isCtrl: boolean) => this._linkPresenter.setSelection([item], isCtrl));
+		this.addListener(this._gridController.createNodeEvent, this._nodePresenter.createNode, this._nodePresenter);
+		this.addListener(this._gridController.connectEvent, this._linkPresenter.createConnection, this._linkPresenter);
 
-		this.addListener(this._linkController.connectEvent, this._gridController.appendLine, this._gridController);
-		this.addListener(this._linkController.disconnectEvent, this._gridController.removeLine, this._gridController);
-		this.addListener(this._linkController.changedSelectionEvent, this._gridController.updateSelection, this._gridController);
+		this.addListener(this._linkPresenter.connectEvent, this._gridController.appendLine, this._gridController);
+		this.addListener(this._linkPresenter.disconnectEvent, this._gridController.removeLine, this._gridController);
+		this.addListener(this._linkPresenter.changedSelectionEvent, this._gridController.updateSelection, this._gridController);
 
 		window.addEventListener("DOMContentLoaded", this.resizeCanvas.bind(this));
 		window.addEventListener("resize", this.resizeCanvas.bind(this));
@@ -116,7 +116,7 @@ export class Grid extends Component {
 		const item = this._nodeLayer.getViewByCoordinate(position);
 		if (item && item.node().id() == view.id()) {
 			// TODO: warning - current view is only NodeView
-			this._nodeController.insert(item.node(), CoordinateConverter.toRelative(position));
+			this._nodePresenter.insert(item.node(), CoordinateConverter.toRelative(position));
 		}
 	}
 
@@ -124,8 +124,8 @@ export class Grid extends Component {
 		if (event.target.name() != this._canvas.name()) {
 			return;
 		}
-		this._nodeController.setSelection([]);
-		this._linkController.setSelection([]);
+		this._nodePresenter.setSelection([]);
+		this._linkPresenter.setSelection([]);
 	}
 
 	private redrawCells() {

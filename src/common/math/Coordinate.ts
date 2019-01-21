@@ -19,8 +19,10 @@ export class Coordinate {
 		return Coordinate.equals(this, coordinate);
 	}
 
-	distance(coordinate: Coordinate): Coordinate {
-		return new Coordinate(this.x - coordinate.x, this.y - coordinate.y);
+	distance(coordinate: Coordinate): number {
+		const dx = this.x - coordinate.x;
+		const dy = this.y - coordinate.y;
+		return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 	}
 
 	translate(tx: Coordinate|number, ty?: number): Coordinate {
@@ -38,5 +40,9 @@ export class Coordinate {
 
 	static equals(first: Coordinate, second: Coordinate): boolean {
 		return (first.x == second.x) && (first.y == second.y);
+	}
+
+	static difference(a: Coordinate, b: Coordinate): Coordinate {
+		return new Coordinate(a.x - b.x, a.y - b.y);
 	}
 }

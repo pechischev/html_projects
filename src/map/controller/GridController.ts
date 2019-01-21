@@ -61,21 +61,23 @@ export class GridController extends Disposable {
 			const frame = new ConnectionFrame();
 			view.setFrame(frame);
 
-			this.addListener(frame.mouseDownEvent, (position: Coordinate) => {
+			this.addListener(frame.clickEvent, (event: KonvaEventObject<MouseEvent>) => {
+				const startPos = new Coordinate(event.evt.offsetX, event.evt.offsetY);
 				this._lineLayer.showConnectionLine(true);
 
 				const mouseMoveKey = this.addListener(canvasApi.mouseMoveEvent, (event: KonvaEventObject<MouseEvent>) => {
 					const mousePos = new Coordinate(event.evt.offsetX, event.evt.offsetY);
-					this._lineLayer.drawConnectionLine(position, mousePos);
+					frame.setVisible(true);
+					this._lineLayer.drawConnectionLine(startPos, mousePos);
 				});
-				const mouseUpKey = this.addListener(canvasApi.mouseUpEvent, (event: KonvaEventObject<MouseEvent>) => {
+				const mouseUpKey = this.addListener(canvasApi.clickEvent, (event: KonvaEventObject<MouseEvent>) => {
 					const mousePos = new Coordinate(event.evt.offsetX, event.evt.offsetY);
 					const lastItem = this._nodeLayer.getViewByCoordinate(mousePos);
-					this._lineLayer.showConnectionLine(false);
-
 					if (lastItem) {
 						this.connectEvent.dispatch(ConnectionService.connect(view, lastItem));
 					}
+					frame.setVisible(false);
+					this._lineLayer.showConnectionLine(false);
 					this.removeListener(mouseMoveKey);
 					this.removeListener(mouseUpKey);
 				});

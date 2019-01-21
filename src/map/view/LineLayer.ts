@@ -16,6 +16,9 @@ export class LineLayer extends Layer<LinkLine> {
 
 	showConnectionLine(show: boolean) {
 		this._line.visible(show);
+		if (!show) {
+			this._line.points([]);
+		}
 		this.redraw();
 	}
 
