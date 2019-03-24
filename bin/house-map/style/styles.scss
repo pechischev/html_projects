@@ -1,0 +1,16 @@
+@import "../../common/style/common";
+
+.house-map {
+  display: grid;
+  grid-template-columns: 250px auto;
+  grid-auto-rows: auto;
+  height: 100%;
+
+  .control-block {
+
+  }
+
+  .map {
+
+  }
+}
