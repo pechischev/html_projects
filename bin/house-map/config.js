@@ -11,7 +11,7 @@ module.exports.stylesPaths = {
 
 module.exports.getJsConfig = (debugOption) => {
 	const config = {
-		entry: "./src/main.ts",
+		entry: "./src/main.tsx",
 		output: {
 			filename: "main.js",
 			path: path.resolve(__dirname, "build/js")

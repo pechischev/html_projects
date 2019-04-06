@@ -7,10 +7,20 @@
   height: 100%;
 
   .control-block {
-
+    padding: 15px;
+    border-right: 1px solid #8C8C8C;
   }
 
   .map {
 
+  }
+
+  .form-layer {
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
   }
 }

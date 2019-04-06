@@ -23,7 +23,15 @@
         "src/*",
         "test/*"
       ]
-    }
+    },
+    "types": [
+      "react",
+      "react-dom",
+      "yandex-maps",
+      "mocha",
+      "chai",
+      "node"
+    ]
   },
   "exclude": [
     "node_modules",

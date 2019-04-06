@@ -1,5 +1,5 @@
 export namespace ArrayUtils {
-	export const replacePositionTo = <T>(arr: T[], oldIndex: number, newIndex: number): T[] => {
+	export const replacePositionTo = <T = {}>(arr: T[], oldIndex: number, newIndex: number): T[] => {
 		if (newIndex >= arr.length) {
 			let k = newIndex - arr.length + 1;
 			while (k--) {
@@ -10,7 +10,7 @@ export namespace ArrayUtils {
 		return arr;
 	};
 
-	export const findIndex = <T>(arr: T[], handler: (value: T, index: number) => void): number => {
+	export const findIndex = <T>(arr: T[], handler: (value: T, index: number) => any): number => {
 		for (let i = 0; i < arr.length; ++i) {
 			const item = arr[i];
 			if (handler(item, i)) {
