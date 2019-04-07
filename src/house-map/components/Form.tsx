@@ -1,17 +1,16 @@
-import { Paper } from "@material-ui/core";
-import { Component } from "react";
+import { Paper, Typography } from "@material-ui/core";
 import * as React from "react";
 
-interface IForm extends React.HTMLAttributes<HTMLDivElement> {
+export interface IForm extends React.HTMLAttributes<HTMLDivElement> {
+	title: string;
 }
 
-export class Form extends Component<IForm> {
-	render() {
-		const {children, ...rest} = this.props;
-		return (
-			<Paper elevation={2} {...rest}>
-				{children}
-			</Paper>
-		);
-	}
-}
+export const Form = (props: IForm) => {
+	const {children, title, ...rest} = props;
+	return (
+		<Paper elevation={2} {...rest} >
+			<Typography variant={ "title" }>{ title }</Typography>
+			{children}
+		</Paper>
+	);
+};

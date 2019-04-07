@@ -1,32 +1,51 @@
 import { Switch, FormControlLabel, Button } from "@material-ui/core";
-import { Component, RefObject, createRef } from "react";
+import { AppController } from "house-map/AppController";
+import { EFormType } from "house-map/interfaces";
+import { PlacemarkItem } from "house-map/model/PlacemarkItem";
 import * as React from "react";
-import IEvent = ymaps.IEvent;
+import { Component, RefObject, createRef } from "react";
+import { AddPlacemarkForm } from "house-map/view/AddPlacemarkForm";
+import { EditPlacemarkForm } from "house-map/view/EditPlacemarkForm";
 import { Popup } from "./components/Popup";
-import { Form } from "./components/Form";
+import IEvent = ymaps.IEvent;
 
 interface IState {
 	canEdit: boolean;
 	currentPos: number[];
-	showForm: boolean;
+	mode: EFormType;
 }
 
 export class App extends Component<{}, IState> {
 	state = {
 		canEdit: true,
 		currentPos: [],
-		showForm: false,
+		mode: EFormType.NONE
 	};
 
+	private controller = new AppController();
 	private map: ymaps.Map;
 	private mapRef: HTMLDivElement;
 	private popupRef: RefObject<Popup> = createRef();
 
 	componentDidMount() {
 		window.addEventListener("DOMContentLoaded", () => this.init());
+
+		this.controller.createItemEvent.addListener((item: PlacemarkItem) => {
+			this.map.geoObjects.add(item.getPlacemark());
+			this.setState({mode: EFormType.APPEND});
+		});
+		this.controller.selectItemEvent.addListener(() => {
+			this.setState({mode: EFormType.EDIT});
+		});
+		this.controller.removeItemEvent.addListener((item: PlacemarkItem) => {
+			this.map.geoObjects.remove(item.getPlacemark());
+			this.setState({mode: EFormType.APPEND});
+		});
 	}
 
 	render() {
+		const showAddForm = this.state.mode == EFormType.APPEND;
+		const showEditForm = this.state.mode == EFormType.EDIT;
 		return (
 			<div className="house-map">
 				<div className="control-block">
@@ -43,7 +62,17 @@ export class App extends Component<{}, IState> {
 					/>
 				</div>
 				<div className="map" ref={ (ref) => this.mapRef = ref }>
-					<Form className={ "form-layer" } style={{display: this.state.showForm ? "" : "none"}}/>
+					<AddPlacemarkForm
+						show={showAddForm}
+						onClose={() => this.setState({mode: EFormType.NONE})}
+						onAppend={() => this.controller.createItem(this.state.currentPos)}
+					/>
+					<EditPlacemarkForm
+						show={showEditForm}
+						onClose={() => this.setState({mode: EFormType.NONE})}
+						onUpdate={() => this.controller.updateItem()}
+						onRemove={() => this.controller.removeItem()}
+					/>
 				</div>
 				<Popup
 					ref={ this.popupRef }
@@ -53,10 +82,10 @@ export class App extends Component<{}, IState> {
 							<>
 								<Button
 									color="primary"
-									onClick={() => {
+									onClick={ () => {
 										props.show(false);
-										this.appendPlacemark(this.state.currentPos);
-									}}
+										this.setState({mode: EFormType.APPEND});
+									} }
 								>
 									Добавить
 								</Button>
@@ -89,28 +118,12 @@ export class App extends Component<{}, IState> {
 					return;
 				}
 				const coords = event.get("coords") as number[];
-				this.setState({
-					currentPos: coords
-				});
+				this.setState({currentPos: coords});
 				const popup = this.popupRef.current;
 				if (!popup.isShow()) {
 					popup.open();
 				}
 			});
 		});
-	}
-
-	private appendPlacemark(coords: number[]) {
-		const placemark = new ymaps.Placemark(coords, {}, {
-			preset: "islands#circleIcon",
-			iconColor: "#009ae4"
-		} as any);
-		placemark.events
-			.add(["mouseenter", "mouseleave"], (event: IEvent) => {
-				const color = (event.get("type") as any) == "mouseenter" ? "#3caa3c" : "#009ae4";
-				(event.get("target") as ymaps.Placemark).options.set("iconColor", color as any);
-			})
-			.add("click", (event: IEvent) => this.setState({showForm: true}));
-		this.map.geoObjects.add(placemark);
 	}
 }
