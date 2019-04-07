@@ -69,6 +69,7 @@
     "jsx-no-multiline-js": false,
     "no-arg": true,
     "no-duplicate-imports": [false, {"allow-namespace-imports": true}],
+    "no-dynamic-delete": false,
     "no-console": [
       true,
       "log",

@@ -65,7 +65,7 @@ export class App extends Component<{}, IState> {
 					<AddPlacemarkForm
 						show={showAddForm}
 						onClose={() => this.setState({mode: EFormType.NONE})}
-						onAppend={() => this.controller.createItem(this.state.currentPos)}
+						onAppend={(data) => this.controller.createItem(this.state.currentPos, data)}
 					/>
 					<EditPlacemarkForm
 						show={showEditForm}

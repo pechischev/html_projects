@@ -25,3 +25,19 @@
     padding: 15px;
   }
 }
+
+.preview-container {
+  position: relative;
+  width: fit-content;
+
+  &__image {
+    width: 300px;
+    height: 200px;
+  }
+
+  &__remove-icon {
+    position: absolute !important;
+    right: 10px;
+    bottom: 10px;
+  }
+}

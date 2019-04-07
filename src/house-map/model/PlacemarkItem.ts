@@ -1,5 +1,6 @@
 import Placemark = ymaps.Placemark;
 import { Disposable } from "common/component/Disposable";
+import { LayerData } from "./LayerData";
 import IEvent = ymaps.IEvent;
 
 export class PlacemarkItem  extends Disposable {
@@ -8,6 +9,7 @@ export class PlacemarkItem  extends Disposable {
 	private title = "";
 	private coords: number[] = [];
 	private placemark: Placemark;
+	private images: LayerData[] = [];
 
 	constructor(title: string, coords: number[]) {
 		super();
@@ -41,5 +43,13 @@ export class PlacemarkItem  extends Disposable {
 
 	getPlacemark(): Placemark {
 		return this.placemark;
+	}
+
+	setImages(images: LayerData[]) {
+		this.images = images;
+	}
+
+	getImages(): LayerData[] {
+		return this.images;
 	}
 }

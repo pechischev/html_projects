@@ -1,5 +1,6 @@
 import { PlacemarkItem } from "house-map/model/PlacemarkItem";
 import { Disposable } from "common/component/Disposable";
+import { IFormData } from "house-map/model/IFormData";
 
 export class AppController extends Disposable {
 	readonly selectItemEvent = this.createDispatcher();
@@ -9,8 +10,9 @@ export class AppController extends Disposable {
 	private items: PlacemarkItem[] = [];
 	private selectedItem?: PlacemarkItem;
 
-	createItem(coords: number[]) {
-		const item = new PlacemarkItem("", coords);
+	createItem(coords: number[], data: IFormData) {
+		const item = new PlacemarkItem(data.title, coords);
+		item.setImages(data.images);
 		this.addListener(item.clickEvent, (item: PlacemarkItem) => {
 			this.selectedItem = item;
 			this.selectItemEvent.dispatch();
