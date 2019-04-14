@@ -14,7 +14,7 @@ export const InnerForm = (props: IInnerForm) => {
 		<Paper elevation={2} {...rest} style={ {display: show ? "" : "none"} } >
 			<div>
 				<Typography variant={ "title" }>{ title }</Typography>
-				<Button onClick={() => onClose()}>Close</Button>
+				<Button variant="contained" onClick={() => onClose()}>Close</Button>
 			</div>
 			{children}
 		</Paper>

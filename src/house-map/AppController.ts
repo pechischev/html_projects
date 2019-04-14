@@ -13,16 +13,27 @@ export class AppController extends Disposable {
 	createItem(coords: number[], data: IFormData) {
 		const item = new PlacemarkItem(data.title, coords);
 		item.setImages(data.images);
-		this.addListener(item.clickEvent, (item: PlacemarkItem) => {
-			this.selectedItem = item;
-			this.selectItemEvent.dispatch();
-		});
+		this.addListener(item.clickEvent, this.selectItem.bind(this));
 		this.items.push(item);
 		this.createItemEvent.dispatch(item);
 	}
 
-	updateItem() {
+	updateItem(data: IFormData) {
+		if (!this.selectedItem) {
+			return;
+		}
+		const {images, title} = data;
+		this.selectedItem.setImages(images);
+		this.selectedItem.setTitle(title);
+	}
 
+	selectItem(item: PlacemarkItem) {
+		this.selectedItem = item;
+		this.selectItemEvent.dispatch();
+	}
+
+	getSelectedItem(): PlacemarkItem {
+		return this.selectedItem;
 	}
 
 	removeItem() {

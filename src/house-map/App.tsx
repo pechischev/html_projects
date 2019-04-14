@@ -2,10 +2,11 @@ import { Switch, FormControlLabel, Button } from "@material-ui/core";
 import { AppController } from "house-map/AppController";
 import { EFormType } from "house-map/interfaces";
 import { PlacemarkItem } from "house-map/model/PlacemarkItem";
-import * as React from "react";
-import { Component, RefObject, createRef } from "react";
 import { AddPlacemarkForm } from "house-map/view/AddPlacemarkForm";
 import { EditPlacemarkForm } from "house-map/view/EditPlacemarkForm";
+import * as React from "react";
+import { Component, RefObject, createRef } from "react";
+import { ViewPlacemarkForm } from "house-map/view/ViewPlacemarkForm";
 import { Popup } from "./components/Popup";
 import IEvent = ymaps.IEvent;
 
@@ -17,7 +18,7 @@ interface IState {
 
 export class App extends Component<{}, IState> {
 	state = {
-		canEdit: true,
+		canEdit: false,
 		currentPos: [],
 		mode: EFormType.NONE
 	};
@@ -35,7 +36,8 @@ export class App extends Component<{}, IState> {
 			this.setState({mode: EFormType.APPEND});
 		});
 		this.controller.selectItemEvent.addListener(() => {
-			this.setState({mode: EFormType.EDIT});
+			const mode = this.state.canEdit ? EFormType.EDIT : EFormType.VIEW;
+			this.setState({mode});
 		});
 		this.controller.removeItemEvent.addListener((item: PlacemarkItem) => {
 			this.map.geoObjects.remove(item.getPlacemark());
@@ -46,6 +48,7 @@ export class App extends Component<{}, IState> {
 	render() {
 		const showAddForm = this.state.mode == EFormType.APPEND;
 		const showEditForm = this.state.mode == EFormType.EDIT;
+		const showViewForm = this.state.mode == EFormType.VIEW;
 		return (
 			<div className="house-map">
 				<div className="control-block">
@@ -69,9 +72,15 @@ export class App extends Component<{}, IState> {
 					/>
 					<EditPlacemarkForm
 						show={showEditForm}
+						item={this.controller.getSelectedItem()}
 						onClose={() => this.setState({mode: EFormType.NONE})}
-						onUpdate={() => this.controller.updateItem()}
+						onUpdate={(data) => this.controller.updateItem(data)}
 						onRemove={() => this.controller.removeItem()}
+					/>
+					<ViewPlacemarkForm
+						show={showViewForm}
+						item={this.controller.getSelectedItem()}
+						onClose={() => this.setState({mode: EFormType.NONE})}
 					/>
 				</div>
 				<Popup
@@ -101,13 +110,7 @@ export class App extends Component<{}, IState> {
 	init() {
 		ymaps.ready().then(() => {
 			this.map = new ymaps.Map(this.mapRef, {
-				// Координаты центра карты.
-				// Порядок по умолчанию: «широта, долгота».
-				// Чтобы не определять координаты центра карты вручную,
-				// воспользуйтесь инструментом Определение координат.
 				center: [56.630842, 47.886089],
-				// Уровень масштабирования. Допустимые значения:
-				// от 0 (весь мир) до 19.
 				zoom: 16,
 				controls: []
 			}, {

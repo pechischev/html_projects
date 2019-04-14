@@ -1,5 +1,6 @@
 import { TextField, Fab } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
+import * as _ from "lodash";
 import * as React from "react";
 import { Component } from "react";
 import { UploadFile } from "house-map/components/UploadFile";
@@ -26,7 +27,7 @@ export class LayerForm extends Component<ILayerFormProps> {
 						const {images, updateImages} = this.props;
 						const item = (ev.target as any & { result: string }).result;
 						const hash = sha1(item);
-						const data = new LayerData(item, hash, "Этаж");
+						const data = new LayerData(item, hash, `Этаж ${_.size(images) + 1}`);
 						updateImages({...images, [hash]: data});
 					} }
 				/>
@@ -41,9 +42,11 @@ export class LayerForm extends Component<ILayerFormProps> {
 				<TextField
 					label="Название схемы"
 					margin="normal"
-					variant="outlined"
 					value={data.getTitle()}
-					onChange={(event) => data.setTitle(event.target.value)}
+					onChange={(event) => {
+						data.setTitle(event.target.value);
+						this.forceUpdate();
+					}}
 				/>
 				<img src={ data.getImage() } className="preview-container__image" key={ key }/>
 				<Fab className="preview-container__remove-icon" onClick={ () => this.removeImage(key) }>

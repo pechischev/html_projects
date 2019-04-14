@@ -1,6 +1,6 @@
-import { Typography, Button } from "@material-ui/core";
+import { Typography, Button, TextField } from "@material-ui/core";
 import * as _ from "lodash";
-import { Component } from "react";
+import { Component, ChangeEvent } from "react";
 import { InnerForm } from "house-map/components/InnerForm";
 import * as React from "react";
 import { LayerForm } from "house-map/view/LayerForm";
@@ -35,13 +35,19 @@ export class AddPlacemarkForm extends Component<IAddPlacemarkForm, IAddPlacemark
 				onClose={ this.close.bind(this) }
 				className="form-layer"
 			>
-				<Typography variant={ "button" }>
-					<Button onClick={ this.append.bind(this) }>Сохранить</Button>
-				</Typography>
+				<TextField
+					label="Название метки"
+					margin="normal"
+					value={this.state.title	}
+					onChange={this.setTitle.bind(this)}
+				/>
 				<LayerForm
 					images={ this.state.images }
 					updateImages={ (images) => this.setState({images}) }
 				/>
+				<Typography variant={ "button" }>
+					<Button variant="contained" onClick={ this.append.bind(this) }>Сохранить</Button>
+				</Typography>
 			</InnerForm>
 		);
 	}
@@ -60,5 +66,11 @@ export class AddPlacemarkForm extends Component<IAddPlacemarkForm, IAddPlacemark
 			images: _.values(images)
 		});
 		this.close();
+	}
+
+	private setTitle(event: ChangeEvent<HTMLInputElement>) {
+		this.setState({
+			title: event.target.value
+		});
 	}
 }
