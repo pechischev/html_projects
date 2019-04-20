@@ -36,6 +36,7 @@ export class AddPlacemarkForm extends Component<IAddPlacemarkForm, IAddPlacemark
 				className="form-layer"
 			>
 				<TextField
+					className="form-layer__title"
 					label="Название метки"
 					margin="normal"
 					value={this.state.title	}

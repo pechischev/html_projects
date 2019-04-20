@@ -17,8 +17,8 @@ export class UploadFile extends Component<IUploadFileProps> {
 	render() {
 		const {fileTypes = [], multiple = false} = this.props;
 		return (
-			<div>
-				<Button onClick={this.loadImage.bind(this)}>Загрузить изображение</Button>
+			<div style={{margin: "15px 0"}}>
+				<Button  onClick={this.loadImage.bind(this)}>Загрузить изображение</Button>
 				<input
 					ref={this.inputRef}
 					type="file"

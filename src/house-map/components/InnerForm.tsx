@@ -1,5 +1,6 @@
-import { Typography, Button, Paper } from "@material-ui/core";
+import { Typography, Paper, IconButton } from "@material-ui/core";
 import * as React from "react";
+import CloseIcon from "@material-ui/icons/Close";
 
 export interface IInnerForm extends React.HTMLAttributes<HTMLDivElement> {
 	title: string;
@@ -13,8 +14,10 @@ export const InnerForm = (props: IInnerForm) => {
 	return (
 		<Paper elevation={2} {...rest} style={ {display: show ? "" : "none"} } >
 			<div>
-				<Typography variant={ "title" }>{ title }</Typography>
-				<Button variant="contained" onClick={() => onClose()}>Close</Button>
+				<IconButton onClick={onClose} style={{float: "left"}}>
+					<CloseIcon/>
+				</IconButton>
+				<Typography variant={ "title" } style={{padding: 12}}>{ title }</Typography>
 			</div>
 			{children}
 		</Paper>

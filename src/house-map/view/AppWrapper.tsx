@@ -90,7 +90,7 @@ export const AppWrapper = withStyles(styles, {withTheme: true})(class AppWrapper
 						<Typography variant="h6" color="inherit" style={ {flexGrow: 1} }>
 							House Map
 						</Typography>
-						<Button color="inherit">Login</Button>
+						<Button color="inherit">Вход</Button>
 					</Toolbar>
 				</AppBar>
 				<Sidebar open={ open } changeOpen={ this.changeOpen.bind(this) }/>

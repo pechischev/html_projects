@@ -27,16 +27,28 @@
     width: 100%;
     z-index: 1;
     padding: 25px;
+
+    &__title {
+      width: 500px;
+    }
   }
+}
+
+.preview-list {
+  display: inline-block;
 }
 
 .preview-container {
   position: relative;
-  width: fit-content;
+  padding: 10px 0;
+  display: grid;
+  margin-right: 10px;
+  float: left;
 
   &__image {
     width: 300px;
     height: 200px;
+    margin-top: 10px;
   }
 
   &__remove-icon {

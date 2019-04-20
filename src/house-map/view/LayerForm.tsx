@@ -18,7 +18,7 @@ export class LayerForm extends Component<ILayerFormProps> {
 	render() {
 		return (
 			<div>
-				<div>
+				<div className="preview-list">
 					{ Object.keys(this.props.images).map((key) => this.renderPreview(key)) }
 				</div>
 				<UploadFile

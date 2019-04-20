@@ -60,8 +60,8 @@ export class EditPlacemarkForm extends Component<IEditPlacemarkForm, IEditPlacem
 					updateImages={ (images) => this.setState({images}) }
 				/>
 				<Typography variant={ "button" }>
-					<Button onClick={ this.update.bind(this) }>Сохранить</Button>
-					<Button onClick={ this.remove.bind(this) } color="secondary">Удалить</Button>
+					<Button variant="contained" onClick={ this.update.bind(this) }>Сохранить</Button>
+					<Button variant="contained" onClick={ this.remove.bind(this) } color="secondary">Удалить</Button>
 				</Typography>
 			</InnerForm>
 		);

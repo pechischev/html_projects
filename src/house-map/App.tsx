@@ -12,14 +12,12 @@ import { Popup } from "./components/Popup";
 import IEvent = ymaps.IEvent;
 
 interface IState {
-	canEdit: boolean;
 	currentPos: number[];
 	mode: EFormType;
 }
 
 export class App extends Component<{}, IState> {
 	state = {
-		canEdit: true,
 		currentPos: [],
 		mode: EFormType.NONE
 	};
@@ -37,7 +35,7 @@ export class App extends Component<{}, IState> {
 			this.setState({mode: EFormType.APPEND});
 		});
 		this.controller.selectItemEvent.addListener(() => {
-			const mode = this.state.canEdit ? EFormType.EDIT : EFormType.VIEW;
+			const mode = this.canEdit() ? EFormType.EDIT : EFormType.VIEW;
 			this.setState({mode});
 		});
 		this.controller.removeItemEvent.addListener((item: PlacemarkItem) => {
@@ -47,21 +45,6 @@ export class App extends Component<{}, IState> {
 	}
 
 	render() {
-		/*return (
-			<div className="control-block">
-				<FormControlLabel
-					control={
-						<Switch
-							checked={ this.state.canEdit }
-							onChange={ (event) => this.setState({canEdit: event.target.checked}) }
-							value="canEdit"
-							color={ "primary" }
-						/>
-					}
-					label="Режим редактирования"
-				/>
-			</div>
-		);*/
 		return (
 			<AppWrapper
 				render={() => {
@@ -107,7 +90,7 @@ export class App extends Component<{}, IState> {
 				balloonMaxWidth: 200,
 			} as any);
 			this.map.events.add("click", (event: IEvent) => {
-				if (!this.state.canEdit) {
+				if (!this.canEdit()) {
 					return;
 				}
 				const coords = event.get("coords") as number[];
@@ -144,6 +127,10 @@ export class App extends Component<{}, IState> {
 					onClose={ () => this.setState({mode: EFormType.NONE}) }
 				/>
 			</>
-		)
+		);
+	}
+
+	private canEdit(): boolean {
+		return JSON.parse(localStorage.getItem("edit")) || false;
 	}
 }
