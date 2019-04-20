@@ -1,12 +1,13 @@
-import { Switch, FormControlLabel, Button } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { AppController } from "house-map/AppController";
 import { EFormType } from "house-map/interfaces";
 import { PlacemarkItem } from "house-map/model/PlacemarkItem";
 import { AddPlacemarkForm } from "house-map/view/AddPlacemarkForm";
+import { AppWrapper } from "house-map/view/AppWrapper";
 import { EditPlacemarkForm } from "house-map/view/EditPlacemarkForm";
+import { ViewPlacemarkForm } from "house-map/view/ViewPlacemarkForm";
 import * as React from "react";
 import { Component, RefObject, createRef } from "react";
-import { ViewPlacemarkForm } from "house-map/view/ViewPlacemarkForm";
 import { Popup } from "./components/Popup";
 import IEvent = ymaps.IEvent;
 
@@ -18,14 +19,14 @@ interface IState {
 
 export class App extends Component<{}, IState> {
 	state = {
-		canEdit: false,
+		canEdit: true,
 		currentPos: [],
 		mode: EFormType.NONE
 	};
 
 	private controller = new AppController();
 	private map: ymaps.Map;
-	private mapRef: HTMLDivElement;
+	private mapRef: HTMLElement;
 	private popupRef: RefObject<Popup> = createRef();
 
 	componentDidMount() {
@@ -46,43 +47,32 @@ export class App extends Component<{}, IState> {
 	}
 
 	render() {
-		const showAddForm = this.state.mode == EFormType.APPEND;
-		const showEditForm = this.state.mode == EFormType.EDIT;
-		const showViewForm = this.state.mode == EFormType.VIEW;
+		/*return (
+			<div className="control-block">
+				<FormControlLabel
+					control={
+						<Switch
+							checked={ this.state.canEdit }
+							onChange={ (event) => this.setState({canEdit: event.target.checked}) }
+							value="canEdit"
+							color={ "primary" }
+						/>
+					}
+					label="Режим редактирования"
+				/>
+			</div>
+		);*/
 		return (
-			<div className="house-map">
-				<div className="control-block">
-					<FormControlLabel
-						control={
-							<Switch
-								checked={ this.state.canEdit }
-								onChange={ (event) => this.setState({canEdit: event.target.checked}) }
-								value="canEdit"
-								color={ "primary" }
-							/>
-						}
-						label="Режим редактирования"
-					/>
-				</div>
-				<div className="map" ref={ (ref) => this.mapRef = ref }>
-					<AddPlacemarkForm
-						show={showAddForm}
-						onClose={() => this.setState({mode: EFormType.NONE})}
-						onAppend={(data) => this.controller.createItem(this.state.currentPos, data)}
-					/>
-					<EditPlacemarkForm
-						show={showEditForm}
-						item={this.controller.getSelectedItem()}
-						onClose={() => this.setState({mode: EFormType.NONE})}
-						onUpdate={(data) => this.controller.updateItem(data)}
-						onRemove={() => this.controller.removeItem()}
-					/>
-					<ViewPlacemarkForm
-						show={showViewForm}
-						item={this.controller.getSelectedItem()}
-						onClose={() => this.setState({mode: EFormType.NONE})}
-					/>
-				</div>
+			<AppWrapper
+				render={() => {
+					return (
+						<>
+							<div className="map" ref={ (ref) => this.mapRef = ref }/>
+							{this.renderForms()}
+						</>
+					);
+				}}
+			>
 				<Popup
 					ref={ this.popupRef }
 					title={ "Добавить схемы для здания?" }
@@ -103,7 +93,7 @@ export class App extends Component<{}, IState> {
 						);
 					} }
 				/>
-			</div>
+			</AppWrapper>
 		);
 	}
 
@@ -128,5 +118,32 @@ export class App extends Component<{}, IState> {
 				}
 			});
 		});
+	}
+
+	private renderForms() {
+		const showAddForm = this.state.mode == EFormType.APPEND;
+		const showEditForm = this.state.mode == EFormType.EDIT;
+		const showViewForm = this.state.mode == EFormType.VIEW;
+		return (
+			<>
+				<AddPlacemarkForm
+					show={ showAddForm }
+					onClose={ () => this.setState({mode: EFormType.NONE}) }
+					onAppend={ (data) => this.controller.createItem(this.state.currentPos, data) }
+				/>
+				<EditPlacemarkForm
+					show={ showEditForm }
+					item={ this.controller.getSelectedItem() }
+					onClose={ () => this.setState({mode: EFormType.NONE}) }
+					onUpdate={ (data) => this.controller.updateItem(data) }
+					onRemove={ () => this.controller.removeItem() }
+				/>
+				<ViewPlacemarkForm
+					show={ showViewForm }
+					item={ this.controller.getSelectedItem() }
+					onClose={ () => this.setState({mode: EFormType.NONE}) }
+				/>
+			</>
+		)
 	}
 }

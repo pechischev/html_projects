@@ -1,10 +1,13 @@
 @import "../../common/style/common";
 
 .house-map {
-  display: grid;
-  grid-template-columns: 250px auto;
-  grid-auto-rows: auto;
+  display: flex;
   height: 100%;
+
+  &-content {
+    position: relative;
+    margin-top: 64px;
+  }
 
   .control-block {
     padding: 15px;
@@ -12,7 +15,8 @@
   }
 
   .map {
-
+    height: 100%;
+    width: 100%;
   }
 
   .form-layer {
@@ -22,7 +26,7 @@
     height: 100%;
     width: 100%;
     z-index: 1;
-    padding: 15px;
+    padding: 25px;
   }
 }
 
@@ -39,5 +43,41 @@
     position: absolute !important;
     right: 10px;
     bottom: 10px;
+  }
+}
+
+.layer-container {
+  padding: 25px;
+  display: flex;
+
+  .layer-image {
+    &__image {
+      display: block;
+      width: 900px;
+      height: 800px;
+    }
+  }
+
+  .layer-list {
+    position: relative;
+    padding: 25px;
+
+    &__item {
+      background: url("../img/layer.svg") no-repeat;
+      width: 150px;
+      height: 50px;
+      display: block;
+      position: absolute;
+
+      &[data-active=true] {
+        background: url("../img/fill_layer.svg") no-repeat;
+      }
+    }
+
+    &__title {
+      position: absolute;
+      width: 150px;
+      margin-top: 20px;
+    }
   }
 }
