@@ -1,6 +1,9 @@
-import { Listener } from "common/event/Listener";
+import { Disposable } from "common/component/Disposable";
 
-export class ConnectionList extends Listener {
+export class ConnectionList extends Disposable {
+	readonly connectEvent = this.createDispatcher();
+	readonly disconnectEvent = this.createDispatcher();
+
 	private _connections = new Map<string, string[]>();
 
 	connect(source: string, target: string) {
@@ -11,6 +14,7 @@ export class ConnectionList extends Listener {
 		if (source != target) {
 			this.appendConnection(target, source);
 		}
+		this.connectEvent.dispatch(source, target);
 	}
 
 	disconnect(source: string, target: string) {
@@ -21,6 +25,7 @@ export class ConnectionList extends Listener {
 		if (source != target) {
 			this.removeConnection(target, source);
 		}
+		this.disconnectEvent.dispatch(source, target);
 	}
 
 	isConnected(item: string, otherItem: string): boolean {
@@ -28,7 +33,7 @@ export class ConnectionList extends Listener {
 	}
 
 	getConnections(item: string): string[] {
-		return this._connections.get(item) || [];
+		return (this._connections.get(item) || []).slice();
 	}
 
 	private appendConnection(item1: string, item2: string) {

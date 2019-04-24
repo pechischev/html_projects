@@ -1,30 +1,20 @@
-import { LinkList } from "map/controller/list/LinkList";
+import { ILink } from "map/model/link/ILink";
 import { Link } from "map/model/link/Link";
-import { ConnectionList } from "map/controller/list/ConnectionList";
+import { Coordinate } from "common/math/Coordinate";
+import { NodeView } from "map/view/item/NodeView";
 
 export class ConnectionService {
-	private _presenter: LinkList;
-	private _list = new ConnectionList();
+	static connect(source: NodeView, target: NodeView): ILink {
+		const first = source.node();
+		const second = target.node();
+		const link = new Link(first.id(), second.id());
 
-	constructor(presenter: LinkList) {
-		this._presenter = presenter;
-	}
+		const point = 0.5;
 
-	connect(source: string, target: string) {
-		this._presenter.appendLink(new Link(source, target));
-		this._list.connect(source, target);
-	}
-
-	disconnect(source: string, target: string) {
-		this._list.disconnect(source, target);
-		this._presenter.removeLink(new Link(source, target));
-	}
-
-	isConnected(item: string, otherItem: string): boolean {
-		return this._list.isConnected(item, otherItem);
-	}
-
-	getConnections(item: string): string[] {
-		return this._list.getConnections(item);
+		first.changedPositionEvent.addListener(() => link.setStartPoint(new Coordinate(point, point).translate(first.position())));
+		second.changedPositionEvent.addListener(() => link.setEndPoint(new Coordinate(point, point).translate(second.position())));
+		link.setStartPoint(new Coordinate(point, point).translate(first.position()));
+		link.setEndPoint(new Coordinate(point, point).translate(second.position()));
+		return link;
 	}
 }

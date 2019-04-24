@@ -1,29 +1,37 @@
 import * as Konva from "konva";
 import { INode } from "map/model/node/INode";
-import { Coordinate } from "common/math/Coordinate";
 import { EditableText } from "map/view/EditableText";
-import { Dispatcher } from "common/event/Dispatcher";
+import { AbstractShape } from "common/canvas/Shape";
+import { Config } from "map/config/Config";
 
-export class NodeView extends Konva.Group {
-	readonly updateEvent = new Dispatcher();
-
+export class NodeView extends AbstractShape<Konva.Group> {
 	private _node: INode;
-	private _selected = false;
 	private _rect: Konva.Rect;
 
 	constructor(item: INode) {
-		super({
-			draggable: true
-		});
+		super();
 		this._node = item;
 
+		this.shape().id(item.id());
+
+		const offsetX = (Config.CELL_WIDTH - Config.NODE_WIDTH) / 2;
+		const offsetY = (Config.CELL_HEIGHT - Config.NODE_HEIGHT) / 2;
+
+		const main = new Konva.Rect({
+			width: Config.CELL_WIDTH,
+			height: Config.CELL_HEIGHT,
+			preventDefault: false
+		});
+
 		this._rect = new Konva.Rect({
-			height: 100,
-			width: 120,
+			height: Config.NODE_HEIGHT,
+			width: Config.NODE_WIDTH,
 			fill: "white",
-			stroke: "#D5D5D5",
-			strokeWidth: 2,
-			cornerRadius: 10
+			stroke: "#26A092",
+			strokeWidth: 1,
+			cornerRadius: 10,
+			offsetX: -offsetX,
+			offsetY: -offsetY
 		});
 
 		const content = item.content();
@@ -31,24 +39,28 @@ export class NodeView extends Konva.Group {
 		textField.align("center");
 		textField.verticalAlign("middle");
 		textField.setSize(this._rect.getSize());
-		textField.changedValue.addListener((value: string) => content.setTitle(value));
-		content.changedTitle.addListener(() => {
+		textField.offsetX(-offsetX);
+		textField.offsetY(-offsetY);
+		this.addListener(textField.changedValue, (value: string) => content.setTitle(value));
+		this.addListener(content.changedTitle, () => {
 			textField.text(content.title());
 			this.updateEvent.dispatch();
 		});
 
-		this.add(this._rect);
-		this.add(textField);
+		const shape = this.shape();
+		shape.add(main);
+		shape.add(this._rect);
+		shape.add(textField);
 
 		// add cursor styling
-		this.on("dragstart dragend mouseover mouseup", (event) => {
+		shape.on("dragstart dragend mouseover mouseup", (event) => {
 			event.currentTarget.moveToTop();
 			document.body.style.cursor = "grab";
 		});
-		this.on("dragmove mousedown", () => {
+		shape.on("dragmove mousedown", () => {
 			document.body.style.cursor = "grabbing";
 		});
-		this.on("mouseout", () => {
+		shape.on("mouseout", () => {
 			document.body.style.cursor = "default";
 		});
 	}
@@ -61,23 +73,13 @@ export class NodeView extends Konva.Group {
 		return this._node;
 	}
 
-	setSelected(selected: boolean) {
-		this._selected = selected;
-		this._rect.stroke(selected ? "#58A8F7" : "#D5D5D5");
-		this.updateEvent.dispatch();
+	protected createShape(): Konva.Group {
+		return new Konva.Group({
+			draggable: true,
+		});
 	}
 
-	selected(): boolean {
-		return this._selected;
-	}
-
-	setPosition(position: Coordinate) {
-		if (position.x == this.x() && position.y == this.y()) {
-			return;
-		}
-		const offsetX = 15;
-		const offsetY = 5;
-		this.x(position.x + offsetX);
-		this.y(position.y + offsetY);
+	protected setSelectedImpl(selected: boolean) {
+		this._rect.strokeWidth(selected ? 4 : 1);
 	}
 }

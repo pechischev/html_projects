@@ -1,7 +1,10 @@
-import { Listener } from "common/event/Listener";
 import { ILink } from "map/model/link/ILink";
+import { Disposable } from "common/component/Disposable";
 
-export class LinkList extends Listener {
+export class LinkList extends Disposable {
+	readonly appendLinkEvent = this.createDispatcher();
+	readonly removeLinkEvent = this.createDispatcher();
+
 	private _links: ILink[] = [];
 
 	appendLink(link: ILink) {
@@ -9,6 +12,7 @@ export class LinkList extends Listener {
 			return;
 		}
 		this._links.push(link);
+		this.appendLinkEvent.dispatch(link);
 	}
 
 	removeLink(link: ILink) {
@@ -17,18 +21,26 @@ export class LinkList extends Listener {
 			return;
 		}
 		this._links.splice(index, 1);
+		this.removeLinkEvent.dispatch(link);
 	}
 
 	links(): ILink[] {
 		return this._links;
 	}
 
-	getLink(link: ILink): ILink|null {
-		return this._links.find((value: ILink) => value.source() == link.source() && value.target() == link.target()) || null;
+	getLinkByItems(first: string, second: string): ILink|null {
+		const check = (source: string, target: string, link: ILink): boolean => {
+			return link.source() == source && link.target() == target;
+		};
+		return this._links.find((link: ILink) => check(first, second, link) || check(second, first, link)) || null;
+	}
+
+	getLink(id: string): ILink|null {
+		return this._links.find((link) => link.id() == id) || null;
 	}
 
 	private hasLink(link: ILink): boolean {
-		return !!this.getLink(link);
+		return !!~this.getLinkIndex(link);
 	}
 
 	private getLinkIndex(link: ILink): number {

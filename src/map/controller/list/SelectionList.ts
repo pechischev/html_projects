@@ -24,6 +24,6 @@ export class SelectionList extends Disposable {
 			selectedItems = [...this._selectedItems, ...appended].filter((item) => removed.indexOf(item) == -1);
 		}
 		this._selectedItems = selectedItems;
-		this.changeSelectionEvent.dispatch();
+		this.changeSelectionEvent.dispatch(selectedItems);
 	}
 }

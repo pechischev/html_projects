@@ -5,6 +5,8 @@ import { ArrayUtils } from "common/utils/ArrayUtils";
 
 export class NodeList extends Disposable {
 	readonly changedListEvent = this.createDispatcher();
+	readonly groupEvent = this.createDispatcher();
+	readonly ungroupEvent = this.createDispatcher();
 
 	private _nodes: INode[] = [];
 	private _groups: string[] = [];
@@ -55,6 +57,7 @@ export class NodeList extends Disposable {
 
 		this._groups.push(group.id());
 		this.changedListEvent.dispatch([group], items);
+		this.groupEvent.dispatch();
 	}
 
 	ungroup(groups: INodeGroup[]) {
@@ -76,6 +79,7 @@ export class NodeList extends Disposable {
 			this.changedListEvent.dispatch(parent ? [] : children, [group]);
 		}
 		this.removeNodes(groups);
+		this.ungroupEvent.dispatch();
 	}
 
 	getGroupNodes(): INodeGroup[] {
